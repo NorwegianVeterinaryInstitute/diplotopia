@@ -1,0 +1,44 @@
+FROM r-base:4.4.0
+
+# https://github.com/analythium/quarto-docker-examples
+
+# DEPENDENCIES 
+RUN apt-get update && apt-get install -y build-essential  \ 
+    libcurl4-gnutls-dev libxml2-dev \
+    libssl-dev pandoc \
+    gdebi-core curl \
+    plocate \ 
+    r-cran-devtools r-cran-rjava \
+    procps
+
+# QUARTO 
+RUN curl -LO https://github.com/quarto-dev/quarto-cli/releases/download/v1.5.45/quarto-1.5.45-linux-amd64.deb
+RUN gdebi --non-interactive quarto-1.5.45-linux-amd64.deb
+RUN rm -rf quarto-1.5.45-linux-amd64.deb
+
+# R libraries
+RUN R --slave -e 'devtools::install_url("https://cran.r-project.org/src/contrib/here_1.0.1.tar.gz", dependencies = TRUE, upgrade = "always")'
+RUN R --slave -e 'devtools::install_url("https://cran.r-project.org/src/contrib/rmarkdown_2.27.tar.gz", dependencies = TRUE, upgrade = "always")'
+RUN R --slave -e 'devtools::install_url("https://cran.r-project.org/src/contrib/knitr_1.47.tar.gz", dependencies = TRUE, upgrade = "always")'
+RUN R --slave -e 'devtools::install_url("https://cran.r-project.org/src/contrib/tinytex_0.51.tar.gz", dependencies = TRUE, upgrade = "always")'
+
+RUN R --slave -e 'devtools::install_url("https://cran.r-project.org/src/contrib/tidyverse_2.0.0.tar.gz", dependencies = TRUE, upgrade = "always")'
+RUN R --slave -e 'devtools::install_url("https://cran.r-project.org/src/contrib/plyr_1.8.9.tar.gz", dependencies = TRUE, upgrade = "always")'
+RUN R --slave -e 'devtools::install_url("https://cran.r-project.org/src/contrib/scales_1.3.0.tar.gz", dependencies = TRUE, upgrade = "always")' 
+RUN R --slave -e 'devtools::install_url("https://cran.r-project.org/src/contrib/seqinr_4.2-36.tar.gz", dependencies = TRUE, upgrade = "always")'
+RUN R --slave -e 'devtools::install_url("https://cran.r-project.org/src/contrib/patchwork_1.2.0.tar.gz", dependencies = TRUE, upgrade = "always")' 
+RUN R --slave -e 'devtools::install_url("https://cran.r-project.org/src/contrib/plotly_4.10.4.tar.gz", dependencies = TRUE, upgrade = "always")'
+RUN R --slave -e 'devtools::install_url("https://cran.r-project.org/src/contrib/xlsx_0.6.5.tar.gz", dependencies = TRUE, upgrade = "always")'
+RUN R --slave -e 'devtools::install_github("davidsjoberg/ggsankey")'
+
+RUN R --slave -e 'devtools::install_url("https://cran.r-project.org/src/contrib/rjson_0.2.21.tar.gz", dependencies = TRUE, upgrade = "always")'
+RUN R --slave -e 'devtools::install_url("https://cran.r-project.org/src/contrib/kableExtra_1.4.0.tar.gz", dependencies = TRUE, upgrade = "always")'
+
+#RUN R --slave -e 'install.packages("BiocManager", dependencies = TRUE); BiocManager::install("treeio")' 
+
+CMD ["quarto", "bash", "R" ]
+
+# Environments
+ENV LC_ALL=C
+ENV PATH="$PATH:/usr/bin"
+ENV R_LIBS_USER="/usr/local/lib/R/site-library:/usr/lib/R/site-library:/usr/lib/R/library:/usr/lib/R/lib"

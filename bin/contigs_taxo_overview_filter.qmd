@@ -1,0 +1,875 @@
+---
+title: "Overview taxonomy contigs per assembly "
+author: "Eve Zeyl Fiskebeck"
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+params:
+  # see how to implement that in param 
+  res_dir: "D:/NOSYNC/testdir"
+  save_dir: "D:/NOSYNC/savedir"
+  ID: "masurca_duplex_flye"
+  assemblyfile: "D:/NOSYNC/testdir/masurca_duplex_flye.fasta" 
+  taxonomyDB: "D:/NOSYNC/rankedlineage.dmp" 
+  positive_filter: "phylum == 'Oomycota'"
+  evalue_min: 1e-20
+  perc_identity_min: 95
+execute: 
+  echo: false
+  cache: false
+format: 
+  html:
+    embed-resources: true
+    default-image-extension: png
+knitr:
+  opts_chunk: 
+    collapse: true
+    comment: "#>" 
+    R.options:
+      knitr.graphics.auto_pdf: true
+editor_options: 
+  chunk_output_type: console
+---
+
+
+```{r, setup library}
+#| include: false
+# setting java options  - does not work as it should with the process 
+# options(java.parameters = paste0("-Xmx", params$javaparam, "000m"))
+#   javaparam: 6 
+#     -P javaparam:${javamem} 
+
+library(here)
+library(plyr)
+#library(xlsx) was too buggy 
+library(readr)
+library(tidyverse)
+library(ggplot2)
+library(ggsankey)
+library(scales)
+library(seqinr)
+library(patchwork)
+```
+
+<!-- aim provide an overview of taxonomical composition of contigs - per assembly
+Per rank, this to help choose which filter to apply -->
+
+```{r, params definition}
+#| include: false
+
+# result directory 
+if (params$res_dir == "." ) { res_dir <- getwd() } else { res_dir <- params$res_dir }
+
+# directory where objects produced here will be saved 
+if (params$save_dir == "." ) { save_dir <- getwd() } else { save_dir <- params$save_dir }
+
+# assembly ID
+ID <- params$ID
+
+# path of the taxonomic database used (ranked lineage)
+taxonomyDB <- params$taxonomyDB
+
+# minimum value for threshold filtering results as trustworthy or not - default 1e-20
+evalue_min <- params$evalue_min
+
+# percent identity to take into account for filtering results as medium or high trust
+# eg can help decide genus or familly level ca as trust area
+perc_identity_min <- params$perc_identity_min
+
+# filtering information provided by the user 
+positive_filter <- rlang::parse_exprs(
+  unlist(as.list(strsplit(params$positive_filter, ",")))
+)
+
+#rlang::parse_expr(params$positive_filter)
+
+# assembly file that is to be filtered 
+assemblyfile <- params$assemblyfile
+```
+<!-- java parameter 
+https://stackoverflow.com/questions/21937640/handling-java-lang-outofmemoryerror-when-writing-to-excel-from-r 
+-->
+
+
+# 1 Preparing the table for taxonomy attributed to all contigs per assembly Id
+
+## 1.1 Get the list of taxonomy files for all contigs and merge into one file 
+
+```{r, get taxon files}
+#| include: false
+
+# Pattern chosen during pipeline running
+taxon_pattern <- "taxo.tsv"
+# list of contig files
+taxon_contig_files <- list.files(res_dir, 
+                                 pattern = paste0(ID, ".*", taxon_pattern), 
+                                 recursive = T, full.names = T)
+```
+
+<!-- "query_length", "subject_length" added for filtering--> 
+
+## 1.2. Defining helper function to read taxon table for each contig
+```{r, fun read_contig_taxo_df}
+#| include: false
+
+
+#' read_contig_taxo_df
+#' 
+#' Reads a taxon id file for a contigs into a table
+#' @params file: path to the results of taxonomic blast search for the specified contig
+
+read_contig_taxo_df <- function(file, id_file_path = NULL){
+  
+  field_names <- c("query_id", "subject_id", "query_length", "subject_length", "perc_identity", "alignment_length", 
+                 "mismatches", "gap_opens", "q_start", "q_end", "s_start",
+                 "s_end", "evalue", "bit_score", "subject_tax_ids", 
+                 "subject_sci_names", "subject_com_names")
+  
+  read_tsv(here::here(file), 
+          col_names = field_names, 
+          col_types = cols(.default = "c"),
+          comment = "#", 
+          id = id_file_path)
+  
+  
+}
+```
+
+## 1.3. Read results of taxonomic search for all contigs and merge into a single table
+```{r, get all taxo into table}
+#| include: false
+
+taxon_contig_df <- plyr::ldply(taxon_contig_files, 
+                               read_contig_taxo_df)
+```
+
+## 1.4. Merging taxonomic numbers with taxonomic scientific names (taxo DB did not work otherwise)
+
+<!-- used rankedlineage.dmp 
+
+about taxa db 
+https://www.biostars.org/p/76551/ -> for some reason did not seems to work as previously to get the scientific and common names 
+
+
+Getting the taxonomy data from NCBI 
+https://www.ncbi.nlm.nih.gov/datasets/docs/v2/how-tos/taxonomy/taxonomy/
+
+The new here with the ranked data -v
+https://ncbiinsights.ncbi.nlm.nih.gov/2018/02/22/new-taxonomy-files-available-with-lineage-type-and-host-information/
+
+This is the link to the README file
+https://ftp.ncbi.nlm.nih.gov/pub/taxonomy/new_taxdump/taxdump_readme.txt
+
+
+get id of contigs we want to keep
+aka choose what to keep / what to filter 
+
+NB: 101203 is Saprolegnia Parasitical - so should have been recovered 
+--> 
+
+
+```{r, fun read_taxonomy}
+#| include: false
+
+
+#' read_taxonomy from file and format 
+#' 
+#' @param file rankedlineage.dmp - taxonomy file from NCBI
+#' @return a dataframe with the taxonomy information correctly formatted
+read_taxonomy <- function(file){
+  
+  ranked_lineages_fields <- c("tax_id", 
+                            "tax_name", 
+                            "species", 
+                            "genus", 
+                            "family", 
+                            "order", 
+                            "class",
+                            "phylum",
+                            "kingdom",
+                            "superkingdom")
+  taxo_df <- 
+    read_delim(here::here(taxonomyDB),
+                          delim = "\t|",
+                          col_types = cols(.default = "c"),
+                          trim_ws = T,
+                          name_repair = "unique"
+                          ) %>% 
+    # eliminates empty columns 
+    select_if(~sum(!is.na(.)) > 0) 
+  
+  # correct column names
+  names(taxo_df) <- ranked_lineages_fields
+  
+  return(taxo_df)
+
+}
+```
+
+
+```{r, reading ranked raxonomy}
+#| include: false
+
+ranked_taxo <- read_taxonomy(taxonomyDB)
+```
+
+<!-- several subject_tax_ids can be registered for the same contig, 
+it needs to be spitted and extended so it can be joined --> 
+
+```{r, separate multiple subject_tax_ids}
+#| include: false
+taxon_contig_df <- 
+  taxon_contig_df %>%
+  tidyr::separate_longer_delim(subject_tax_ids, delim = ";") %>%
+  # removes evt white space
+  dplyr::mutate(subject_tax_ids = str_trim(subject_tax_ids, side = "both")) %>%
+  # remove now they are not usevfull
+  dplyr::select(-subject_sci_names, -subject_com_names)
+```
+
+
+```{r, combine taxonomy - numbers with with current taxonomy}
+#| include: false
+taxon_contig_df <- 
+  taxon_contig_df %>%
+  left_join(ranked_taxo, by = c("subject_tax_ids" = "tax_id")) 
+```
+
+
+```{r, cleaning environment}
+#| include: false
+
+rm(list = c("ranked_taxo", "taxon_contig_files"))
+```
+
+<!-- TO UNCOMMENT TO Createa and use savepoint for local analysis if necessary 
+
+
+```{r saving data in case filtering need to be adjusted}
+#| include: false
+
+saveRDS(taxon_contig_df, 
+       file = here::here(save_dir, paste0(ID, "_taxon_contig_df.rds"))
+       )
+```
+
+
+
+```{r}
+taxon_contig_df <- readRDS(
+  here::here(save_dir, paste0(ID, "_taxon_contig_df.rds"))
+  )
+```
+
+-->
+
+
+Data overview structure: 
+```{r}
+taxon_contig_df %>% 
+  glimpse()
+```
+
+
+## 1.5. Preparing presentation of results for blast filter per quality blast evidence
+### 1.5.1 Overview of evidence values
+
+<!-- 
+https://www.metagenomics.wiki/tools/blast/evalue
+
+https://ravilabio.info/notes/bioinformatics/e-value-bitscore.html#:~:text=Bit%2Dscore%20does%20not%20depend,in%20an%20constantly%20increasing%20database.&text=The%20E%2Dvalue%20provides%20information,match%20is%20purely%20by%20chance.
+--> 
+
+
+
+<!-- evalue distribution per order best lowest ... as we have 5 results at most 
+should give an idea where to filter
+-->
+
+Each contig is one independent taxonomy observation (5 repeats should come out - but variation) -> group contig
+Order - blast according to "best match" : lowest evalue - highest percent of identity feks.
+Attribute order observation for each "taxo observation per contig"
+plot distribution evalue and evt bit_score to see if there is a clear cutoff we can use to reduce dataset
+(eg is the first one always good enough?)
+
+- [ ] TODO: FIND out : why not necessary same number of blast results for each contig ?
+```{r}
+# taxon_contig_df %>%
+#   group_by(query_id) %>%
+#   summarise(nb_blast_results = n()) %>%
+#   View()
+```
+
+
+<!-- ggplot helps
+https://www.geeksforgeeks.org/how-to-make-density-plots-with-ggplot2-in-r/
+--> 
+We keep the best result per contig - by evalue then by identity and filter the rest out
+
+```{r, arranging df keeping only best result per contig }
+#| include: false
+
+ordered_row_taxon_contig_df <- 
+  taxon_contig_df %>%
+  dplyr::mutate_at(vars(perc_identity, alignment_length, mismatches, gap_opens,
+                        evalue, bit_score,
+                        q_start, q_end, 
+                        s_start, s_end, 
+                        query_length, subject_length),
+                   as.numeric) %>%
+  # Get order observation
+  dplyr::group_by(query_id) %>%
+  dplyr::arrange(evalue, desc(perc_identity)) %>% 
+  dplyr::mutate(row_numbering = row_number())
+```
+
+#### 1.5.1.1 keeping not first evalue results
+
+<!-- 
+keeping not best evalues for eventual later rescuing 
+of the contigs that were not best, as long as evalue <= threshold 
+--> 
+
+```{r, not best evalue }
+#| include: false
+notbest_evalue_df <- 
+  ordered_row_taxon_contig_df %>%
+  dplyr::filter(row_numbering != 1) %>%
+  dplyr::ungroup() %>%
+  # only keeping if evalue is below threshold
+  dplyr::filter(evalue <= evalue_min)
+```
+
+
+
+#### 1.5.1.2  keeping first evalue results 
+```{r, keeping only best evalue result per contig }
+ordered_row_taxon_contig_df <- 
+  ordered_row_taxon_contig_df %>%
+  dplyr::filter(row_numbering == 1) %>%
+  dplyr::ungroup()
+```
+
+
+#### 1.5.1.3 Getting the range of e-values for first results
+
+```{r, range values blast}
+range(ordered_row_taxon_contig_df$evalue)
+#range(ordered_row_taxon_contig_df$row_numbering)
+```
+
+scatterplot evalues - % identity
+
+```{r, create plot p_evalue_percidentity}
+p_evalue_percidentity <- 
+  ordered_row_taxon_contig_df %>%
+  ggplot2::ggplot(aes(x = evalue, y = perc_identity)) +
+  geom_vline(xintercept = 1e-20, color = "green", linetype = "dashed") +
+  geom_hline(yintercept = 95, color = "green", linetype = "dashed") +
+  geom_hline(yintercept = 90, color = "green", linetype = "dashed") +
+  geom_hline(yintercept = 80, color = "green", linetype = "dashed") +
+  geom_point(alpha = .5) +
+  scale_x_continuous(trans = "log10", breaks = scales::log_breaks(n = 10)) +
+  # expand = expansion(mult = c(.2 ,0))
+  labs(x = "E-value", y = "Percent of identity") +
+  annotate("text", x = 1e-20, y = 80 , color = "green", label = "1e-20" ) +
+  #scale_x_log10() +
+  theme_minimal()
+
+p_evalue_percidentity
+```
+
+
+```{r, save plot p_evalue_percidentity}
+#| include: false
+
+ggsave(here::here(save_dir, paste0(ID, "_evalue_perc_identity.png")),
+      width = 10, height = 10, 
+      units = "cm",
+      dpi = 300,
+      bg = "white")
+```
+
+<!-- here should do interactive so can see what are the results values, and change color / size of those outside area) -->
+
+<!-- if necessary for development 
+NB: getting contigID - so can crosscheck if some contigs have only low value matches
+
+```{r, getting info distinct contig ids}
+#| include: false
+
+contigID <- 
+  taxon_contig_df %>%
+  select(query_id) %>%
+  distinct() 
+```
+
+--> 
+
+
+### 1.5.2 classifying classification by evidence threshold
+
+For best evalues : Classifying match / threshold for filtering
+
+```{r, ordering contigs by confidence - though not used after - informational }
+#| include: false
+ordered_row_taxon_contig_df <- 
+  ordered_row_taxon_contig_df %>%
+  mutate(confidence_threshold = 
+           case_when(
+             evalue <= evalue_min & perc_identity >= perc_identity_min ~ "high",
+             evalue >= evalue_min ~ "low",
+             TRUE ~ "medium")) 
+```
+
+
+### 1.5.3 Checking contigs size and evidence threshold
+
+```{r, contig size check}
+#| include: false
+
+contig_size_check_df <- 
+  ordered_row_taxon_contig_df %>%
+  ungroup() %>%
+  select(query_id, query_length, subject_length, perc_identity, alignment_length, evalue, bit_score, confidence_threshold) %>%
+  dplyr::mutate(prop_query_aligned = alignment_length / query_length * 100) %>%
+  dplyr::arrange(desc(query_length)) 
+
+# contig_size_check_df %>% 
+#   head(n = 30) %>% View()
+
+# glimpse(contig_size_check_df)  
+```
+
+<!-- examples of stacking plots types 
+https://felixfan.github.io/stacking-plots-same-x/
+https://bookdown.org/hneth/ds4psy/D-3-apx-colors-basics.html
+--> 
+
+```{r, p1 plot contig size }
+#| include: false
+
+p1 <- 
+  contig_size_check_df %>%
+  ggplot2::ggplot(aes(x = query_length)) +
+  geom_histogram(color = "azure4", fill = "royalblue1", bins = 100) +
+  theme_minimal() +
+  labs(x = "Contig length", y = "Number of contigs")
+
+#p1
+```
+
+
+```{r, p2 plot contig size and proportion query aligned}
+#| include: false
+
+p2 <- 
+  contig_size_check_df %>%
+  ggplot2::ggplot(aes(x = query_length, y = prop_query_aligned)) +
+  geom_point(alpha = .5 , color = "palegreen3")  +
+  theme_minimal() +
+  labs(x = "Contig length", y = "Proportion of query aligned")
+
+#p2 
+  
+```
+
+
+```{r, p3 plot contig size and evalue}
+#| include: false
+
+
+p3 <- 
+  contig_size_check_df %>%
+  ggplot2::ggplot(aes(x = query_length, y = evalue)) +
+  geom_point(alpha = .5 , color = "mediumpurple1")  +
+  geom_hline(yintercept = 1e-20, color = "green", linetype = "dashed") +
+  annotate("text", y = 1e-20, x = 0 , color = "green", label = "1e-20" ) +
+  theme_minimal() +
+  labs(x = "Contig length", y = "E-value") +
+  scale_y_log10()
+
+#p3
+```
+
+
+```{r, p4 plot contig size and bit score}
+#| include: false
+
+p4 <- 
+  contig_size_check_df %>%
+  ggplot2::ggplot(aes(x = query_length, y = bit_score)) +
+  geom_point(alpha = .5 , color = "coral1")  +
+  theme_minimal() +
+  labs(x = "Contig length", y = "Bit Score") +
+  scale_y_log10()
+
+#p4
+```
+
+
+```{r, p5 plot contig size and identity}
+#| include: false
+
+p5 <- 
+  contig_size_check_df %>%
+  ggplot2::ggplot(aes(x = query_length, y = perc_identity)) +
+  geom_point(alpha = .5 , color = "cyan1")  +
+  theme_minimal() +
+  labs(x = "Contig length", y = "Percent identity") 
+
+#p5
+```
+
+
+```{r, p_complete combined plot }
+#| fig-width: 20
+#| fig-height: 30
+
+p_complete <- p5 / p4 / p3 / p2 / p1 +
+  plot_layout(guides=  "collect", 
+              axes = "collect_x")
+p_complete
+```
+
+
+```{r, saving plot: p_complete combined plot  }
+#| include: false
+
+ggsave(here::here(save_dir, paste0(ID, "_contig_size_check.png")),
+       p_complete, 
+       width = 20, height = 30, 
+       units = "cm",
+       bg = "white")
+```
+
+
+### 1.5.4 filtering results 
+
+
+#### 1.5.4.1 Getting what it is expected to be with a positivie filter : 
+eg: is expected species 
+
+
+<!-- filtering with Rlang expression 
+https://www.alexstephenson.me/post/2022-04-03-filtering-expressions-with-rlang/
+--> 
+
+```{r}
+#| include: false
+
+# Test 
+#positive_filter <- rlang::expr(species == "Saprolegnia parasitica")
+#positive_filter <- rlang::expr(genus == "Saprolegnia")
+
+positive_df <- 
+  ordered_row_taxon_contig_df %>%
+  dplyr::filter(!!!positive_filter)
+```
+
+
+
+#### 1.5.4.2 checking if and salvaging results from non first evalues dataset 
+
+
+<!-- 
+if where identified in postive filter, but not with the  best evalue
+Adding those before filtering contigs in fasta files
+-->
+```{r, positve not first evalue}
+#| include: false
+positive_df_salvage <- 
+  notbest_evalue_df %>%
+  dplyr::ungroup() %>%
+  # only keeping if filter condition is positive 
+  dplyr::filter(!!!positive_filter) %>%
+  dplyr::group_by(query_id) %>%
+  dplyr::filter(row_number()==1) %>%
+  dplyr::ungroup()  %>%
+  mutate(confidence_threshold = 
+           case_when(
+             evalue <= evalue_min & perc_identity >= perc_identity_min ~ "high",
+             evalue >= evalue_min ~ "low",
+             TRUE ~ "medium"))
+```
+
+
+<!-- now checking those that were positive but not with best evalue 
+and that were not detected in the dataset with best evalue
+--> 
+```{r, checking how many added by not best evalue}
+#| include: false
+contig_to_add_df <- 
+  positive_df_salvage %>%
+  dplyr::select(query_id) %>%
+  # dplyr::add_row(query_id = "contig_145", .before = 1) %>% # test if this work using a negative 
+  anti_join(positive_df %>% dplyr::ungroup())
+  
+```
+
+#### 1.5.4.3 Adding eventual salvage to resutls 
+
+<!-- if some need to be added to the dataset - they are added now --> 
+
+```{r}
+#| include: false
+
+if (nrow(contig_to_add_df) > 0) {
+  
+  positive_df <-
+    positive_df_salvage %>% 
+    dplyr::select(query_id) %>%
+    anti_join(positive_df) %>%
+    # selecting the data for those that are not in the positive df 
+    inner_join(positive_df_salvage) %>%
+    # merging with the ones that were positive at first selection
+    dplyr::bind_rows(positive_df) 
+
+}
+```
+
+#### 1.5.4.4 Summary filtering 
+
+There was `r nrow(contig_to_add_df)` contigs that were not identified by the 
+the best evalue, but were identified with the positive filter with an evalue <=
+`r evalue_min`(threshold). Those are now added to the final filter
+
+
+`r nrow(positive_df)` contigs out of `r nrow( ordered_row_taxon_contig_df)`, 
+aka `r round(nrow(positive_df)/nrow( ordered_row_taxon_contig_df)*100, digits = 2)`  
+were classified as `r paste(unlist(positive_filter), collapse = ", ")`
+
+<!-- have to filter what is expected otherwise it is really too huge of a plot --> 
+
+#### 1.5.3.2 Alluvial plot for contigs that are not what is expected 
+
+
+```{r, complement : negative filter - discarded }
+#| include: false
+
+# negative_df <- 
+#   ordered_row_taxon_contig_df %>%
+#   filter(!!positive_filter == F)
+
+# when complex expression, this is easier to find what was not positive
+negative_df <- 
+  ordered_row_taxon_contig_df %>%
+  anti_join(positive_df)
+
+```
+
+Alluvial plot for n =  `r nrow(negative_df)` contigs. 
+for not expected species
+
+
+<!-- 
+Alluvial  plot per taxonomical level -> to help select what to filter in / out
+to provide good flexibility to user
+
+https://github.com/davidsjoberg/ggsankey
+https://r-charts.com/flow/sankey-diagram-ggplot2/
+https://rpubs.com/techanswers88/sankey-with-own-data-in-ggplot -> this one 
+https://github.com/fbreitwieser/pavian
+https://github.com/fbreitwieser/pavian/blob/master/R/sample-build_sankey_network.R
+https://stackoverflow.com/questions/76739633/rearrange-the-order-of-nodes-in-a-sankey-diagram-using-ggsankey
+
+https://rpubs.com/techanswers88/sankey-with-own-data-in-ggplot
+--> 
+
+Used guide here: <https://rpubs.com/techanswers88/sankey-with-own-data-in-ggplot>
+
+```{r}
+#| include: false
+
+alluvial_df  <- 
+  negative_df %>% 
+  ungroup() %>%
+  #mutate(count = 1) %>%
+  # Some fields are not filled with create a mess
+  mutate(across(where(is.character), ~replace_na(., "NA"))) #%>%
+  #tail(n = 100)
+
+
+alluvial_df_long <- 
+  alluvial_df %>%
+  #arrange(kingdom, phylum, class,  order, family, genus, species) %>% 
+  ggsankey::make_long(superkingdom, 
+                      kingdom, 
+                      phylum,
+                      class,
+                      order,
+                      family,
+                      genus,
+                      species) 
+```
+
+# HERE - need a way to order the nodes (to look better) - and counts/perc would be ok also
+
+<!-- SEE 
+https://corybrunson.github.io/ggalluvial/articles/order-rectangles.html
+--> 
+
+```{r , alluvial plot function}
+#| include: false
+
+my_alluvial_plot <- function(data, 
+                             text_base_size = 10,
+                             hjust = -0.5,
+                             space = 1) {
+  
+  data %>% 
+    ggplot(
+    aes(x = x, 
+        next_x = next_x, 
+        node = node, 
+        next_node = next_node,
+        fill = factor(node), 
+        label = node)) +
+    geom_alluvial(flow.alpha = 0.5, 
+                  space = space,
+                  node.color = "black",
+                  show.legend = FALSE) +
+    geom_alluvial_label(inherit.aes = T, 
+                        space = space, 
+                        show.legend = FALSE,
+                        hjust = hjust)  +
+    theme_bw() +
+    theme(legend.position = "none") + 
+    theme(text=element_text(size=text_base_size),
+          axis.title = element_blank(), 
+          axis.text.y = element_blank(),
+          axis.ticks = element_blank(), 
+          panel.grid = element_blank())  +
+    theme(plot.margin = margin(1,1,1,1, "cm"))
+  
+}
+```
+
+
+```{r , alluvial plot contaminant possible}
+#| include: false
+
+ap1 <- my_alluvial_plot(alluvial_df_long, space = 1.5, hjust = 0, text_base_size = 10)
+  
+  
+#ap1  
+  
+
+ap1 <- 
+  ap1 + 
+  expand_limits(x= c(0, length(levels(ap1$data$x)) + 2))  +
+  labs(title = "Contigs that are not expected species - plot to improve ordering") 
+
+#ap1 
+
+
+```
+
+```{r, save alluvial plot}
+#| include: false
+
+ggsave(here::here(save_dir, paste0(ID, "_alluvial_plot_possible_contaminants.png")), 
+       ap1, 
+       width = 30, 
+       height = 20, units = "cm")
+```
+
+
+<!-- alternative 
+https://corybrunson.github.io/ggalluvial/
+
+-->
+
+<!-- 
+Making counts 
+
+Avoiding crossing 
+https://github.com/davidsjoberg/ggsankey/issues/7
+https://stackoverflow.com/questions/76739633/rearrange-the-order-of-nodes-in-a-sankey-diagram-using-ggsankey
+--> 
+#### 1.5.3.3 Export tables positive and negative filtered contigs 
+
+
+```{r, export data }
+#| include: false
+readr::write_csv(as.data.frame(positive_df %>% arrange(desc(query_length))), 
+                 here::here(save_dir, paste0(ID, "_positive_filter", ".csv"))
+                 )
+readr::write_csv(as.data.frame(negative_df %>% arrange(desc(query_length))), 
+                 here::here(save_dir, paste0(ID, "_negative_filter", ".csv"))
+                 )
+
+filter_done <- data.frame("filter" = deparse(positive_filter))
+                          
+readr::write_csv(filter_done, 
+                 here::here(save_dir, paste0(ID, "_filter_info", ".csv"))
+                 )
+
+readr::write_csv(taxon_contig_df, 
+                 here::here(save_dir, paste0(ID, "_all_taxon_contig", ".csv"))
+                 )
+
+```
+
+## 1.6 Filtering contigs corresponding to positive filter
+
+<!-- allows providing a first idea - then pipeline and filter can be modified for the rest --> 
+```{r, exporting filtered fasta files}
+#| include: false
+
+## import contigs queried with blast
+assembly_fasta <- seqinr::read.fasta(assemblyfile, forceDNAtolower = F)
+
+## create the vector for sub-setting according to the filter for positive and negative contigs
+positive_subset_v <- names(assembly_fasta) %in% positive_df$query_id
+negative_subset_v <- names(assembly_fasta) %in% negative_df$query_id
+
+## subset the contigs to keep and write to output 
+positive_fasta <- assembly_fasta[positive_subset_v]
+negative_fasta <- assembly_fasta[negative_subset_v]
+
+# write the fasta files
+seqinr::write.fasta(positive_fasta, names = names(positive_fasta), 
+                    file = paste0(save_dir, "/", ID,  "_assembly_filtered_positive.fasta"),
+                    nbchar = 80, as.string = F)
+
+
+seqinr::write.fasta(negative_fasta, names = names(negative_fasta), 
+                    file = paste0(save_dir, "/", ID,  "_assembly_filtered_negative.fasta"),
+                    nbchar = 80, as.string = F)
+
+
+```
+
+
+# Eventuall refiltering of the contigs 
+
+Rerun the script using a different rlang expression 
+Fields employed for filtering can belong to : 
+"species", "genus", "family", "order", "class", "phylum", "kingdom", "superkingdom"
+
+
+example of filter: `genus == "Saprolegnia" | species == "Saprolegnia parasitica"`
+You can combine fields and filters. 
+
+This filter is called the positive filter (positive are all contigs that are kept in the assembly, as those
+criteria are positive accoring to the filter provided).
+
+In negative filter, are all contigs those that have been removed from the assembly.
+
+
+<!-- 
+# Possible improvements 
+- organisation plot alluvial (TODO)
+- adding filter by mini size  contig 
+- adding reason filtering then in the tables 
+
+- changing name of the script for automation - short 
+- improving text
+- improving - an alluvial plot for proportion ? but then need the remainer of what is ... 
+
+--> 
+
+```{r}
+sink(here::here(save_dir, "R.version"))
+sessionInfo()
+sink()
+```

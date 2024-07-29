@@ -1,0 +1,310 @@
+---
+title: "Busco Summary"
+author: "Eve Zeyl Fiskebeck"
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+params:
+  res_dir: "D:/NOSYNC/Sapro_deconta/05_BUSCO"
+  save_dir: "."
+  lineage_dataset: "alveolata_odb10,stramenopiles_odb10,eukaryota_odb10"
+execute: 
+  echo: false
+  cache: false
+format: 
+  html:
+    default-image-extension: svg
+    embed-resources: true
+knitr:
+  opts_chunk: 
+    collapse: true
+    comment: "#>" 
+    R.options:
+      knitr.graphics.auto_pdf: true
+editor_options: 
+  chunk_output_type: console
+---
+
+
+```{r, setup}
+#| include: false
+library(here)
+library(rjson)
+library(tidyverse)
+library(kableExtra)
+```
+
+```{r, params to object}
+# For testing 
+# params to objects
+
+if(params$res_dir == ".") {
+  res_dir <- here::here()
+  } else {
+    res_dir <- params$res_dir
+  }
+
+if(params$save_dir == ".") {
+  save_dir <- here::here()
+  } else {
+    save_dir <- params$save_dir
+  }
+
+
+lineage_dataset <- unlist(strsplit(params$lineage_dataset, ","))
+  
+```
+
+```{r, creating savedir if not exit}
+#| include: false 
+if (! dir.exists(save_dir)) dir.create(save_dir)
+
+```
+
+```{r,  wrangling 1}
+#| include: false
+json_res_files <- list.files(path = res_dir, pattern = "*short_summary.*.json" , full.names = TRUE, recursive = TRUE)
+
+assembly_ID <-   
+  json_res_files %>%
+  str_remove(res_dir) %>%
+  str_remove_all("(^/)|(/.*$)") %>%
+  str_remove_all(paste(lineage_dataset, collapse = "|")) %>%
+  str_remove("_$") 
+
+```
+
+Info: For result interpretation see: [busco guidelines - interpretation](https://busco.ezlab.org/busco_userguide.html#interpreting-the-results)
+
+<!-- merging all results into one table and saving --> 
+```{r, wrangling 2}
+#| include: false
+temp_res <- 
+  lapply(
+    json_res_files, function (x) fromJSON(file = here::here(x)) %>% as.data.frame()
+    )  
+
+busco_res <- Reduce(full_join, temp_res) 
+rm(temp_res)
+```
+
+<!-- reducing table for visualization of what is important--> 
+```{r, wrangling 3}
+#| include: false
+# need to get the assembly and lineage separated 
+busco_res <- 
+  busco_res %>%
+  dplyr::mutate(assembly_ID =  str_remove(parameters.out ,
+                                          paste0("_",lineage_dataset.name))) %>%
+  dplyr::select(-dplyr::starts_with("parameters")) %>%
+  dplyr::select(assembly_ID, 
+                lineage := lineage_dataset.name, 
+                number_of_buscos:= lineage_dataset.number_of_buscos,
+                number_of_species:= lineage_dataset.number_of_species,
+                starts_with("results"),
+                -results.one_line_summary, 
+                -results.domain, 
+                lineage_dataset.creation_date) %>%
+  dplyr::rename_at(.vars = vars(starts_with("results.")),
+                   .funs =  ~str_remove_all(., "results.")) 
+```
+
+
+
+Lineages creation dates: 
+<!-- report lineage creation dates --> 
+```{r, lineages creation dates}
+busco_res %>%
+  dplyr::select(lineage, lineage_dataset.creation_date) %>%
+  distinct() %>%
+  kableExtra::kable( caption = "Lineage creation dates",
+                     format = "html",
+                     escape = FALSE) %>%
+    kableExtra::kable_styling()
+
+```
+
+
+
+
+<!--separating assembly metrics from completness - for easier usage - deduplicate per assembly also--> 
+
+```{r, split info}
+#| include: false
+assembly_var <- c( "Number.of.scaffolds", "Number.of.contigs", "Total.length", 
+                   "Percent.gaps", "Scaffold.N50", "Contigs.N50")
+
+busco_assembly_metrics <- 
+  busco_res %>%
+  dplyr::select(assembly_ID, any_of(assembly_var), -lineage_dataset.creation_date) %>%
+  distinct()
+
+
+busco_completeness <- 
+  busco_res %>%
+  dplyr::select(assembly_ID, lineage, everything(), -any_of(assembly_var), 
+                -lineage_dataset.creation_date) 
+
+# clean memory
+rm(busco_res)
+```
+
+
+<!-- saving the tables - some people prefer -->
+
+```{r, save results}
+#| include: false
+readr::write_csv(busco_assembly_metrics, 
+                 here::here(save_dir, "busco_assembly_metrics.csv")
+                 )
+
+readr::write_csv(busco_completeness, 
+                 here::here(save_dir, "busco_completness.csv")
+                 )
+```
+
+<!-- plotting the results for report and comparison -->
+
+```{r, to long format}
+#| include: false
+
+busco_completeness_long <- 
+  busco_completeness %>%
+    dplyr:: mutate_at(.vars = c("number_of_buscos", "number_of_species"),
+              .funs = ~as.numeric(.)) %>%
+    tidyr::pivot_longer(cols = c(everything(), -assembly_ID, -lineage),
+                      names_to = "parameter",
+               values_to = "value")
+
+```
+
+
+```{r, plot per param}
+#| column: page
+#| out-width: 100%
+#| out-height: 150%
+#| fig-format: svg
+
+ggplot2::ggplot(busco_completeness_long, 
+                ggplot2::aes(x = assembly_ID, y = value, 
+                             color = assembly_ID,
+                             fill = assembly_ID,
+                             pch = lineage, 
+                             )
+                ) +
+  ggplot2::geom_point(size = 1) +
+  ggplot2::facet_wrap(~parameter, scales = "free_y") +
+  ggplot2::theme_minimal() +
+  ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 45, hjust = 1),
+                 legend.position = "right", 
+                 text=element_text(size=8)) +
+  ggplot2::labs(title = "Busco Completeness",
+                x = "Assembly ID",
+                y = "Value") 
+
+```
+
+
+```{r, reproduction busco data}
+#| include: false
+
+param_col <- c("Complete_single" = "cyan1", "Complete_duplicated" = "deepskyblue3", 
+               "Missing" = "firebrick1", "Fragmented" = "gold1")
+
+
+temp_wide <- 
+  busco_completeness_long %>%
+  dplyr::mutate(parameter = 
+                  case_when(
+                    str_detect(parameter, "Complete.BUSCOs") ~ "FILTEROUT",
+                    str_detect(parameter, "Single.copy.BUSCOs") ~ "Complete_single",
+                    str_detect(parameter, "Missing.BUSCOs") ~ "Missing",
+                    str_detect(parameter, "Fragmented.BUSCOs") ~ "Fragmented",
+                    str_detect(parameter, "Multi.copy.BUSCOs"  ) ~ "Complete_duplicated",
+                    str_detect(parameter, "number_of_buscos") ~ "number_of_buscos",
+                    TRUE ~ "FILTEROUT"
+                  )) %>%
+  filter(parameter != "FILTEROUT") %>%
+  pivot_wider(id_cols = all_of(
+    c("assembly_ID", "lineage")),
+    names_from = parameter, 
+    values_from = value, 
+    values_fn = sum )  %>%
+  mutate_at(vars(Complete_single, Complete_duplicated, Missing, Fragmented), ~ . / number_of_buscos * 100) %>%
+  # control now is ok 
+  #rowwise() %>%
+  mutate(total_perc = sum(Complete_single, Complete_duplicated, Missing, Fragmented)) 
+  
+temp_long <- 
+  temp_wide %>%
+  tidyr::pivot_longer(cols = c(everything(), -assembly_ID, -lineage),
+                      names_to = "parameter",
+               values_to = "value") %>%
+  filter(parameter != "total_perc", 
+         parameter != "number_of_buscos") %>%
+  mutate(parameter = factor(parameter, 
+                            levels = c("Complete_single", "Complete_duplicated", "Fragmented", "Missing"),
+                            ordered = T)
+         ) %>%
+    arrange(parameter, desc(value))
+```
+
+
+```{r, reproduction busco plot}
+#| fig-width: 10
+#| fig-height: 10
+busco_plot <- 
+  ggplot2::ggplot(temp_long,
+                ggplot2::aes(x = value, y = assembly_ID, 
+                             fill = parameter)) +
+  ggplot2::geom_col(position = position_stack(reverse = T),
+                    orientation = "y", width = .5) + 
+  scale_fill_manual(values = param_col) +
+  ggplot2::facet_wrap(~lineage, scales = "free_y") +
+  ggplot2::theme_minimal() +
+  ggplot2::theme(axis.text.x = ggplot2::element_text(angle = 45, hjust = 1),
+                 legend.position = "right", 
+                 text=element_text(size=8)) +
+  ggplot2::labs(title = "Busco Completeness",
+                x = "Assembly ID",
+                y = "%BUSCOs") 
+
+busco_plot
+```
+
+<!-- saving the plot 
+
+```{r,  saving busco plot}
+ggsave(here::here(save_dir, "busco_plot.svg"), 
+       plot = busco_plot, 
+       width = 30, height = 30,
+       units = "cm",
+       device = "svg")
+```
+-->
+
+```{r, tables incl}
+busco_completeness %>%
+  arrange(lineage, assembly_ID) %>%
+  group_by(lineage) %>%
+  kableExtra::kable( caption = "Busco Completeness",
+                     format = "html") %>%
+  kableExtra::kable_styling()
+```
+
+
+
+
+```{r,table metrics}
+busco_assembly_metrics %>%
+  kableExtra::kable( caption = "Busco Assembly metrics",
+                     format = "html") %>%
+  kableExtra::kable_styling()
+```
+
+<!-- SESSION INFO --> 
+
+```{r}
+sink(file = paste0(here::here(save_dir, "R_busco.version")))
+sessionInfo()
+sink()
+```
+

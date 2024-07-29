@@ -1,0 +1,35 @@
+title: "MultiQC report from Qualimap2"
+report_comment: >
+    This MultiQC report has been generated on results from running the 
+    Saprolegnia analysis pipeline.
+
+report_header_info:
+  - Contact E-mail: "evfi@vetinst.no"
+  - Application Type: "Qualimap2 BamQC"
+
+#  - Project Type: "Application"
+#  - Sequencing Platform: "HiSeq 2500 High Output V4"
+#  - Sequencing Setup: "2x125"
+  
+show_analysis_paths: False
+show_analysis_time: True
+
+run_modules:
+- qualimap
+
+table_columns_visible:
+  QualiMap:
+    general_error_rate: True
+    median_insert_size: True
+
+# qualimap_config:
+#   general_stats_coverage:
+#     - 10
+#     - 20
+#     - 40
+#     - 200
+#     - 30000
+#   general_stats_coverage_hidden:
+#     - 10
+#     - 20
+#     - 200
