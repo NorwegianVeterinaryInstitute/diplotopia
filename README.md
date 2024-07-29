@@ -10,6 +10,6 @@ These organism are highly challenging, as around 40% of their genome is repetiti
 
 
 ## Change log: 
-2024-07-29: Migrated (and somewhat sorted) code and wiki that was ready to the present repository - added members - created team. 
-2024-07-26: Created the repository. The code that has been so far developped for the pipeline needs to be migrated in this new public repository. 
+- 2024-07-29: Migrated (and somewhat sorted) code and wiki that was ready to the present repository - added members - created team. 
+- 2024-07-26: Created the repository. The code that has been so far developped for the pipeline needs to be migrated in this new public repository. 
 
