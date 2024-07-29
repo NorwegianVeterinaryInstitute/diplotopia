@@ -1,0 +1,3 @@
+assembler,csv_input,comment
+necat,/cluster/projects/nn9305k/active/evezeyl/projects/Saprolegnia/git/2023_Saprolegnia_pilot/dev_pipeline/tryssembly/input.necat.csv,test necat template input
+masurca,/cluster/projects/nn9305k/active/evezeyl/projects/Saprolegnia/git/2023_Saprolegnia_pilot/dev_pipeline/tryssembly/input.masurca.csv,test masurca template input
