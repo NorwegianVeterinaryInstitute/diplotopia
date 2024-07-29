@@ -1,0 +1,30 @@
+FROM continuumio/miniconda3 
+
+RUN apt-get update -q && apt-get install -q -y mlocate build-essential manpages-dev \ 
+	binutils zlib1g-dev
+#libtool autoconf automake nasm pkgconf curl sed
+    
+RUN conda config --add channels defaults
+RUN conda config --add channels bioconda
+RUN conda config --add channels conda-forge
+
+RUN conda create -y -n quast -c bioconda quast=5.2.0
+RUN conda install -y -n quast -c conda-forge matplotlib
+RUN conda install -y -n quast -c bioconda perl-time-hires gridss
+
+RUN echo ". /opt/conda/etc/profile.d/conda.sh" >> ~/.bashrc && \
+    echo "conda activate quast" >> ~/.bashrc
+
+ENV PATH="$PATH:/opt/conda/envs/quast/bin/:/opt/conda/envs/quast/bin/python"
+
+# Adding the databases - tried different solutions - only like that it works
+WORKDIR opt/conda/envs/quast/bin/
+RUN /opt/conda/envs/quast/bin/python quast-download-gridss
+RUN /opt/conda/envs/quast/bin/python quast-download-silva
+RUN /opt/conda/envs/quast/bin/python quast-download-busco
+
+WORKDIR /
+
+SHELL ["conda", "run", "-n", "quast", "/bin/bash", "python", "-c"]
+CMD [ "/bin/bash", "quast", "python" ]
+

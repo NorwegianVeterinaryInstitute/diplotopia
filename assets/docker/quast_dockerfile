@@ -1,0 +1,43 @@
+FROM continuumio/miniconda3 
+
+RUN apt-get update -q && apt-get install -q -y mlocate build-essential manpages-dev \ 
+	binutils zlib1g-dev wget curl sed
+#libtool autoconf automake nasm pkgconf
+    
+RUN conda config --add channels defaults
+RUN conda config --add channels bioconda
+RUN conda config --add channels conda-forge
+
+RUN conda create -y -n quast -c bioconda quast=5.2.0
+#python=3.12.1
+RUN conda install -y -n quast -c anaconda pip 
+RUN conda install -y -n quast -c bioconda perl-time-hires gridss
+
+# Does not want to install
+#RUN conda install -y -n quast -c biconda busco
+
+RUN echo ". /opt/conda/etc/profile.d/conda.sh" >> ~/.bashrc && \
+    echo "conda activate quast" >> ~/.bashrc
+
+WORKDIR /opt/conda/envs/quast/bin/
+RUN /opt/conda/envs/quast/bin/python pip install quast==5.2.0 joblib matplotlib
+
+# Adding manually extra databases to busco - some links were broken
+WORKDIR /opt/conda/envs/quast/lib/python3.10/site-packages/quast_libs/busco/
+RUN curl -o eukaryota.tar.gz https://busco-data.ezlab.org/v4/data/lineages/eukaryota_odb10.2020-09-10.tar.gz
+RUN curl -o fungi.tar.gz https://busco-data.ezlab.org/v4/data/lineages/fungi_odb10.2020-09-10.tar.gz
+RUN curl -o bacteria.tar.gz https://busco-data.ezlab.org/v4/data/lineages/bacteria_odb10.2020-03-06.tar.gz
+RUN curl -o alveolata.tar.gz https://busco-data.ezlab.org/v4/data/lineages/alveolata_odb10.2020-09-10.tar.gz
+RUN curl -o stramenopiles.tar.gz https://busco-data.ezlab.org/v4/data/lineages/stramenopiles_odb10.2020-08-05.tar.gz
+
+ENV PATH="/opt/conda/envs/quast/bin/:/opt/conda/envs/quast/bin/python:/opt/conda/envs/quast/bin/python:$PATH"
+
+WORKDIR /opt/conda/envs/quast/bin/
+RUN /opt/conda/envs/quast/bin/python quast-download-gridss
+RUN /opt/conda/envs/quast/bin/python quast-download-silva
+RUN /opt/conda/envs/quast/bin/python quast-download-busco
+
+SHELL ["conda", "run", "-n", "quast", "/bin/bash", "python", "-c"]
+CMD [ "/bin/bash", "quast", "python"]
+
+
