@@ -1,9 +1,192 @@
 # DIPLOTOPIA pipeline and program descriptions
 
 
-
-
 ## Statement of need
+
+
+## Overview 
+
+<!-- learning graphviz https://quarto.org/docs/authoring/diagrams.html
+
+https://graphviz.org/ 
+graphviz online editor might help a bit
+ --> 
+
+```{dot}
+digraph Pipeline_Overview {
+
+    graph [
+		label = "Diplotopia Pipeline Overview\n\n"
+		labelloc = t
+		//fontsize = 20
+		layout = dot
+		rankdir = TB
+		newrank = true
+	]
+
+    node [
+		style=filled
+		shape=box
+        style = filled
+		//shape=plaintext
+	]
+
+
+    edge [
+		arrowsize=.5
+		labeldistance=4
+		penwidth=1
+	]
+
+
+    // Decontamination reads
+    ReadsDecontaminationT  [
+            label = "PURELY_RAW\n(Reads decontamination; optional)";
+            color = darkgrey;
+            ];
+        
+
+    // Trial assembly
+    TryssemblyT  [
+           label = "TRYSSEMBLY\n(trial of different kind of assemblies)";
+           color = deeppink;
+            ];
+
+    // Decontamination contigs
+    FiltercontigsT  [
+        label = "FILTER_CONTIGS\n(assembly decontamination)";
+        color = chartreuse2;
+        ];
+
+    // Comparison assemblies for choice
+    CompassT  [
+        label = "COMPASS\n(comparison of assemblies)";
+        color = chartreuse2;
+        ];
+    
+    // Diploid to haploid (should be improved)
+    HaplopurgeT  [ 
+            label = "HAPLOPURGE\n(get haploid contigs)";
+            color = lightgreen;
+            ];
+
+
+    // Variant calling tracks
+    VariantT [
+        shape=note; 
+        label = "Variant Calling";
+        color = grey;
+        //styple=empty;
+        ];
+        
+    FunGen [
+        label = "FunGen";
+        color = pink;
+        ];
+
+    VARWRRUM [
+        label = "VARWRRUM";;
+        color = chartreuse2;
+        ];
+
+
+
+    // Tracks order (not subtracks)
+    ReadsDecontaminationT -> TryssemblyT;
+    TryssemblyT -> FiltercontigsT;
+    FiltercontigsT -> HaplopurgeT;
+    FiltercontigsT -> CompassT;
+    HaplopurgeT -> CompassT ; 
+    HaplopurgeT -> VariantT;
+
+    VariantT -> {FunGen VARWRRUM};
+
+
+
+}
+
+
+```
+<!-- would nbe better if nodes were of same size 
+https://stackoverflow.com/questions/48888032/graphviz-make-all-nodes-the-same-size-as-the-largest 
+-->
+
+
+```{dot}
+digraph G {
+
+        // Decontamination reads
+        subgraph cluster_0 {
+            style = filled;
+            color = darkgrey;
+            node [
+                style = filled,
+                color = white
+                ];
+            a0 -> a1 -> a2 -> a3;
+            label = "PURELY_RAW";
+        }
+
+        //ReadsDecontaminationT -> a0
+}
+
+```{dot}
+digraph G {
+    // Trial Assembly 
+}
+
+```
+
+
+```{dot}
+digraph G {
+    
+        // Variant calling tracks
+        
+        VariantT [
+            shape=square; 
+            label = "Variant Calling"
+            ];
+
+        subgraph cluster_0 {
+            style = filled;
+            color = deeppink;
+            node [
+                style = filled,
+                color = white
+                ];
+            a0 -> a1 -> a2 -> a3;
+            label = "FunGen";
+        }
+
+        subgraph cluster_2 {
+            style = filled;
+            color = chartreuse2;
+            node [
+                style = filled,
+                color = white
+                ];
+
+            b0 -> b1 -> b2 -> b3;
+            label = "VARWRRUM";
+            
+        }
+
+        
+      VariantT -> a0;
+      VariantT -> b0;
+
+
+            
+}
+
+```
+
+
+```{dot}
+//| label: fig-simple
+//| fig-cap: "This is a simple graphviz graph."
+```
 
 ## Track descriptions
 
