@@ -1,11 +1,21 @@
 # Preface {.unnumbered}
 
-This is a Quarto book.
+<!-- This is a quarto book. To learn more about Quarto books visit <https://quarto.org/docs/books>. -->
 
-To learn more about Quarto books visit <https://quarto.org/docs/books>.
+The development of this pipeline started out to be able to analyze _Saprolegnia Parasitica_ genetic data.
+The pipeline will (we hope) be further developed as other needs to study diploid organisms arise.
 
+The purpose of the current track implemented in the pipeline is to help and guide the steps leading to variant calling on a poplation of diploid organism  
+
+- do and determine what is the best assembly possible for a (diploid) organism you never worked with, previously (or not well studied). This means testing different assembly methods, to obtain the best possible assembly given the data at hand.
+- Choosing, cleaning and then using the best haploid assembly to detect variants within a population of genomes from the same species.
+
+To do so we have developed several tracks (workflows), some of which might have different options (sub-workflows) that can be activated or deactivated.
+
+
+
+<!-- References 
 The organization of this documentation and of this pipeline originates from [ALPPACA pipeline](https://github.com/NorwegianVeterinaryInstitute/ALPPACA) (at this stage)
+--> 
 
-```{r}
-1 + 1
-```
+
