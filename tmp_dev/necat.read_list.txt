@@ -1,0 +1,2 @@
+/cluster/projects/nn9305k/active/thhaverk/nanopore_processing/NP_run_20231218/results_20231218/04_nanofilt_basic/simplex.barcode24.trimmed.fastq.gz
+/cluster/projects/nn9305k/active/thhaverk/nanopore_processing/NP_run_20240130/results_20240201/04_nanofilt_basic/simplex.barcode09.trimmed.fastq.gz

@@ -1,0 +1,6 @@
+assemblyID,R1,R2,long_read
+
+VI07096_masurca,
+/cluster/projects/nn9305k/active/evezeyl/projects/Saprolegnia/git/2023_Saprolegnia_pilot/analyses/masurca_test/VI07096_R1.fastq.gz
+/cluster/projects/nn9305k/active/evezeyl/projects/Saprolegnia/git/2023_Saprolegnia_pilot/analyses/masurca_test/VI07096_R2.fastq.gz
+/cluster/projects/nn9305k/active/evezeyl/projects/Saprolegnia/git/2023_Saprolegnia_pilot/data/reads/concat_nanopore_ref/VI07096.fastq.gz
