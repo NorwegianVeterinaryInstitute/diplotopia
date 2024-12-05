@@ -1,7 +1,16 @@
 # Preface {.unnumbered}
 
+
 <!-- This is a quarto book. To learn more about Quarto books visit <https://quarto.org/docs/books>. -->
 
+## Pipeline status 
+
+**Under development.**
+
+You will can find "short" description of each track and its current the development status in @sec-overview.
+
+
+## Reason for the development of this pipeline
 The development of this pipeline started out to be able to analyze _Saprolegnia Parasitica_ genetic data.
 The pipeline will (we hope) be further developed as other needs to study diploid organisms arise.
 
@@ -12,6 +21,8 @@ The purpose of the current track implemented in the pipeline is to help and guid
 
 To do so we have developed several tracks (workflows), some of which might have different options (sub-workflows) that can be activated or deactivated.
 
+
+## Statement of need
 
 
 <!-- References 

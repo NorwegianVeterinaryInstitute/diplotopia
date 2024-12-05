@@ -1,10 +1,10 @@
 # DIPLOTOPIA pipeline and program descriptions
 
 
-## Statement of need
 
 
-## Overview 
+
+## Overview {#sec-overview}
 
 <!-- learning graphviz https://quarto.org/docs/authoring/diagrams.html
 
@@ -138,11 +138,25 @@ digraph G {
 ```
 
 
+
+```{dot}
+//| label: fig-simple
+//| fig-cap: "This is a simple graphviz graph."
+```
+
+## Track descriptions
+
+<!-- # general description -->
+
+<!-- #  short description each track -->
+
+
+### Variant calling tracks
+
 ```{dot}
 digraph G {
     
         // Variant calling tracks
-        
         VariantT [
             shape=square; 
             label = "Variant Calling"
@@ -181,15 +195,3 @@ digraph G {
 }
 
 ```
-
-
-```{dot}
-//| label: fig-simple
-//| fig-cap: "This is a simple graphviz graph."
-```
-
-## Track descriptions
-
-<!-- # general description -->
-
-<!-- #  short description each track -->

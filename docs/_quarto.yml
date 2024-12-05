@@ -1,15 +1,17 @@
 project:
   type: book
 
+number-depth: 5
+
+# book options
 book:
-  title: "docs"
-  author: "Norah Jones"
+  title: "Diplotopia pipeline documentation"
+  author: "Eve Zeyl Fiskebeck"
   date: "04/12/2024"
   chapters:
     - index.qmd
-    - requirements.qmd
+    - requirements_installation.qmd
     - description.qmd
-    - installation.qmd
     - usage.md
     - configuration.qmd
     - output.qmd
@@ -17,9 +19,19 @@ book:
     - saga_users.qmd
     - summary.qmd
     - references.qmd
+    - part: "Changes"
+      chapters:
+      - changelog_versions.qmd
+      - changelog_development.qmd
+    - part: "Scientific reasoning"
+      chapters :
+      
+
+
 
 bibliography: references.bib
 
+# format options - consider creating index
 format:
   html:
     theme: cosmo
