@@ -187,7 +187,7 @@ General overview of the pipeline
 
 -------------------------------------------------------------------
 
-### (1) PURELY_RAW: Cleaning raw reads from eventual contaminants (STATUS: DEV)
+### PURELY_RAW: Cleaning raw reads from eventual contaminants (STATUS: DEV)
 
 **Pre-assembly. Detection and filtering out (optional) of contaminated reads, prior to assembly.**
 <!-- Description 
@@ -206,7 +206,7 @@ Manuals and other resources
 
 -------------------------------------------------------------------
 
-### (2) TRYSSEMBLY: Testing different assembly methods (STATUS: DEV)
+### TRYSSEMBLY: Testing different assembly methods (STATUS: DEV)
 
 **Trial of different assemblers to obtain a suitable assembly for your purposes.**
 
@@ -235,7 +235,7 @@ Manuals and other resources
 
 -------------------------------------------------------------------
 
-### (3) FILTER_CONTIGS (STATUS: FUNCTIONAL)
+### FILTER_CONTIGS (STATUS: FUNCTIONAL)
 
 Optional track. **Filters out contigs/scaffolds from assemblies, when those are not detected as belonging to a "positive" filtering criteria (eg. organism of interest). Employed for removal of contaminated contigs from assemblies.**
 Main output: decontaminated asembly sequence
@@ -272,7 +272,7 @@ Manuals and other resources
 -------------------------------------------------------------------
 
 
-### (4) COMPASS: Comparing assemblies (STATUS: FUNCTIONAL) 
+### COMPASS: Comparing assemblies (STATUS: FUNCTIONAL) 
 
 **Assembly comparison and evaluation - a guide to choice which assembly to use for further analyses**
 
@@ -328,7 +328,7 @@ Manuals and other resources
 
 -------------------------------------------------------------------
 
-### (5) HAPLOPURGE (STATUS: FUNCTIONAL) 
+### HAPLOPURGE (STATUS: FUNCTIONAL) 
 
 **From assembly to haploid assembly - retaining the haploid genome for variant calling**
 
@@ -422,7 +422,7 @@ digraph G {
 }
 ```
 
-#### (6.1) VARWRRUM: Variants At Regions Where Reference Reads Uniquely Map (STATUS: FUNCTIONAL)
+#### VARWRRUM: Variants At Regions Where Reference Reads Uniquely Map (STATUS: FUNCTIONAL)
 
 **Variant calling - halpoid reference, diploid genome.**
 
@@ -478,7 +478,7 @@ Manuals and other resources
 
 -------------------------------------------------------------------
 
-#### (6.2) : 
+####  Magdalena 
 -------------------------------------------------------------------
 
 <!-- 
