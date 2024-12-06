@@ -1,0 +1,158 @@
+# Choices and reason behind those choices for : FILTER_CONTIGS track
+
+<!-- Filtering out contaminant contigs -->
+
+- subworflow : `FILTERING_CONTIGS.nf`
+- output directory : `/results/filter_contigs/${ID}` if `filter_contigs` track is used OR `/results/1_FILTER_CONTIGS` if `compass` track is used. 
+
+We choosed to use a "positive" filter, aka contigs are kept if they match the positive filtering expression. 
+
+##  Why to do so ? 
+
+Some contaminants might have been sequenced together with the organims of interest. Contigs that result of the assembly of those contaminants might be retrieved, depending on which steps have been taken (or not), prior to assembly, 
+
+Contaminant contigs are defined as contigs that do not belong to desired organism of study. This include eg. host, or other organism eg. bacterial contaminants from the lab. 
+
+It is good to ensure that no contaminant contigs remain in the genome that will be used post-assemblyas they can affect eg. the evaluation of the completness of the genome; moreover you do not want to call variants that belong to another species, do you ? 
+
+We employ the taxonomic classification of each contig to select contigs that only belong to the organism under study. To do so, the user will need to define a filtering expression (positive) that defines what is the correct taxonomy of the organism to be retrieved. This will allow to solely select contigs that matches this expression. (Note that you might need to adjust your positive filtering expression and rerun the filtering of contigs to optain appropriate filtering.) 
+
+Note that is important to be able to judge what taxon are likely be detected that are real vs those that are artifactual. Indeed, even blast databases are not perfectly currated, and depending the organism you study, some real sequences might have been attributed to another organism. 
+<!--
+(Aka what the user believe to be true contaminants contigs vs artifacts due to classification database composition and classification process ).
+--> 
+
+## Summary of the filtering strategy
+
+step 1: The Taxonomic classification of each contig in each assembly is done using blastn taxonomical identification. We aimed to keep a maximum of 5 matches for each contig[^1].
+
+[^1]: Seems that equivalent matches are given in output also 
+
+
+step 2: An `R script: contigs_taxo_overview_filter.qmd` is used to sort and keep the best match per contig. 
+We define the best match as the classification for which the e-value is lowest. At equal low e-values, the best match is the classification for which the percent identity is highest. 
+
+Then best match classification that correspond to the positive filter are kept as non-contaminated contigs. (Secondary classifications are kept aside for a second screening step.)
+<!-- TODO improve that script !! 
+evalue criteria also in first
+-->
+
+We evaluate if there appear to be any classification biais of best matches (eg. scatterplots; see output files). 
+
+We use secondary classification to salvage contigs that were not discovered as positive match with the best matches, provided that the e-value is above a minimum threshold (1e-20 per default), such as to not errorneously discard contigs as not belonging to the organism of interst. 
+
+We provide evaluation of possible contaminants by taxonomic rank (eg. alluvial plots) for further adjustments of the positive filter (see output files). 
+
+We report both contigs that correspond to positive matches and no matches, to allow inspection for further adjustment of the filtering expression. 
+
+
+### Details of the filtering strategy
+
+The filtering is done by the `script: contigs_taxo_overview_filter.qmd`, writen in R.  
+
+The script: 
+1. collates the taxonomical results for each contig in each assembly
+2. reads and join the collated results with the `rankedlineage.dmp` file that provides the taxonomical rank of each taxon ID number.
+
+NB: see [NCBI new taxonomy](https://ncbiinsights.ncbi.nlm.nih.gov/2018/02/22/new-taxonomy-files-available-with-lineage-type-and-host-information/) for more detailed information about the NCBI taxonomy used.
+
+Note that the fields for rank filtrering are described in [taxdump_readme.txt](https://ftp.ncbi.nlm.nih.gov/pub/taxonomy/new_taxdump/taxdump_readme.txt). 
+
+We kept in our taxonomical table the following fields from `rankedlineage.dmp`
+
+```text
+tax_id                  -- node id
+tax_name                -- scientific name of the organism
+species                 -- name of a species (coincide with organism name for species-level nodes)
+genus					-- genus name when available
+family					-- family name when available
+order					-- order name when available
+class					-- class name when available
+phylum					-- phylum name when available
+kingdom					-- kingdom name when available
+superkingdom			-- superkingdom (domain) name when available
+```
+
+<!-- TODO
+THIS I think we need to review  with updated script - this is not used but to review manually now, as I changed the process 
+The contigs are classified according to a degree of "confidence" using the following defaults (parameters which can be changed): `evalue_min: 1e-20 and perc_identity_min: 95`
+
+- considered of "high confidence" if: evalue <= evalue_min & perc_identity >= perc_identity_min  
+- considered of "medium confidence" if : evalue <= evalue_min & perc_identity <= perc_identity_min
+- considered of "low confidence" if : evalue >= evalue_min
+
+> Note: This classification is a test and is not used for filtering, but can help give an indication of what need to be checked in details. This provided in the table giving the classification per contig, positively filtered and negatively filtered
+
+
+Note: Ultimately the filtering expression is transformed in a Rlang expression, as we use R to perform the filtering. 
+-->
+
+
+### 1. Extract the best classification match per contig. 
+
+**The best match is defined as the match with lowest evalue and then highest percentage of identity.** 
+> this is done by sorting matches per contig by ordering data with ascending evalue, and descending percentage of identity, and by then keeping only the first row value per contig. 
+
+### 2. Filtering the contigs and building the filtering expression
+
+**The filtering is done according to a user defined filter expression, the user choice.
+Any data that match the filter is referred to as "positive" filtering, what does not matches is referred to as "negative".**
+
+The user select a set of keywords that will efficiently be used to remove contigs that are poorly classified (or any other selection by choosing values in fields in one of the following fields).
+
+taxonomical fields: 
+"tax_name", "species", "genus", "family", "order", "class", "phylum", 
+"kingdom", "superkingdom"
+
+To be more efficient at building your positive filtering expression, take the deepest taxonomical level that will identify the organism of interest. 
+
+
+**The order of quotes is important - otherwise the arguments wont be passed successfully to the script**
+
+Examples of simple filtering expressions
+
+```text
+"genus == 'Saprolegnia'"
+"species == 'Saprolegnia parasitica'"
+"phylum != 'Arthropoda'" 
+```
+
+You can refining the filtering expression :
+```text 
+"superkingdom == 'Eukaryota', phylum == 'Oomycota'"  # treated as list of filters , AND 
+"superkingdom == 'Eukaryota' & phylum == 'Oomycota'" # treated together AND
+"superkingdom == 'Eukaryota' | phylum == 'Oomycota'" # treated together OR
+"genus == 'Chironomus' & genus == 'Epistrophe'" # will be empty - because it cant be both 
+"genus == 'Chironomus', genus == 'Epistrophe'"  # equivalent to line above
+"genus == 'Chironomus' | genus == 'Epistrophe'" # OR is working
+```
+
+> Note: The filtering expression will be transformed in an rlang expression, thus it is important to **quote adequately**, so the filtering expression are passed correctly to R (double quote external, simple quotes internal).
+
+Advises:
+- Try to keep your filter as simple as possible. The deepest taxonomical level choosen, the most simple is the filtering expression. 
+- Use branckets to separate complex filters more efficiently 
+- using `,` between expression create a list of filters that are treated as `and`
+- control in the "negative filtered taxon" that you did not remove any contig you wished to keep. 
+
+## Description of output files :
+
+- ${ID}_filter_info.csv : a reminder of what filtering expression was used information about the positive filter that was used (for archive)
+- ${ID}_all_taxon_contig.csv : concatenated results of blast classificaiton for all contigs (unfiltered)
+- ${ID}_positive_filter.csv : the best classification for each contig positive to the filter expression
+- ${ID}_negative_filter.csv : best classification for each contig negative to the filter expression
+
+
+<!-- TODO explain what is the best classification : how I sort -->
+- ${ID}_alluvial_plot_possible_contaminants.png : an alluvial plots trying to show the possible contaminants and their taxonomical hiearchy (anything that did not match the positive filter)
+<!-- TODO Find a way to make this plot look better, now its very tangled -->
+- {ID}_evalue_perc_identity.png : scatterplot to investigate eventual quality pattern associated to contig classification (evalue and percent identity on all results of classification provided by blast)
+- {ID}_contig_size_check.png : scatterplots to investigate eventual quality pattern associated to contig size
+
+- {ID}_filtered_positive.fasta : decontaminated assembly
+- {ID}_filtered_negative.fasta : contaminant contigs (can be used for further investivations)
+
+
+`{ID}_taxon_contig_df.rds` taxonomic classification table - Rojbect saved for faster inspection
+<!-- TODO to remove from output -->
+

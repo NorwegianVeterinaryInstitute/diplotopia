@@ -1,0 +1,45 @@
+project:
+  type: book
+
+number-depth: 6
+
+# book options
+book:
+  title: "Diplotopia pipeline documentation"
+  author: "Eve Zeyl Fiskebeck"
+  date: "04/12/2024"
+  chapters:
+    - index.qmd
+    - requirements_installation.qmd
+    - description.qmd
+    - usage.qmd
+    - saga_users.qmd
+    - configuration.qmd
+    - output.qmd
+    - contribution.qmd
+    - summary.qmd
+    - references.qmd
+    - part: "Changes"
+      chapters:
+      - changelog_versions.qmd
+      - changelog_development.qmd
+    - part: "Scientific reasoning"
+      chapters :
+      - filter_contigs_choices.qmd
+      - haplopurge_choices.qmd
+      - VARWRRUMM_choices.qmd
+
+
+bibliography: references.bib
+
+# format options - consider creating index
+format:
+  html:
+    theme: cosmo
+  pdf:
+    documentclass: scrreprt
+  epub:
+    cover-image: cover.png
+
+editor: visual
+
