@@ -1,9 +1,94 @@
 # Saga Users
 
-<!--#  Usage : https://quarto.org/docs/books/ -->
+Specific instructions and good to know for SAGA users at NVI
 
+<!--#  Usage : https://quarto.org/docs/books/ -->
+<!-- 
 ## Where to find the pipeline
 
 ## Profiles
 
 ## Specific command examples
+--> 
+
+
+## Configure your bashrc if not done previously
+
+We use aptainer on saga with containers. 
+Nextflow manage the download of the containers that are employed by diplotopia pipeline for you. 
+You will need to had at least the 4
+
+If this has been done previously, please control the that the information is correct. 
+
+```bash
+cd ~
+nano .bashrc
+```
+
+You should have those lines in .bashrc
+```bash 
+# NF environment variables
+# This is required for nf-core pipelines (as well add it now)
+export NXF_SINGULARITY_CACHEDIR=${USERWORK}/images
+export NXF_SINGULARITY_LIBRARYDIR=${USERWORK}/images
+# We want this to use apptainer with Nextflow 
+export NXF_APPTAINER_CACHEDIR=${USERWORK}/images
+export NXF_APPTAINER_LIBRARYDIR=${USERWORK}/images
+```
+
+OPTIONAL : You can also add those lines if
+- you plan to do some debuging or test containers, outside of nextflow 
+
+```bash
+export APPTAINER_CACHEDIR=${USERWORK}/images
+export APPTAINER_LIBRARYDIR=${USERWORK}/images
+export APPTAINER_BIND="$USERWORK,/cluster/projects/nn9305k/active/<username>,/cluster/projects/nn9305k/db_flatfiles"
+```
+
+## Preparing command to run the pipeline in SAGA
+
+Nextflow require JAVA to run. 
+Before running a nextflow pipeline please do: 
+
+```bash
+module purge 
+module load Java/17.0.4
+```
+
+I will recommend to use variables to define the paths of
+- nextflow : NF
+- the pipeline "launcher" : MAIN
+- the pipeline configuration file specifig to SAGA : CONFIG
+
+<!-- TODO : Change path repo when installed -->
+
+```bash
+# This is the git clone of diplotopia rep
+REPO="/cluster/projects/nn9305k/active/evezeyl/projects/Saprolegnia/git/diplotopia"
+
+# path files for running diplotopia
+NF="/cluster/projects/nn9305k/bin/nextflow_23.04.4"
+MAIN="${REPO}/main.nf" 
+CONFIG="${REPO}/conf/saga_sapro.config"
+```
+Then the basic synthax of a diplotopia will be: 
+
+```bash
+$NF run $MAIN -c $CONFIG --out_dir <path_outputdirectory> -work-dir $USERWORK/diplotpia  --track <track_choice> --input <input.csv> <changed_options>   -profile apptainer -resume 2>&1 | tee nf.runlog
+```
+
+Notes: 
+- You will need to fill what is in between <> with what you have choosen
+- change options needs 2 `-` then the name of option, a space and the value of the option. Example : `--remove_contaminants no`
+- you can look at all the options that you can change by looking at the options described in `.nextflow.config` file, also online [here](https://github.com/NorwegianVeterinaryInstitute/diplotopia/blob/main/nextflow.config)
+- Using `-resume`will allow the pipeline to start when it stoped (eg. if bugs osv, or when you are testing parameters)
+- `2>&1 | tee nf.runlog` is to redirecting the screen output and error to a log, this, to help us debug in case. 
+
+
+Now you have enough information, so you can transpose advises that are
+specified in [How to run section](./3_How_to_Run.md) 
+
+## Going further 
+
+- [Nextflow training](https://training.nextflow.io/)
+- [Lesson in development: Carpentries](https://carpentries-incubator.github.io/workflows-nextflow/instructor/08-configuration.html)

@@ -2,6 +2,84 @@
 
 ## Requirements
 
+This pipeline is written using [nextflow](https://www.nextflow.io/) DSL2. 
+You need to have Nextflow >= 23.04.4 available on your system. 
+Please refer to [corresponding Nextflow documentation](https://www.nextflow.io/docs/latest/install.html)
+Nextflow requires Java to be available. This pipeline has been tested using Java v 17.0.4
+
+While nextflow will download/make software used in this pipeline available, you sill need to download some external databases and provide their path to use this pipeline.
+
 ## Installation
 
+### Obtain necessary external databases
+
+This pipeline make use of several external databases, 
+you will have to modify the path of those in the `nextflow.config`file,
+so it corresponds to your system (OR you can provide those in the running command, but
+that is certainly more combersom). 
+
+We unfortunately cannot provide image nor create those databases as ready to use
+for the pipeline, as they would require too much space or need to be adapted to 
+the organism you are working with. 
+
+Moreover, internet access might not be accessible at run time on HPC clusters, so downloading 
+those databases is the only option. 
+
+#### Blastn database (FILTER_CONTIGS track / option in COMPASS track)
+
+ A local blastn database must have been pre-downloaded before using this track (no internet query during compute). 
+ For more information, please see [NCBI here for download](https://ftp.ncbi.nlm.nih.gov/blast/db/).
+ Please provide the path of blast database to the parameter `blastDB` in nextflow.config.
+
+#### NCBI taxonomic rank file (FILTER_CONTIGS track / option in COMPASS track)
+ The taxonomic rank file `rankedlineage.dmp` from [NCBI new taxonomy](https://ncbiinsights.ncbi.nlm.nih.gov/2018/02/22/new-taxonomy-files-available-with-lineage-type-and-host-information/) is used to link the taxon_id (number) to the scientific name. 
+
+ This file must be downloaded and its path must be provided as parameter `ranked_taxo_file` in nextflow.config at installation. 
+
+#### KRAKEN2 (COMPASS track)
+
+If you are working with organism that is not (or very poorly) represented in the database, you will get taxonomic classification that is attributed to other taxonomic groups. 
+
+If you decide to download an already made database, please ensure that the organism you are interested in is included in the database. Note that Kraken mini database is likely to be too restrictive and this will lead to spurious results.  
+
+For better classification results, we recomend you build your own database, ensuring that the organism of interst is included in the database. 
+
+Please have a look at [Kraken2 documentation](https://github.com/DerrickWood/kraken2/blob/master/docs/MANUAL.markdown) for database creating. 
+
+ Please provide the path of kraken2 database to the parameter `krakenDB` in nextflow.config.
+
+<!-- TODO check - advise ? adjust kmer size longer for more specificity, because its assemblies ? 
+ASK THOMAS
+-->
+
+#### Busco (COMPASS track)
+
+Please refer to [BUSCO documentation](https://busco.ezlab.org/busco_userguide.html#download-and-automated-update) for downloading the lineage markers sets that you will want to work with, and provide the path of the `busco_downloads` directory (that is created at download by BUSCO) to the parameter `busco_download_path` in nextflow.config.
+
+
+<!-- QUAST
+Note quast can include several checks on other database, find genes osv
+But I removed that, was too long and heavy, and not so usefull when 
+working with species we do not know what is expected. 
+
+See later if want to implement a more complete option or not
+-->
+
+### Configuration on your system 
+
+Clone the diplotopia repository.
+Create a configuration file to run on your system, using a template in ./config
+
+### Configuration of your bashrc for nextflow
+
+As per today, this pipeline will only run with containers. 
+You will need some configuration of paths nextflow will use to cache and store those containers, according to your system. This is related to nextflow usage, and not to diplotopia specifically.
+
+Please have a look at nextflow documentation to configure containers. 
+
+**NB: SAGA users, please look [HERE](./SAGA_USERS_instructions), to configure your system (.bashrc) ready to use nexflow**
+
+
 ## Testing
+
+<!-- TBA --> 

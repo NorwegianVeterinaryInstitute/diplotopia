@@ -1,4 +1,10 @@
 {
-    "quarto.usePipQuarto": false,
+    "quarto.usePipQuarto": true,
     "quarto.path": "~/bin/quarto"
+}
+
+{
+    "files.associations": {
+        "*.qmd": "markdown"
+    }
 }

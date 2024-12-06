@@ -3,13 +3,17 @@
 
 <!-- This is a quarto book. To learn more about Quarto books visit <https://quarto.org/docs/books>. -->
 
+Welcome to the diplotopia documentation!
+
 ## Pipeline status 
 
-**Under development.**
+This pipeline is currently under development. 
+
+It is possible that some tracks do not work as intended (eg. reorganisation modules, change of name).
+If you attempt to use this pipeline, please let us now if it not working or of anything that is weird (scientifically and bioinformatically).
+
 
 You will can find "short" description of each track and its current the development status in @sec-overview.
-
-
 
 ## Reason for the development of this pipeline
 The development of this pipeline started out to be able to analyze _Saprolegnia Parasitica_ genetic data.

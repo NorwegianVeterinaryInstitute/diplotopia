@@ -1,0 +1,59 @@
+# Choices and reason behind those choices for : HAPLOPURGE track
+
+## long reads
+
+- mapping using [minimap2]()
+
+-a / -align_cov Percent cutoff for identifying a contig as a haplotig. DEFAULT = 70
+-m / -max_match Percent cutoff for identifying repetitive contigs. Ignored when
+
+## short reads (not implemented yet)
+
+## Results
+
+### HIST
+
+- `${ID}_long.bam.200.gencov` -> so seems each cotig / 200 units -> data for coverage histogram -> **`{ID}_long.bam.histogram.200.png` : histogram that is used to determine low, medium and high coverage zones for next step**
+<!-- those two could be optional or removed as output, incl. fasta original assembly provided  -->
+- `{ID}_long.bam.bai` -> mapping
+- `.fasta.ai` -> assembly indexing
+
+### COV
+
+> "cutoffs from the previous step to analyse the coverage on a contig by contig basis." [purge haplotigs repository]
+
+`${ID}_coverage_stats.csv`
+
+- suspect will be analysed further (eventually removed then)
+- junk will be removed directly
+
+== need to understand ==
+
+- if mosaic coverage low/high >= 80 % -> 8\*more low coverage than high -> then Junk - its supposed to be a diploid organism so ...
+- suspect ; <= 80 % is diploid
+
+### HAPLOTIGS
+
+`${ID}_haplocurated.fasta`- the contigs that are kept
+
+`${ID}_haplocurated.reassignments.tsv` & `${ID}__haplocurated.contig_associations.log` information about what was kept, reassigned, repeat osv
+
+`${ID}_haplocurated.haplotigs.fasta` - haplotigs (removed)
+`${ID}_necat_slurm_test1_haplocurated.artefacts.fasta` - junk
+
+\${ID}\_tmp_purge_haplotigs
+
+- `assembly.coverage.bed``
+  - format : contig - start_pos - end_pos - coverage
+  - overlapping windows 2500 bp - sliding
+
+<!-- References -->
+
+[purge haplotigs repository]: https://bitbucket.org/mroachawri/purge_haplotigs/src/master/
+[minimap2]: https://github.com/lh3/minimap2
+
+### improvement
+
+- should maybe have a step of verification of what has been filtered out - searching what it is to validate the filtering step
+- BLAST search of the contigs that have been filtered out to see what they are -> either reuse previous search Or new with different params
+- (thomas speak about that)

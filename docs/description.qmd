@@ -1,10 +1,9 @@
 # DIPLOTOPIA pipeline and program descriptions
 
 
-
-
-
 ## Overview {#sec-overview}
+
+
 
 <!-- learning graphviz https://quarto.org/docs/authoring/diagrams.html
 
@@ -167,15 +166,18 @@ digraph Pipeline_Overview {
 
 <!-- would nbe better if nodes were of same size 
 https://stackoverflow.com/questions/48888032/graphviz-make-all-nodes-the-same-size-as-the-largest 
+
+would be good if in legend boxes were closer to each other
 -->
 
+<!-- 
+See also:
 
+General overview of the pipeline
+ ![DIPLOTOPIA overview](./files/pipeline_overview.drawio.svg) 
 
+--> 
 
-
-```{dot}
-
-```
 
 ## Track descriptions
 
@@ -183,7 +185,9 @@ https://stackoverflow.com/questions/48888032/graphviz-make-all-nodes-the-same-si
 
 <!-- #  short description each track -->
 
-### PURELY_RAW: Cleaning raw reads from eventual contaminants (STATUS: DEV)
+-------------------------------------------------------------------
+
+### (1) PURELY_RAW: Cleaning raw reads from eventual contaminants (STATUS: DEV)
 
 **Pre-assembly. Detection and filtering out (optional) of contaminated reads, prior to assembly.**
 <!-- Description 
@@ -200,7 +204,9 @@ Manuals and other resources
 
 -->
 
-### TRYSSEMBLY: Testing different assembly methods (STATUS: DEV)
+-------------------------------------------------------------------
+
+### (2) TRYSSEMBLY: Testing different assembly methods (STATUS: DEV)
 
 **Trial of different assemblers to obtain a suitable assembly for your purposes.**
 
@@ -227,7 +233,9 @@ Manuals and other resources
 
 -->
 
-### 3. FILTER_CONTIGS (STATUS: FUNCTIONAL)
+-------------------------------------------------------------------
+
+### (3) FILTER_CONTIGS (STATUS: FUNCTIONAL)
 
 Optional track. **Filters out contigs/scaffolds from assemblies, when those are not detected as belonging to a "positive" filtering criteria (eg. organism of interest). Employed for removal of contaminated contigs from assemblies.**
 Main output: decontaminated asembly sequence
@@ -261,6 +269,110 @@ Manuals and other resources
 - [NCBI Blast help](https://blast.ncbi.nlm.nih.gov/doc/blast-help/)
 
 
+-------------------------------------------------------------------
+
+
+### (4) COMPASS: Comparing assemblies (STATUS: FUNCTIONAL) 
+
+**Assembly comparison and evaluation - a guide to choice which assembly to use for further analyses**
+
+This track aims to provide statistical information allowing to compare assemblies, in order to be able to make informed choice about which assembly you will use for the rest of your analyses, this depending of your purpose / criteria. 
+
+![COMPASS track overview](./files/COMPASS.drawio.svg)
+
+The tracks provide statistical information (main output) about: 
+- coverage (base coverage : deeph) (QUALIMAP) with results summarized with (MULITQC)
+- contiguity and coverage genome (relative to a given reference genome, which can be either one assembly you select or an external assembly, or both) - In some cases it can detect missassemblies, dependent of the reference genome used (QUAST)
+- completeness (BUSCO): it is possible to use one or several sets of markers. 
+> Eg. if no specific marker are developed for the lineage that is your object of interest, you can chose to use markers from several lineages for the comparison, and see which will provide the most informative completness informaiton. 
+
+<!-- TODO : other things that should be added ? -->
+
+A summary table for completness (BUSCO) is generated using a R-quarto script (see diplotopia/bin/busco_summary.qmd) at the end of the track. 
+
+Note that it is also possible to run FILTER_CONTIGS track in COMPASS, this is for convenience during rerun, and when you are sure you have defined your filtering expression correctly. 
+
+<!-- TODO put this part as optional ! in the pipeline-->
+Eventual contamination of the assemblies is checked using a kmer approach (KRAKEN2). Note that this information is purely indicative (and a deviation of normal KRAKEN2 usage). Moreover if the organism that you are interested in in NOT included in the kraken database that is used, this will most certainly report erroneous taxon content. 
+
+See also [Installation##Obtain_necessary_external databases], as this track require a kraken database to be either downloaded or created specifically for your analysis. 
+<!-- TODO check that the infor is available and correct here -->
+
+References
+
+- [BUSCO article](https://academic.oup.com/bioinformatics/article/31/19/3210/211866)
+- [QUAST article](https://academic.oup.com/bioinformatics/article/29/8/1072/228832)
+- [QUALIMAP article](https://academic.oup.com/bioinformatics/article/28/20/2678/206551)
+- [MULTIQC article](https://academic.oup.com/bioinformatics/article/32/19/3047/2196507)
+- [SAMTOOLS article](https://academic.oup.com/gigascience/article/10/2/giab008/6137722?login=false)
+- [MINIMAP article](https://academic.oup.com/bioinformatics/article/34/18/3094/4994778)
+- [BWA-MEM article](https://arxiv.org/abs/1303.3997)
+- [KRAKEN2 article](https://genomebiology.biomedcentral.com/articles/10.1186/s13059-019-1891-0)
+
+Repositories
+
+- [QUAST repository](https://github.com/ablab/quast)
+- [QUALIMAP repository](https://bitbucket.org/kokonech/qualimap/commits/branch/master)
+- [BUSCO repository](https://gitlab.com/ezlab/busco)
+- [MULTIQC repository](https://github.com/MultiQC/MultiQC)
+- [SAMTOOLS repository](https://github.com/samtools/samtools)
+- [MINIMAP repository](https://github.com/lh3/minimap2)
+- [BWA repository](https://github.com/lh3/bwa)
+- [KRAKEN2 repository](https://github.com/DerrickWood/kraken2)
+
+<!-- TODO need to add pavian ? make a pavian like output -->
+
+Manuals and other resources
+
+- [BUSCO manual](https://busco.ezlab.org/busco_userguide.html#installation-with-docker)
+
+-------------------------------------------------------------------
+
+### (5) HAPLOPURGE (STATUS: FUNCTIONAL) 
+
+**From assembly to haploid assembly - retaining the haploid genome for variant calling**
+
+! Currently only for long reads
+
+<!-- TODO  make it available for short reads (prioritized long reads because was was most likely used for obtaining good reference) -->
+
+The purpose of this track is to clean the chosen assembly to optain an haploid representation of the genome of a diploid organism. Ie, we aim to optain an haploid representation of the genome of a diploid organism. 
+This haploid representation (HaploSSembly) will then be used to call variants (or any other aim where it fits) of diploid organisms, allow allowing to determine the genotype at each haploid locus. 
+Main output: HaploSSembly (Haploid Assembly)
+
+The original assembly, provided as input, is inspected for eventual chimera/missassembly contigs, junk (potential low copy number contaminants), repeats and haplotigs using [purge haplotigs]((https://bmcbioinformatics.biomedcentral.com/articles/10.1186/s12859-018-2485-7)) software. 
+<!-- TODO re-read paper: define better  --> 
+
+
+![HAPLOPURGE track overview](./files/HAPLOPURGE.drawio.svg)
+
+First, reads are mapped (using MINIMAP) to the (decontaminated) assembly <!-- if you provide it as input - should be -->. Purge Haplotigs software allows to draw an histogram that allows to evaluate the coverage of the haploid and diploid parts of the genome, which allows to determine three coverage thresholds low, mid (between the haploid and diploid pics) and high that Purge Haploitigs software will further used to attemps to classify contigs as haploid VS diploid, poliploid (eg. small repeats) or chimeric/artificial contigs, this on the basis of the proportion of haploid and diploid coverage for each contig. 
+<!-- TODO understand better and recheck info, and reformulate -->
+
+Based on this classification, haplotigs and other ambiguous contigs are discared from the original input assembly.
+
+<!-- TODO  : THINK 
+NB: it also allows, by examining the difference to the completeness and size of the assembly previously obtained, to evaluate how many alleles were assembled separately 
+- would be an estimate
+- eg can have chimeaa / remove the complete version instead of incomplete version of a gene ? 
+? could it be used to provide a general idea of polymorphism at the level it was given before for sapro ? hein ... brrr 
+-->
+
+See also [HAPLOPURGE choices](./Haplopurge_choices)
+
+References
+
+- [Purge haplotigs article](https://bmcbioinformatics.biomedcentral.com/articles/10.1186/s12859-018-2485-7) 
+- [MINIMAP article](https://academic.oup.com/bioinformatics/article/34/18/3094/4994778)
+
+Repositories
+- [Purge haplotigs repository](https://bitbucket.org/mroachawri/purge_haplotigs/src/master/) 
+- [MINIMAP repository](https://github.com/lh3/minimap2)
+ 
+Manuals and other resources
+
+
+-------------------------------------------------------------------
 
 
 ### Variant calling tracks
@@ -308,5 +420,144 @@ digraph G {
 
 
 }
-
 ```
+
+#### (6.1) VARWRRUM: Variants At Regions Where Reference Reads Uniquely Map (STATUS: FUNCTIONAL)
+
+**Variant calling - halpoid reference, diploid genome.**
+
+This track prepares the reference (an HaploSSembly / haploid genome assembly) and samples for variant calling. Then it does statistical variant calling (using FreeBayes software), does variant filtering and variant normalisation of called variants; this for each sample individually but also for all samples considered as a single population.  
+Main output: normalised vcf file
+
+![VARWRRUM track overview](./files/VARWRRUM.drawio.svg)
+
+
+The detailed track descriptions is provided [here](./VARWRRUM_choices). 
+In short, the reference is softmasked, at least for low complexity regions, 
+<!-- TODO implement rest ? --> 
+the reads of each sample (diploid) <!-- TODO remove the polyploid option or keep as is ? --> 
+are mapped to it, and variants are called for each sample and globaly as a population, using solely reads that are uniquely mapped, this with [Freebayes software](). Variants are filtered, ensuring that solely variants of good quality are retained, and 
+normalised, which allow to compare position of the call between samples. 
+<!-- TODO read more about normalisation variants, should also maybe add phasing here? -->
+
+We implemented different statistics calculation (coverage, presence of mapping tags) at the different stages (pre, during, and after)
+variant calling and filtering. 
+
+As mentioned in [FREEBAYES repository](https://github.com/freebayes/freebayes), 
+> "Users are encouraged to examine their output and both variants which are retained and those they filter out".
+
+We certainly encourage this practice, as this will allow to adjust filtering criteria, and might also hint about improvement to be gained at the reads mapping filtering and/or assembly masking stages. 
+
+
+References
+- [Trim Galore citat](https://doi.org/10.5281/zenodo.5127899)
+- [BWA-MEM article](https://arxiv.org/abs/1303.3997)
+- [SAMTOOLS article](https://academic.oup.com/gigascience/article/10/2/giab008/6137722?login=false)
+- [SEQKIT article](https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0163962)
+- [BBTools/BBmask article](https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0185056)
+- [VT article](https://academic.oup.com/bioinformatics/article/31/13/2202/196142)
+- [FREEBAYES article](https://arxiv.org/abs/1207.3907)
+- [purge haplotigs article](https://bmcbioinformatics.biomedcentral.com/articles/10.1186/s12859-018-2485-7)
+- [BCFtools article](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3198575/)
+
+Repositories
+- [Trim Galore repository](https://github.com/FelixKrueger/TrimGalore)
+- [BWA repository](https://github.com/lh3/bwa)
+- [SAMTOOLS website](https://www.htslib.org/)
+- [SEQKIT repository](https://github.com/shenwei356/seqkit/releases)
+- [BBTools/BBmask website](https://jgi.doe.gov/data-and-tools/software-tools/bbtools/)
+- [VT repository](https://github.com/atks/vt)
+- [FREEBAYES repository](https://github.com/freebayes/freebayes)
+- [purge haplotigs repository](https://bitbucket.org/mroachawri/purge_haplotigs/src/master/)
+- [BCFTools repository](https://github.com/samtools/bcftools)
+
+Manuals and other resources
+- [SAMTOOLS manual](https://www.htslib.org/doc/#manual-pages)
+- [BCFTools manual](https://samtools.github.io/bcftools/bcftools.html)
+- [VT documentation](https://genome.sph.umich.edu/wiki/Vt)
+
+-------------------------------------------------------------------
+
+#### (6.2) : 
+-------------------------------------------------------------------
+
+<!-- 
+TODO 
+
+See if can find a way to annotate - even if too different - for diploid / by similarity or 
+I need to explore what could be done for Sapro 
+
+### 7. ANNOTATION 
+- haploSSembly
+- Variants then ... annotation effect ? 
+
+--> 
+-------------------------------------------------------------------
+
+<!-- 
+TODO URGENT
+
+Determinant pathogenecity 
+- repeats 
+  - copy nb variation ? 
+  - pattern / type classification (homology?)
+
+- snps 
+  - gwas like with unitigs ? phasing possible hum ...
+
+
+-->
+
+-------------------------------------------------------------------
+
+
+<!-- 
+VISUALISATION 
+
+- jbrowse - manage to open files 
+
+TRY (need X11)
+- https://github.com/kcleal/gw
+-->
+
+
+## References
+<!-- reference so far 2024-07-30  -->
+
+
+Bushnell, Brian, Jonathan Rood, and Esther Singer. “BBMerge – Accurate Paired Shotgun Read Merging via Overlap.” PLOS ONE 12, no. 10 (October 26, 2017): e0185056. https://doi.org/10.1371/journal.pone.0185056.
+
+Camacho, Christiam, George Coulouris, Vahram Avagyan, Ning Ma, Jason Papadopoulos, Kevin Bealer, and Thomas L. Madden. “BLAST+: Architecture and Applications.” BMC Bioinformatics 10 (December 15, 2009): 421. https://doi.org/10.1186/1471-2105-10-421.
+
+Danecek, Petr, James K Bonfield, Jennifer Liddle, John Marshall, Valeriu Ohan, Martin O Pollard, Andrew Whitwham, et al. “Twelve Years of SAMtools and BCFtools.” GigaScience 10, no. 2 (February 1, 2021): giab008. https://doi.org/10.1093/gigascience/giab008.
+
+Ewels, Philip, Måns Magnusson, Sverker Lundin, and Max Käller. “MultiQC: Summarize Analysis Results for Multiple Tools and Samples in a Single Report.” Bioinformatics 32, no. 19 (October 1, 2016): 3047–48. https://doi.org/10.1093/bioinformatics/btw354.
+
+García-Alcalde, Fernando, Konstantin Okonechnikov, José Carbonell, Luis M. Cruz, Stefan Götz, Sonia Tarazona, Joaquín Dopazo, Thomas F. Meyer, and Ana Conesa. “Qualimap: Evaluating next-Generation Sequencing Alignment Data.” Bioinformatics 28, no. 20 (October 15, 2012): 2678–79. https://doi.org/10.1093/bioinformatics/bts503.
+
+Gurevich, Alexey, Vladislav Saveliev, Nikolay Vyahhi, and Glenn Tesler. “QUAST: Quality Assessment Tool for Genome Assemblies.” Bioinformatics 29, no. 8 (April 15, 2013): 1072–75. https://doi.org/10.1093/bioinformatics/btt086.
+
+Krueger, Felix, Frankie James, Phil Ewels, Ebrahim Afyounian, and Benjamin Schuster-Boeckler. “FelixKrueger/TrimGalore: 
+V0.6.7 - DOI via Zenodo.” Zenodo, July 23, 2021. https://doi.org/10.5281/zenodo.5127899.
+
+Li, Heng. “A Statistical Framework for SNP Calling, Mutation Discovery, Association Mapping and Population Genetical Parameter Estimation from Sequencing Data.” Bioinformatics 27, no. 21 (November 1, 2011): 2987–93. https://doi.org/10.1093/bioinformatics/btr509.
+
+“Aligning Sequence Reads, Clone Sequences and Assembly Contigs with BWA-MEM.” arXiv, May 26, 2013. https://doi.org/10.48550/arXiv.1303.3997.
+
+“Minimap2: Pairwise Alignment for Nucleotide Sequences.” Bioinformatics 34, no. 18 (September 15, 2018): 3094–3100. https://doi.org/10.1093/bioinformatics/bty191.
+
+Quarto. “Quarto.” Accessed July 30, 2024. https://quarto.org/.
+
+“R Core Team (2024). R: A Language and Environment for Statistical Computing. R Foundation for Statistical Computing, Vienna, Austria. URL Https://Www.R-Project.Org/,” n.d.
+
+Roach, Michael J., Simon A. Schmidt, and Anthony R. Borneman. “Purge Haplotigs: Allelic Contig Reassignment for Third-Gen Diploid Genome Assemblies.” BMC Bioinformatics 19, no. 1 (November 29, 2018): 460. https://doi.org/10.1186/s12859-018-2485-7.
+
+Shen, Wei, Shuai Le, Yan Li, and Fuquan Hu. “SeqKit: A Cross-Platform and Ultrafast Toolkit for FASTA/Q File Manipulation.” PLOS ONE 11, no. 10 (October 5, 2016): e0163962. https://doi.org/10.1371/journal.pone.0163962.
+
+“SeqKit: A Cross-Platform and Ultrafast Toolkit for FASTA/Q File Manipulation.” PLOS ONE 11, no. 10 (October 5, 2016): e0163962. https://doi.org/10.1371/journal.pone.0163962.
+
+Simão, Felipe A., Robert M. Waterhouse, Panagiotis Ioannidis, Evgenia V. Kriventseva, and Evgeny M. Zdobnov. “BUSCO: Assessing Genome Assembly and Annotation Completeness with Single-Copy Orthologs.” Bioinformatics 31, no. 19 (October 1, 2015): 3210–12. https://doi.org/10.1093/bioinformatics/btv351.
+
+Tan, Adrian, Gonçalo R. Abecasis, and Hyun Min Kang. “Unified Representation of Genetic Variants.” Bioinformatics 31, no. 13 (July 1, 2015): 2202–4. https://doi.org/10.1093/bioinformatics/btv112.
+
+Wood, Derrick E., Jennifer Lu, and Ben Langmead. “Improved Metagenomic Analysis with Kraken 2.” Genome Biology 20, no. 1 (November 28, 2019): 257. https://doi.org/10.1186/s13059-019-1891-0.

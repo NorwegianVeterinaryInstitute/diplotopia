@@ -28,3 +28,4 @@ quarto check
 alias quarto="~/bin/quarto"
 # then make sure the path is configured on vscode for saga and workspace in the quarto extension (but not for user as different on pc)
 ```
+Ok still things laking for the preview render (I do not know why, maybe because latex not detected osv) 
