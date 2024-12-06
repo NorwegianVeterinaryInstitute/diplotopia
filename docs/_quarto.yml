@@ -8,7 +8,6 @@ book:
   title: "Diplotopia pipeline documentation"
   author: "Eve Zeyl Fiskebeck"
   date: "04/12/2024"
-  # number-sections: true
   chapters:
     - index.qmd
     - requirements_installation.qmd
