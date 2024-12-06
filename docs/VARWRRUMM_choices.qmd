@@ -2,21 +2,21 @@
 
 ## HaploSSembly for mapping
 
-Haploid assembly (or as near as possible is required for this variant calling track).
-We use [FREEBAYES] variant mapper for variant calling. **We recommend to read FREEBAYES instructions carefully to understand what has been done (an not) here**
+Haploid assembly (or as near as possible is required for this variant calling track). We use [FREEBAYES](https://github.com/freebayes/freebayes) variant mapper for variant calling. **We recommend to read FREEBAYES instructions carefully to understand what has been done (an not) here**
 
 ## Data preparation prior to variant calling
 
 Reads are mapped using [BWA-MEM](v1) <!-- Because we want to report all alternative locations mapping, which it seems BWA-MEM2 do not do yet -> so if BWA-MEM use version 1 -->. All alternative alignments are reported as secondary alignments in the BAM file and shorter splits are marked as secondary. See also: [BWA-MEM reference manual](https://bio-bwa.sourceforge.net/bwa.shtml). Reads groups (ID and SM corresponding to sample id are added). <!-- we might want to change to put ID as ref id here ? -->
 
-The mapped file is then indexed using [samtools].
+The mapped file is then indexed using [samtools](https://github.com/samtools).
 
-This is followed by marking of duplicate reads (default), as recommended in Freebayes, using [sambamba].
+This is followed by marking of duplicate reads (default), as recommended in Freebayes, using [sambamba](https://github.com/biod/sambamba).
 
-> Note that it is also possible to ignore those (eg. you did not use PCR for library preparation), or remove them totally. @thomas talk !
+> Note that it is also possible to ignore those (eg. you did not use PCR for library preparation), or remove them totally. \<?thomas\> talk !
 
-For information purpose, we then compute the coverage depth using [samtools].
+For information purpose, we then compute the coverage depth using [samtools](https://github.com/samtools).
 
+```{=html}
 <!--
 bwam_mem var process
 -[x] read groups - attached to their sample as they are identified by freebayes (RG tag), and the header of the BAM file in which it resides must map the RG tags to sample names (SM).
@@ -35,6 +35,9 @@ Used option marking shorter splits as secondary ->  compatible picard
 - [ ]
 
 -->
+```
+
+```{=html}
 <!-- Coverage calculation
 maybe should change that here  - change to thing that already makes the plot
 https://deeptools.readthedocs.io/en/develop/content/list_of_tools.html
@@ -42,12 +45,13 @@ https://deeptools.readthedocs.io/en/develop/content/list_of_tools.html
 compatible with scripts freebayes if need to make parallelisation -> not sure about this tool ....  could use this one ...
 https://github.com/hartwigmedical/hmftools/blob/master/bam-tools/README.md
 -->
+```
 
-## Variant Calling [Freebayes]
+## Variant Calling [Freebayes](https://github.com/freebayes/freebayes)
 
 ### Raw variant calling
 
-We used [Freebayes] for variant calling. Freebayes has been developped for variant calling on diploid genomes (but can be used for other ploidy levels) based on illumina short reads. It allows probabilistic calling of variants: computes the probability that a variant exist at the loci <!-- incl. pop and per sample>.
+We used [Freebayes](https://github.com/freebayes/freebayes) for variant calling. Freebayes has been developped for variant calling on diploid genomes (but can be used for other ploidy levels) based on illumina short reads. It allows probabilistic calling of variants: computes the probability that a variant exist at the loci <!-- incl. pop and per sample>.
 
 **Freebayes discard reads marked as duplicates during variant calling**
 
@@ -70,6 +74,7 @@ For now, trying the GNU parallel
 
 ### Filtering calls: quality insurance
 
+```{=html}
 <!-- Note About variant quality VCF
 
 
@@ -83,48 +88,37 @@ Library for filtering
 https://github.com/vcflib/vcflib?tab=readme-ov-file#filter
 
 -->
+```
 
 QUAL and or depth (DP) or observation count
 
-- QUAL: probability that there is a polymorphism at the loci described by the record.
-  $1 - P_{locus\ is\ homozygous\ given\ the\ data}$
-  [GQ, when supplying --genotype-qualities]
+-   QUAL: probability that there is a polymorphism at the loci described by the record. $1 - P_{locus\ is\ homozygous\ given\ the\ data}$ \[GQ, when supplying --genotype-qualities\]
 
 vcffilter in vcflib
 
-- probability of not being polymorphic less than phred 20 (aka 0.01), or probability of polymorphism > 0.99.
+-   probability of not being polymorphic less than phred 20 (aka 0.01), or probability of polymorphism \> 0.99.
 
-* examine output manually
+-   examine output manually
 
 <!-- References -->
 
-[freebayes]: https://github.com/freebayes/freebayes
-[bamtools]: https://github.com/pezmaster31/bamtools
-[sambamba]: https://github.com/biod/sambamba
-[samtools]: https://github.com/samtools
-
 Usefull links:
 
-- [Variant call format (VCF) 4.1](https://samtools.github.io/hts-specs/VCFv4.1.pdf)
+-   [Variant call format (VCF) 4.1](https://samtools.github.io/hts-specs/VCFv4.1.pdf)
 
+```{=html}
 <!-- Usefull to remember
 https://genome.sph.umich.edu/wiki/BamUtil:_diff
 -->
+```
 
 ## Normalization of variants representation
 
+------------------------------------------------------------------------
 
+Freebayes output VCF 4.2: <!-- despites its writen in freebayes 4.1 -->\
+\> "probabilistic description of allelic variants within a population of samples, but it is equally suited to describing the probability of variation in a single sample."
 
----------
+> citat from
 
-Freebayes output VCF 4.2: <!-- despites its writen in freebayes 4.1 -->  
-> "probabilistic description of allelic variants within a population of samples, but it is equally suited to describing the probability of variation in a single sample."
-
-> citat from 
- 
-- phred and probability of not being polymorphic (or formula)
-
-
-
-
-
+-   phred and probability of not being polymorphic (or formula)

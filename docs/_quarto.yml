@@ -1,23 +1,23 @@
 project:
   type: book
 
-number-depth: 5
+number-depth: 6
 
 # book options
 book:
   title: "Diplotopia pipeline documentation"
   author: "Eve Zeyl Fiskebeck"
   date: "04/12/2024"
-  number-sections: true
+  # number-sections: true
   chapters:
     - index.qmd
     - requirements_installation.qmd
     - description.qmd
     - usage.qmd
+    - saga_users.qmd
     - configuration.qmd
     - output.qmd
     - contribution.qmd
-    - saga_users.qmd
     - summary.qmd
     - references.qmd
     - part: "Changes"
