@@ -13,10 +13,13 @@ graphviz online editor might help a bit
  --> 
 
 ```{dot}
+//| label: fig-simple
+//| fig-cap: "This is a simple graphviz graph."
+
 digraph Pipeline_Overview {
 
     graph [
-		label = "Diplotopia Pipeline Overview\n\n"
+		label = "Diplotopia Pipeline, Tracks Overview\n\n"
 		labelloc = t
 		//fontsize = 20
 		layout = dot
@@ -40,108 +43,138 @@ digraph Pipeline_Overview {
 
 
     // Decontamination reads
-    ReadsDecontaminationT  [
-            label = "PURELY_RAW\n(Reads decontamination; optional)";
-            color = darkgrey;
-            ];
+    PurelyrawT  [
+        label = "PURELY_RAW\n(Reads decontamination; optional)";
+        color = gray;
+        fontcolor = darkslategray1;
+        ];
         
 
     // Trial assembly
     TryssemblyT  [
-           label = "TRYSSEMBLY\n(trial of different kind of assemblies)";
-           color = deeppink;
-            ];
+        label = "TRYSSEMBLY\n(trial of different kind of assemblies)";
+        color = deeppink;
+        ];
 
     // Decontamination contigs
     FiltercontigsT  [
-        label = "FILTER_CONTIGS\n(assembly decontamination)";
+        label = "FILTER_CONTIGS\n(assembly decontamination; optional)";
         color = chartreuse2;
+        fontcolor = darkslategray1;
         ];
 
     // Comparison assemblies for choice
     CompassT  [
         label = "COMPASS\n(comparison of assemblies)";
         color = chartreuse2;
-        ];
+    ];
     
     // Diploid to haploid (should be improved)
     HaplopurgeT  [ 
-            label = "HAPLOPURGE\n(get haploid contigs)";
-            color = lightgreen;
-            ];
+        label = "HAPLOPURGE\n(get haploid contigs)";
+        color = lightgreen;
+    ];
 
+    subgraph cluster_6 {
+        style = filled;
+        color = "ghostwhite"
+        fontcolor = gray;
+        node [style=filled];
+		{FunGen VARWRRUM }
+		label = "Variant Calling Tracks";
+		
+	};
 
-    // Variant calling tracks
-    VariantT [
-        shape=note; 
-        label = "Variant Calling";
-        color = grey;
-        //styple=empty;
-        ];
-        
     FunGen [
         label = "FunGen";
         color = pink;
-        ];
+    ];
 
     VARWRRUM [
-        label = "VARWRRUM";;
+        label = "VARWRRUM";
         color = chartreuse2;
-        ];
+    ];
 
+    // Elements additional
+
+    Haplossembly [
+        label = "Choosen assembly \n (HaploSSembly)";
+        style = dotted;
+    ];
 
 
     // Tracks order (not subtracks)
-    ReadsDecontaminationT -> TryssemblyT;
+    PurelyrawT -> TryssemblyT [style=dashed, color=grey];
+    
     TryssemblyT -> FiltercontigsT;
     FiltercontigsT -> HaplopurgeT;
-    FiltercontigsT -> CompassT;
+    
+    // sub-optimal paths 
+    TryssemblyT -> CompassT [style=dashed, color=grey];
+    FiltercontigsT -> CompassT [style=dashed, color=grey];
+
     HaplopurgeT -> CompassT ; 
-    HaplopurgeT -> VariantT;
 
-    VariantT -> {FunGen VARWRRUM};
+    CompassT -> Haplossembly;
 
 
+    Haplossembly -> FunGen; 
+    Haplossembly-> VARWRRUM; 
+    
+
+    // Legend 
+    subgraph cluster_666 {
+        rankdir=TB;
+        style = rounded;
+        label = "Legend";
+        color = gray;
+        fontcolor = gray;
+        node [syle = filled];
+        edge [style = invis];      
+		
+        planned -> building -> partial -> functional -> optional
+
+		
+	};
+
+    planned [
+        color = gray;
+    ];
+
+    building [
+        label = "currently building"
+        color = pink;
+    ];
+
+    partial [
+        label = "partial build"
+        color = deeppink;
+    ];
+
+    functional [
+        color = chartreuse2;
+    ];
+
+
+    optional [
+        label = "optional\n(font color)"
+        fontcolor = darkslategray1;
+        color = "ghostwhite";
+    ];
 
 }
-
-
 ```
+
 <!-- would nbe better if nodes were of same size 
 https://stackoverflow.com/questions/48888032/graphviz-make-all-nodes-the-same-size-as-the-largest 
 -->
 
 
-```{dot}
-digraph G {
-
-        // Decontamination reads
-        subgraph cluster_0 {
-            style = filled;
-            color = darkgrey;
-            node [
-                style = filled,
-                color = white
-                ];
-            a0 -> a1 -> a2 -> a3;
-            label = "PURELY_RAW";
-        }
-
-        //ReadsDecontaminationT -> a0
-}
-
-```{dot}
-digraph G {
-    // Trial Assembly 
-}
-
-```
 
 
 
 ```{dot}
-//| label: fig-simple
-//| fig-cap: "This is a simple graphviz graph."
+
 ```
 
 ## Track descriptions
@@ -150,48 +183,130 @@ digraph G {
 
 <!-- #  short description each track -->
 
+### PURELY_RAW: Cleaning raw reads from eventual contaminants (STATUS: DEV)
+
+**Pre-assembly. Detection and filtering out (optional) of contaminated reads, prior to assembly.**
+<!-- Description 
+
+
+- [ ] raw reads nanopore ? -> Thomas track integration ? 
+- [ ] raw reads illumina ?`
+
+#### Tools used in this track and references
+
+References
+Repositories
+Manuals and other resources
+
+-->
+
+### TRYSSEMBLY: Testing different assembly methods (STATUS: DEV)
+
+**Trial of different assemblers to obtain a suitable assembly for your purposes.**
+
+As per today, assemblies are a model of an organisms' genome, not the truth! 
+Testing different assemblies methods (or assemblers) might serve your purpose. Indeed, some assemblers will perform better with some organisms, while some better is other organisms. Moreover, depending on what is the ultimate goal for you to do an assembly (eg. syntheny comparison of organisms belonging to the same species, copy number variation, variant calling ....) then some methods might serve your ultimate goal better than others. 
+
+As it is difficult to predict what will work best (at least for me), then it might be usefull to try different methods rapidely. Here is a track that aims to give you some assembly options. 
+
+(Note that this track is expected to growth .... when the need arise). 
+
+Currently the methods we are using here are: 
+
+
+- NECAT : from NECAT assembler specialized for long reads (nanopore), [NECAT ARTICLE](https://www.nature.com/articles/s41467-020-20236-7) and [NECAT TOOL repository](https://github.com/xiaochuanle/NECAT)
+- MASURCA : from MASURCA genome assembler, an hybrid assembler, [MASURCA FIRST ARTICLE](https://academic.oup.com/bioinformatics/article/29/21/2669/195975), [MASURCA HYBRID ARTICLE](https://genome.cshlp.org/content/27/5/787) and [MASURCA TOOL repository](https://github.com/alekseyzimin/masurca)
+
+<!-- Description 
+
+#### Tools used in this track and references
+
+References
+Repositories
+Manuals and other resources
+
+-->
+
+### 3. FILTER_CONTIGS (STATUS: FUNCTIONAL)
+
+Optional track. **Filters out contigs/scaffolds from assemblies, when those are not detected as belonging to a "positive" filtering criteria (eg. organism of interest). Employed for removal of contaminated contigs from assemblies.**
+Main output: decontaminated asembly sequence
+
+![FILTER_CONTIGS track overview](./files/FILTER_CONTIGS.drawio.svg)
+
+This track uses [seqkit](https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0163962) software to split assemblies into the set of contigs for each sample, allowing high parallelization of the [blastn] taxonomical comparison of each contig. 
+Blastn is used to detect a maximum of 5 matches and to provide the taxonomical identification of those matches.
+
+The blastn taxonomical results are then collated and used to filter out likely contaminant contig using the R-quarto script `diplotopia/bin/contigs_taxo_overview_filter.qmd`. 
+
+A "positive filter" expression (rlang) is provided by the user. Any taxonomy that is not reflected within the positive filter will be considered as contaminant. We aimed to make the choice of this expression as flexible as possible. It is eg. possible to use an expression composed of several taxonomic ranks, ensuring that we can fine tune the filtering step to obtain a "decontaminated" assembly.
+
+<!-- TODO check how the expression is build -->
+See [Filtering contigs explanations](./Filtering_contigs) for more details about the filtering process strategy.
+
+See also [Installation##Obtain_necessary_external databases], as this track require database/files to be pre-downloaded.
+
+References
+- [SEQKIT article](https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0163962)
+- [BLAST article](https://pubmed.ncbi.nlm.nih.gov/20003500/) <!-- this is the tool, where is the science ? -->
+- [R](https://cran.r-project.org/)
+- [Quarto](https://quarto.org/)
+
+ <!-- TODO session info / packages used in R script -->
+
+Repositories
+- [SEQKIT repository](https://github.com/shenwei356/seqkit/releases)
+
+Manuals and other resources
+- [NCBI Blast help](https://blast.ncbi.nlm.nih.gov/doc/blast-help/)
+
+
+
 
 ### Variant calling tracks
 
 ```{dot}
 digraph G {
+
+    graph [
+		label = "Variant Calling\nTracks Overview"
+		labelloc = t
+		//fontsize = 20
+		layout = dot
+		rankdir = TB
+		newrank = true
+	]
+
+    node [
+		style = filled
+		shape = box
+        style = filled
+	]
+
+    edge [
+		arrowsize=.5
+		labeldistance=4
+		penwidth=1
+	]
+
+    // Fungen Track 
+    subgraph cluster_0 {
+        style = filled;
+        color = pink;
+        label="FungGen";
+        tata;
+	};
+
     
-        // Variant calling tracks
-        VariantT [
-            shape=square; 
-            label = "Variant Calling"
-            ];
-
-        subgraph cluster_0 {
-            style = filled;
-            color = deeppink;
-            node [
-                style = filled,
-                color = white
-                ];
-            a0 -> a1 -> a2 -> a3;
-            label = "FunGen";
-        }
-
-        subgraph cluster_2 {
-            style = filled;
-            color = chartreuse2;
-            node [
-                style = filled,
-                color = white
-                ];
-
-            b0 -> b1 -> b2 -> b3;
-            label = "VARWRRUM";
-            
-        }
-
-        
-      VariantT -> a0;
-      VariantT -> b0;
+    // VARWRRUM Track 
+    subgraph cluster_1 {
+        style = filled;
+        color = chartreuse2;
+        label = "VARWRRUM";
+        tata2;
+    };
 
 
-            
 }
 
 ```
