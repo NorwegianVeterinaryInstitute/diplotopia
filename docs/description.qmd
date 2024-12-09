@@ -5,13 +5,13 @@
 ```{=html}
 <!-- learning graphviz https://quarto.org/docs/authoring/diagrams.html
 
-https://graphviz.org/ 
+https://graphviz.org/
 graphviz online editor might help a bit
  -->
 ```
 
 ```{dot}
-//| label: fig-simple
+//| label: fig-PipelineOverview
 //| fig-cap: "This is a simple graphviz graph."
 
 digraph Pipeline_Overview {
@@ -46,7 +46,7 @@ digraph Pipeline_Overview {
         color = gray;
         fontcolor = darkslategray1;
         ];
-        
+
 
     // Trial assembly
     TryssemblyT  [
@@ -66,9 +66,9 @@ digraph Pipeline_Overview {
         label = "COMPASS\n(comparison of assemblies)";
         color = chartreuse2;
     ];
-    
+
     // Diploid to haploid (should be improved)
-    HaplopurgeT  [ 
+    HaplopurgeT  [
         label = "HAPLOPURGE\n(get haploid contigs)";
         color = lightgreen;
     ];
@@ -80,7 +80,7 @@ digraph Pipeline_Overview {
         node [style=filled];
 		{FunGen VARWRRUM }
 		label = "Variant Calling Tracks";
-		
+
 	};
 
     FunGen [
@@ -103,24 +103,24 @@ digraph Pipeline_Overview {
 
     // Tracks order (not subtracks)
     PurelyrawT -> TryssemblyT [style=dashed, color=grey];
-    
+
     TryssemblyT -> FiltercontigsT;
     FiltercontigsT -> HaplopurgeT;
-    
-    // sub-optimal paths 
+
+    // sub-optimal paths
     TryssemblyT -> CompassT [style=dashed, color=grey];
     FiltercontigsT -> CompassT [style=dashed, color=grey];
 
-    HaplopurgeT -> CompassT ; 
+    HaplopurgeT -> CompassT ;
 
     CompassT -> Haplossembly;
 
 
-    Haplossembly -> FunGen; 
-    Haplossembly-> VARWRRUM; 
-    
+    Haplossembly -> FunGen;
+    Haplossembly-> VARWRRUM;
 
-    // Legend 
+
+    // Legend
     subgraph cluster_666 {
         rankdir=TB;
         style = rounded;
@@ -128,11 +128,11 @@ digraph Pipeline_Overview {
         color = gray;
         fontcolor = gray;
         node [syle = filled];
-        edge [style = invis];      
-		
+        edge [style = invis];
+
         planned -> building -> partial -> functional -> optional
 
-		
+
 	};
 
     planned [
@@ -164,19 +164,19 @@ digraph Pipeline_Overview {
 ```
 
 ```{=html}
-<!-- would nbe better if nodes were of same size 
-https://stackoverflow.com/questions/48888032/graphviz-make-all-nodes-the-same-size-as-the-largest 
+<!-- would nbe better if nodes were of same size
+https://stackoverflow.com/questions/48888032/graphviz-make-all-nodes-the-same-size-as-the-largest
 
 would be good if in legend boxes were closer to each other
 -->
 ```
 
 ```{=html}
-<!-- 
+<!--
 See also:
 
 General overview of the pipeline
- ![DIPLOTOPIA overview](./files/pipeline_overview.drawio.svg) 
+ ![DIPLOTOPIA overview](./files/pipeline_overview.drawio.svg)
 
 -->
 ```
@@ -187,14 +187,13 @@ General overview of the pipeline
 
 <!-- #  short description each track -->
 
-------------------------------------------------------------------------
+---
 
 ### PURELY_RAW: Cleaning raw reads from eventual contaminants (STATUS: DEV)
 
-**Pre-assembly. Detection and filtering out (optional) of contaminated reads, prior to assembly.** <!-- Description 
+**Pre-assembly. Detection and filtering out (optional) of contaminated reads, prior to assembly.** <!-- Description
 
-
-- [ ] raw reads nanopore ? -> Thomas track integration ? 
+- [ ] raw reads nanopore ? -> Thomas track integration ?
 - [ ] raw reads illumina ?`
 
 #### Tools used in this track and references
@@ -205,7 +204,7 @@ Manuals and other resources
 
 -->
 
-------------------------------------------------------------------------
+---
 
 ### TRYSSEMBLY: Testing different assembly methods (STATUS: DEV)
 
@@ -219,11 +218,17 @@ As it is difficult to predict what will work best (at least for me), then it mig
 
 Currently the methods we are using here are:
 
--   NECAT : from NECAT assembler specialized for long reads (nanopore), [NECAT ARTICLE](https://www.nature.com/articles/s41467-020-20236-7) and [NECAT TOOL repository](https://github.com/xiaochuanle/NECAT)
--   MASURCA : from MASURCA genome assembler, an hybrid assembler, [MASURCA FIRST ARTICLE](https://academic.oup.com/bioinformatics/article/29/21/2669/195975), [MASURCA HYBRID ARTICLE](https://genome.cshlp.org/content/27/5/787) and [MASURCA TOOL repository](https://github.com/alekseyzimin/masurca)
+- NECAT : from NECAT assembler specialized for long reads (nanopore), [NECAT ARTICLE] and [NECAT TOOL repository]
+- MASURCA : from MASURCA genome assembler, an hybrid assembler, [MASURCA FIRST ARTICLE], [MASURCA HYBRID ARTICLE] and [MASURCA TOOL repository]
+
+[necat article]: https://www.nature.com/articles/s41467-020-20236-7
+[necat tool repository]: https://github.com/xiaochuanle/NECAT
+[masurca first article]: https://academic.oup.com/bioinformatics/article/29/21/2669/195975
+[masurca hybrid article]: https://genome.cshlp.org/content/27/5/787
+[masurca tool repository]: https://github.com/alekseyzimin/masurca
 
 ```{=html}
-<!-- Description 
+<!-- Description
 
 #### Tools used in this track and references
 
@@ -234,15 +239,19 @@ Manuals and other resources
 -->
 ```
 
-------------------------------------------------------------------------
+---
 
 ### FILTER_CONTIGS (STATUS: FUNCTIONAL)
 
 Optional track. **Filters out contigs/scaffolds from assemblies, when those are not detected as belonging to a "positive" filtering criteria (eg. organism of interest). Employed for removal of contaminated contigs from assemblies.** Main output: decontaminated asembly sequence
 
-![FILTER_CONTIGS track overview](./files/FILTER_CONTIGS.drawio.svg)
+![FILTER_CONTIGS track overview]
 
-This track uses [seqkit](https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0163962) software to split assemblies into the set of contigs for each sample, allowing high parallelization of the \[blastn\] taxonomical comparison of each contig. Blastn is used to detect a maximum of 5 matches and to provide the taxonomical identification of those matches.
+[filter_contigs track overview]: ./files/FILTER_CONTIGS.drawio.svg
+
+This track uses [seqkit] software to split assemblies into the set of contigs for each sample, allowing high parallelization of the \[blastn\] taxonomical comparison of each contig. Blastn is used to detect a maximum of 5 matches and to provide the taxonomical identification of those matches.
+
+[seqkit]: https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0163962
 
 The blastn taxonomical results are then collated and used to filter out likely contaminant contig using the R-quarto script `diplotopia/bin/contigs_taxo_overview_filter.qmd`.
 
@@ -250,19 +259,30 @@ A "positive filter" expression (rlang) is provided by the user. Any taxonomy tha
 
 <!-- TODO check how the expression is build -->
 
-See [Filtering contigs explanations](./Filtering_contigs) for more details about the filtering process strategy.
+See [Filtering contigs explanations] for more details about the filtering process strategy.
+
+[filtering contigs explanations]: ./Filtering_contigs
 
 See also \[Installation##Obtain_necessary_external databases\], as this track require database/files to be pre-downloaded.
 
-References - [SEQKIT article](https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0163962) - [BLAST article](https://pubmed.ncbi.nlm.nih.gov/20003500/) <!-- this is the tool, where is the science ? --> - [R](https://cran.r-project.org/) - [Quarto](https://quarto.org/)
+References - [SEQKIT article] - [BLAST article] <!-- this is the tool, where is the science ? --> - [R] - [Quarto]
+
+[seqkit article]: https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0163962
+[blast article]: https://pubmed.ncbi.nlm.nih.gov/20003500/
+[r]: https://cran.r-project.org/
+[quarto]: https://quarto.org/
 
 <!-- TODO session info / packages used in R script -->
 
-Repositories - [SEQKIT repository](https://github.com/shenwei356/seqkit/releases)
+Repositories - [SEQKIT repository]
 
-Manuals and other resources - [NCBI Blast help](https://blast.ncbi.nlm.nih.gov/doc/blast-help/)
+[seqkit repository]: https://github.com/shenwei356/seqkit/releases
 
-------------------------------------------------------------------------
+Manuals and other resources - [NCBI Blast help]
+
+[ncbi blast help]: https://blast.ncbi.nlm.nih.gov/doc/blast-help/
+
+---
 
 ### COMPASS: Comparing assemblies (STATUS: FUNCTIONAL)
 
@@ -270,7 +290,9 @@ Manuals and other resources - [NCBI Blast help](https://blast.ncbi.nlm.nih.gov/d
 
 This track aims to provide statistical information allowing to compare assemblies, in order to be able to make informed choice about which assembly you will use for the rest of your analyses, this depending of your purpose / criteria.
 
-![COMPASS track overview](./files/COMPASS.drawio.svg)
+![COMPASS track overview]
+
+[compass track overview]: ./files/COMPASS.drawio.svg
 
 The tracks provide statistical information (main output) about: - coverage (base coverage : deeph) (QUALIMAP) with results summarized with (MULITQC) - contiguity and coverage genome (relative to a given reference genome, which can be either one assembly you select or an external assembly, or both) - In some cases it can detect missassemblies, dependent of the reference genome used (QUAST) - completeness (BUSCO): it is possible to use one or several sets of markers. \> Eg. if no specific marker are developed for the lineage that is your object of interest, you can chose to use markers from several lineages for the comparison, and see which will provide the most informative completness informaiton.
 
@@ -288,33 +310,53 @@ See also \[Installation##Obtain_necessary_external databases\], as this track re
 
 References
 
--   [BUSCO article](https://academic.oup.com/bioinformatics/article/31/19/3210/211866)
--   [QUAST article](https://academic.oup.com/bioinformatics/article/29/8/1072/228832)
--   [QUALIMAP article](https://academic.oup.com/bioinformatics/article/28/20/2678/206551)
--   [MULTIQC article](https://academic.oup.com/bioinformatics/article/32/19/3047/2196507)
--   [SAMTOOLS article](https://academic.oup.com/gigascience/article/10/2/giab008/6137722?login=false)
--   [MINIMAP article](https://academic.oup.com/bioinformatics/article/34/18/3094/4994778)
--   [BWA-MEM article](https://arxiv.org/abs/1303.3997)
--   [KRAKEN2 article](https://genomebiology.biomedcentral.com/articles/10.1186/s13059-019-1891-0)
+- [BUSCO article]
+- [QUAST article]
+- [QUALIMAP article]
+- [MULTIQC article]
+- [SAMTOOLS article]
+- [MINIMAP article]
+- [BWA-MEM article]
+- [KRAKEN2 article]
+
+[busco article]: https://academic.oup.com/bioinformatics/article/31/19/3210/211866
+[quast article]: https://academic.oup.com/bioinformatics/article/29/8/1072/228832
+[qualimap article]: https://academic.oup.com/bioinformatics/article/28/20/2678/206551
+[multiqc article]: https://academic.oup.com/bioinformatics/article/32/19/3047/2196507
+[samtools article]: https://academic.oup.com/gigascience/article/10/2/giab008/6137722?login=false
+[minimap article]: https://academic.oup.com/bioinformatics/article/34/18/3094/4994778
+[bwa-mem article]: https://arxiv.org/abs/1303.3997
+[kraken2 article]: https://genomebiology.biomedcentral.com/articles/10.1186/s13059-019-1891-0
 
 Repositories
 
--   [QUAST repository](https://github.com/ablab/quast)
--   [QUALIMAP repository](https://bitbucket.org/kokonech/qualimap/commits/branch/master)
--   [BUSCO repository](https://gitlab.com/ezlab/busco)
--   [MULTIQC repository](https://github.com/MultiQC/MultiQC)
--   [SAMTOOLS repository](https://github.com/samtools/samtools)
--   [MINIMAP repository](https://github.com/lh3/minimap2)
--   [BWA repository](https://github.com/lh3/bwa)
--   [KRAKEN2 repository](https://github.com/DerrickWood/kraken2)
+- [QUAST repository]
+- [QUALIMAP repository]
+- [BUSCO repository]
+- [MULTIQC repository]
+- [SAMTOOLS repository]
+- [MINIMAP repository]
+- [BWA repository]
+- [KRAKEN2 repository]
+
+[quast repository]: https://github.com/ablab/quast
+[qualimap repository]: https://bitbucket.org/kokonech/qualimap/commits/branch/master
+[busco repository]: https://gitlab.com/ezlab/busco
+[multiqc repository]: https://github.com/MultiQC/MultiQC
+[samtools repository]: https://github.com/samtools/samtools
+[minimap repository]: https://github.com/lh3/minimap2
+[bwa repository]: https://github.com/lh3/bwa
+[kraken2 repository]: https://github.com/DerrickWood/kraken2
 
 <!-- TODO need to add pavian ? make a pavian like output -->
 
 Manuals and other resources
 
--   [BUSCO manual](https://busco.ezlab.org/busco_userguide.html#installation-with-docker)
+- [BUSCO manual]
 
-------------------------------------------------------------------------
+[busco manual]: https://busco.ezlab.org/busco_userguide.html#installation-with-docker
+
+---
 
 ### HAPLOPURGE (STATUS: FUNCTIONAL)
 
@@ -326,35 +368,47 @@ Manuals and other resources
 
 The purpose of this track is to clean the chosen assembly to optain an haploid representation of the genome of a diploid organism. Ie, we aim to optain an haploid representation of the genome of a diploid organism. This haploid representation (HaploSSembly) will then be used to call variants (or any other aim where it fits) of diploid organisms, allow allowing to determine the genotype at each haploid locus. Main output: HaploSSembly (Haploid Assembly)
 
-The original assembly, provided as input, is inspected for eventual chimera/missassembly contigs, junk (potential low copy number contaminants), repeats and haplotigs using [purge haplotigs]((https://bmcbioinformatics.biomedcentral.com/articles/10.1186/s12859-018-2485-7)) software. <!-- TODO re-read paper: define better  -->
+The original assembly, provided as input, is inspected for eventual chimera/missassembly contigs, junk (potential low copy number contaminants), repeats and haplotigs using [purge haplotigs] software. <!-- TODO re-read paper: define better  -->
 
-![HAPLOPURGE track overview](./files/HAPLOPURGE.drawio.svg)
+[purge haplotigs]: "https://bmcbioinformatics.biomedcentral.com/articles/10.1186/s12859-018-2485-7"
+
+![HAPLOPURGE track overview]
+
+[haplopurge track overview]: ./files/HAPLOPURGE.drawio.svg
 
 First, reads are mapped (using MINIMAP) to the (decontaminated) assembly <!-- if you provide it as input - should be -->. Purge Haplotigs software allows to draw an histogram that allows to evaluate the coverage of the haploid and diploid parts of the genome, which allows to determine three coverage thresholds low, mid (between the haploid and diploid pics) and high that Purge Haploitigs software will further used to attemps to classify contigs as haploid VS diploid, poliploid (eg. small repeats) or chimeric/artificial contigs, this on the basis of the proportion of haploid and diploid coverage for each contig. <!-- TODO understand better and recheck info, and reformulate -->
 
 Based on this classification, haplotigs and other ambiguous contigs are discared from the original input assembly.
 
 ```{=html}
-<!-- TODO  : THINK 
-NB: it also allows, by examining the difference to the completeness and size of the assembly previously obtained, to evaluate how many alleles were assembled separately 
+<!-- TODO  : THINK
+NB: it also allows, by examining the difference to the completeness and size of the assembly previously obtained, to evaluate how many alleles were assembled separately
 - would be an estimate
-- eg can have chimeaa / remove the complete version instead of incomplete version of a gene ? 
-? could it be used to provide a general idea of polymorphism at the level it was given before for sapro ? hein ... brrr 
+- eg can have chimeaa / remove the complete version instead of incomplete version of a gene ?
+? could it be used to provide a general idea of polymorphism at the level it was given before for sapro ? hein ... brrr
 -->
 ```
 
-See also [HAPLOPURGE choices](./Haplopurge_choices)
+See also [HAPLOPURGE choices]
+
+[haplopurge choices]: ./Haplopurge_choices
 
 References
 
--   [Purge haplotigs article](https://bmcbioinformatics.biomedcentral.com/articles/10.1186/s12859-018-2485-7)
--   [MINIMAP article](https://academic.oup.com/bioinformatics/article/34/18/3094/4994778)
+- [Purge haplotigs article]
+- [MINIMAP article]
 
-Repositories - [Purge haplotigs repository](https://bitbucket.org/mroachawri/purge_haplotigs/src/master/) - [MINIMAP repository](https://github.com/lh3/minimap2)
+[purge haplotigs article]: https://bmcbioinformatics.biomedcentral.com/articles/10.1186/s12859-018-2485-7
+[minimap article]: https://academic.oup.com/bioinformatics/article/34/18/3094/4994778
+
+Repositories - [Purge haplotigs repository] - [MINIMAP repository]
+
+[purge haplotigs repository]: https://bitbucket.org/mroachawri/purge_haplotigs/src/master/
+[minimap repository]: https://github.com/lh3/minimap2
 
 Manuals and other resources
 
-------------------------------------------------------------------------
+---
 
 ### Variant calling tracks
 
@@ -382,7 +436,7 @@ digraph G {
 		penwidth=1
 	]
 
-    // Fungen Track 
+    // Fungen Track
     subgraph cluster_0 {
         style = filled;
         color = pink;
@@ -390,8 +444,8 @@ digraph G {
         tata;
 	};
 
-    
-    // VARWRRUM Track 
+
+    // VARWRRUM Track
     subgraph cluster_1 {
         style = filled;
         color = chartreuse2;
@@ -410,65 +464,136 @@ digraph G {
 This track prepares the reference (an HaploSSembly / haploid genome assembly) and samples for variant calling. Then it does statistical variant calling (using FreeBayes software), does variant filtering and variant normalisation of called variants; this for each sample individually but also for all samples considered as a single population.\
 Main output: normalised vcf file
 
-![VARWRRUM track overview](./files/VARWRRUM.drawio.svg)
+![VARWRRUM track overview]
 
-The detailed track descriptions is provided [here](./VARWRRUM_choices). In short, the reference is softmasked, at least for low complexity regions, <!-- TODO implement rest ? --> the reads of each sample (diploid) <!-- TODO remove the polyploid option or keep as is ? --> are mapped to it, and variants are called for each sample and globaly as a population, using solely reads that are uniquely mapped, this with [Freebayes software](). Variants are filtered, ensuring that solely variants of good quality are retained, and normalised, which allow to compare position of the call between samples. <!-- TODO read more about normalisation variants, should also maybe add phasing here? -->
+[varwrrum track overview]: ./files/VARWRRUM.drawio.svg
+
+The detailed track descriptions is provided [here]. In short, the reference is softmasked, at least for low complexity regions, <!-- TODO implement rest ? --> the reads of each sample (diploid) <!-- TODO remove the polyploid option or keep as is ? --> are mapped to it, and variants are called for each sample and globaly as a population, using solely reads that are uniquely mapped, this with [Freebayes software]. Variants are filtered, ensuring that solely variants of good quality are retained, and normalised, which allow to compare position of the call between samples. <!-- TODO read more about normalisation variants, should also maybe add phasing here? -->
+
+[here]: ./VARWRRUM_choices
+
+[Freebayes software]:
 
 We implemented different statistics calculation (coverage, presence of mapping tags) at the different stages (pre, during, and after) variant calling and filtering.
 
-As mentioned in [FREEBAYES repository](https://github.com/freebayes/freebayes), \> "Users are encouraged to examine their output and both variants which are retained and those they filter out".
+As mentioned in [FREEBAYES repository], \> "Users are encouraged to examine their output and both variants which are retained and those they filter out".
+
+[freebayes repository]: https://github.com/freebayes/freebayes
 
 We certainly encourage this practice, as this will allow to adjust filtering criteria, and might also hint about improvement to be gained at the reads mapping filtering and/or assembly masking stages.
 
-References - [Trim Galore citat](https://doi.org/10.5281/zenodo.5127899) - [BWA-MEM article](https://arxiv.org/abs/1303.3997) - [SAMTOOLS article](https://academic.oup.com/gigascience/article/10/2/giab008/6137722?login=false) - [SEQKIT article](https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0163962) - [BBTools/BBmask article](https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0185056) - [VT article](https://academic.oup.com/bioinformatics/article/31/13/2202/196142) - [FREEBAYES article](https://arxiv.org/abs/1207.3907) - [purge haplotigs article](https://bmcbioinformatics.biomedcentral.com/articles/10.1186/s12859-018-2485-7) - [BCFtools article](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3198575/)
+References - [Trim Galore citat] - [BWA-MEM article] - [SAMTOOLS article] - [SEQKIT article] - [BBTools/BBmask article] - [VT article] - [FREEBAYES article] - [purge haplotigs article] - [BCFtools article]
 
-Repositories - [Trim Galore repository](https://github.com/FelixKrueger/TrimGalore) - [BWA repository](https://github.com/lh3/bwa) - [SAMTOOLS website](https://www.htslib.org/) - [SEQKIT repository](https://github.com/shenwei356/seqkit/releases) - [BBTools/BBmask website](https://jgi.doe.gov/data-and-tools/software-tools/bbtools/) - [VT repository](https://github.com/atks/vt) - [FREEBAYES repository](https://github.com/freebayes/freebayes) - [purge haplotigs repository](https://bitbucket.org/mroachawri/purge_haplotigs/src/master/) - [BCFTools repository](https://github.com/samtools/bcftools)
+[trim galore citat]: https://doi.org/10.5281/zenodo.5127899
+[bwa-mem article]: https://arxiv.org/abs/1303.3997
+[samtools article]: https://academic.oup.com/gigascience/article/10/2/giab008/6137722?login=false
+[seqkit article]: https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0163962
+[bbtools/bbmask article]: https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0185056
+[vt article]: https://academic.oup.com/bioinformatics/article/31/13/2202/196142
+[freebayes article]: https://arxiv.org/abs/1207.3907
+[purge haplotigs article]: https://bmcbioinformatics.biomedcentral.com/articles/10.1186/s12859-018-2485-7
+[bcftools article]: https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3198575/
 
-Manuals and other resources - [SAMTOOLS manual](https://www.htslib.org/doc/#manual-pages) - [BCFTools manual](https://samtools.github.io/bcftools/bcftools.html) - [VT documentation](https://genome.sph.umich.edu/wiki/Vt)
+Repositories - [Trim Galore repository] - [BWA repository] - [SAMTOOLS website] - [SEQKIT repository] - [BBTools/BBmask website] - [VT repository] - [FREEBAYES repository] - [purge haplotigs repository] - [BCFTools repository]
 
-------------------------------------------------------------------------
+[trim galore repository]: https://github.com/FelixKrueger/TrimGalore
+[bwa repository]: https://github.com/lh3/bwa
+[samtools website]: https://www.htslib.org/
+[seqkit repository]: https://github.com/shenwei356/seqkit/releases
+[bbtools/bbmask website]: https://jgi.doe.gov/data-and-tools/software-tools/bbtools/
+[vt repository]: https://github.com/atks/vt
+[freebayes repository]: https://github.com/freebayes/freebayes
+[purge haplotigs repository]: https://bitbucket.org/mroachawri/purge_haplotigs/src/master/
+[bcftools repository]: https://github.com/samtools/bcftools
 
-## \#### Magdalena
+Manuals and other resources - [SAMTOOLS manual] - [BCFTools manual] - [VT documentation]
+
+[samtools manual]: https://www.htslib.org/doc/#manual-pages
+[bcftools manual]: https://samtools.github.io/bcftools/bcftools.html
+[vt documentation]: https://genome.sph.umich.edu/wiki/Vt
+
+---
+
+## \#### FunGen
+
+> Origin of the track (ref)
+
+```{dot}
+
+//| label: fig-FugGenTrack
+//| fig-cap: "Overview of the variant calling track: FungGen."
+
+digraph Pipeline_Overview {
+
+    graph [
+		label = "FunGen\n"
+		labelloc = t
+		//fontsize = 20
+		layout = dot
+		rankdir = TB
+		newrank = true
+    ]
+
+    node [
+		style=filled
+		shape=box
+        style = filled
+		//shape=plaintext
+	]
+
+
+    edge [
+		arrowsize=.5
+		labeldistance=4
+		penwidth=1
+	]
+
+    // FunGen detail
+
+
+
+}
+```
 
 ```{=html}
-<!-- 
-TODO 
+<!--
+TODO
 
-See if can find a way to annotate - even if too different - for diploid / by similarity or 
-I need to explore what could be done for Sapro 
+See if can find a way to annotate - even if too different - for diploid / by similarity or
+I need to explore what could be done for Sapro
 
-### 7. ANNOTATION 
+### 7. ANNOTATION
 - haploSSembly
-- Variants then ... annotation effect ? 
+- Variants then ... annotation effect ?
 
 -->
 ```
 
-------------------------------------------------------------------------
+---
 
 ```{=html}
-<!-- 
+<!--
 TODO URGENT
 
-Determinant pathogenecity 
-- repeats 
-  - copy nb variation ? 
+Determinant pathogenecity
+- repeats
+  - copy nb variation ?
   - pattern / type classification (homology?)
 
-- snps 
+- snps
   - gwas like with unitigs ? phasing possible hum ...
 
 
 -->
 ```
 
-------------------------------------------------------------------------
+---
 
 ```{=html}
-<!-- 
-VISUALISATION 
+<!--
+VISUALISATION
 
-- jbrowse - manage to open files 
+- jbrowse - manage to open files
 
 TRY (need X11)
 - https://github.com/kcleal/gw

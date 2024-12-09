@@ -8,9 +8,23 @@ While nextflow will download/make software used in this pipeline available, you 
 
 ## Installation
 
+## Basic installation
+
+To be able to run, \[Nextflow\](<https://www.nextflow.io/>) v \> XX
+
+must be installed.
+
+We use containers to run each software. A container system (Docker, Singularity or Apptainer must be available our your system).
+
+> Notes:
+>
+> -   We use Apptainer on our HPC, which is then what the pipeline has been tested with.
+>
+> -   Running the pipeline with Conda is currently not available
+
 ### Obtain necessary external databases
 
-This pipeline make use of several external databases, you will have to modify the path of those in the `nextflow.config`file, so it corresponds to your system (OR you can provide those in the running command, but that is certainly more combersom).
+This pipeline make use of several external databases, you will have to modify the path of those in the `nextflow.config`file, so it corresponds to your system (OR you can provide those in the running command, but that is certainly more combersome).
 
 We unfortunately cannot provide image nor create those databases as ready to use for the pipeline, as they would require too much space or need to be adapted to the organism you are working with.
 
