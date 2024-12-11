@@ -2,19 +2,30 @@
 
 ## HaploSSembly for mapping
 
-Haploid assembly (or as near as possible is required for this variant calling track). We use [FREEBAYES](https://github.com/freebayes/freebayes) variant mapper for variant calling. **We recommend to read FREEBAYES instructions carefully to understand what has been done (an not) here**
+Haploid assembly (or as near as possible is required for this variant calling track). We use [FREEBAYES] variant mapper for variant calling. **We recommend to read FREEBAYES instructions carefully to understand what has been done (an not) here**
+
+  [FREEBAYES]: https://github.com/freebayes/freebayes
 
 ## Data preparation prior to variant calling
 
-Reads are mapped using [BWA-MEM](v1) <!-- Because we want to report all alternative locations mapping, which it seems BWA-MEM2 do not do yet -> so if BWA-MEM use version 1 -->. All alternative alignments are reported as secondary alignments in the BAM file and shorter splits are marked as secondary. See also: [BWA-MEM reference manual](https://bio-bwa.sourceforge.net/bwa.shtml). Reads groups (ID and SM corresponding to sample id are added). <!-- we might want to change to put ID as ref id here ? -->
+Reads are mapped using [BWA-MEM] <!-- Because we want to report all alternative locations mapping, which it seems BWA-MEM2 do not do yet -> so if BWA-MEM use version 1 -->. All alternative alignments are reported as secondary alignments in the BAM file and shorter splits are marked as secondary. See also: [BWA-MEM reference manual]. Reads groups (ID and SM corresponding to sample id are added). <!-- we might want to change to put ID as ref id here ? -->
 
-The mapped file is then indexed using [samtools](https://github.com/samtools).
+  [BWA-MEM]: v1
+  [BWA-MEM reference manual]: https://bio-bwa.sourceforge.net/bwa.shtml
 
-This is followed by marking of duplicate reads (default), as recommended in Freebayes, using [sambamba](https://github.com/biod/sambamba).
+The mapped file is then indexed using [samtools].
+
+  [samtools]: https://github.com/samtools
+
+This is followed by marking of duplicate reads (default), as recommended in Freebayes, using [sambamba].
+
+  [sambamba]: https://github.com/biod/sambamba
 
 > Note that it is also possible to ignore those (eg. you did not use PCR for library preparation), or remove them totally. \<?thomas\> talk !
 
-For information purpose, we then compute the coverage depth using [samtools](https://github.com/samtools).
+For information purpose, we then compute the coverage depth using [samtools].
+
+  [samtools]: https://github.com/samtools
 
 ```{=html}
 <!--
@@ -47,11 +58,13 @@ https://github.com/hartwigmedical/hmftools/blob/master/bam-tools/README.md
 -->
 ```
 
-## Variant Calling [Freebayes](https://github.com/freebayes/freebayes)
+## Variant Calling [Freebayes]
+
+  [Freebayes]: https://github.com/freebayes/freebayes
 
 ### Raw variant calling
 
-We used [Freebayes](https://github.com/freebayes/freebayes) for variant calling. Freebayes has been developped for variant calling on diploid genomes (but can be used for other ploidy levels) based on illumina short reads. It allows probabilistic calling of variants: computes the probability that a variant exist at the loci <!-- incl. pop and per sample>.
+We used [Freebayes] for variant calling. Freebayes has been developped for variant calling on diploid genomes (but can be used for other ploidy levels) based on illumina short reads. It allows probabilistic calling of variants: computes the probability that a variant exist at the loci <!-- incl. pop and per sample>.
 
 **Freebayes discard reads marked as duplicates during variant calling**
 
@@ -71,6 +84,8 @@ some params )
 See if implement ... or not
 For now, trying the GNU parallel
 -->
+
+  [Freebayes]: https://github.com/freebayes/freebayes
 
 ### Filtering calls: quality insurance
 
@@ -104,7 +119,9 @@ vcffilter in vcflib
 
 Usefull links:
 
--   [Variant call format (VCF) 4.1](https://samtools.github.io/hts-specs/VCFv4.1.pdf)
+-   [Variant call format (VCF) 4.1]
+
+  [Variant call format (VCF) 4.1]: https://samtools.github.io/hts-specs/VCFv4.1.pdf
 
 ```{=html}
 <!-- Usefull to remember

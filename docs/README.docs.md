@@ -29,3 +29,12 @@ alias quarto="~/bin/quarto"
 # then make sure the path is configured on vscode for saga and workspace in the quarto extension (but not for user as different on pc)
 ```
 Ok still things laking for the preview render (I do not know why, maybe because latex not detected osv) 
+
+
+## nf-core notes
+
+- [ ] running offline https://nf-co.re/docs/usage/getting_started/offline/
+  
+<!-- 
+learning how to use nf core modules and make the command 
+-->

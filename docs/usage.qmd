@@ -25,17 +25,23 @@ NOT IMPLEMENTED YET
 
 ## SAGA users only
 
-Please use apptainer as container. See [here](./SAGA_USERS_instructions) for configuration in SAGA (for all nextflow pipelines).
+Please use apptainer as container. See [here] for configuration in SAGA (for all nextflow pipelines).
+
+  [here]: ./SAGA_USERS_instructions
 
 ## Which options can I choose
 
 <!-- TODO -- update when finalized -->
 
-For an updated list of available options, please have a look at `diplotopia/nextflow.config` file (or online [HERE](https://github.com/NorwegianVeterinaryInstitute/diplotopia/blob/main/nextflow.config)). The nextflow.config file provides the options (and ssociated description) that are currently implemented in the pipeline. It also allows you to check what default options are used in the pipeline.
+For an updated list of available options, please have a look at `diplotopia/nextflow.config` file (or online [HERE][1]). The nextflow.config file provides the options (and ssociated description) that are currently implemented in the pipeline. It also allows you to check what default options are used in the pipeline.
+
+  [1]: https://github.com/NorwegianVeterinaryInstitute/diplotopia/blob/main/nextflow.config
 
 You do not need to change this file to change options that are used differently from run to run. The desired options can be given when launching the pipeline (see below) thanks to the priority order during nextlow configuration at runtime. However, the priority order means that you should put the options that you want to change after having mentionned any other configuration file that contains parameters affecting the pipeline options.
 
-See [nextflow documentation on configuration priority](https://www.nextflow.io/docs/latest/config.html) for more information.
+See [nextflow documentation on configuration priority] for more information.
+
+  [nextflow documentation on configuration priority]: https://www.nextflow.io/docs/latest/config.html
 
 Note: Available options will also be described for each track of the pipeline.
 
@@ -115,11 +121,13 @@ Purpose: Filtering out contigs that do not represent the genome of the organism 
 
 -   `ranked_taxo_file = null`" please provide the path of NCBI taxonomic file: "rankedlineage.dmp" (once at installation)
 
--   `positive_filter = null` rlang filtering expression, any contigs detected as corresponding (positive) to this filtering criteria will be kept in the dataset. Example "phylum == 'Oomycota'" . **! OOPS : Be aware that the external brackets need to be double**. See [here](./Filtering_contigs) for additional examples.
+-   `positive_filter = null` rlang filtering expression, any contigs detected as corresponding (positive) to this filtering criteria will be kept in the dataset. Example "phylum == 'Oomycota'" . **! OOPS : Be aware that the external brackets need to be double**. See [here][2] for additional examples.
 
 -   `evalue_min = 1e-20` query results where positive filtering expression is TRUE, are only considered as valid if the blast $evalue \geq 1e-20$
 
 -   `perc_identity_min = 95` query results where positive filtering expression is TRUE, are only considered as valid if the blast identify measure of the query $\geq 95\%$ identity with the target sequence.
+
+  [2]: ./Filtering_contigs
 
 ------------------------------------------------------------------------
 
@@ -158,7 +166,9 @@ If you have **both** long and short reads :
 
 *Contigs classification and removal of contaminated contigs* - `remove_contaminants = "no"` if "yes" then activates FILTER_CONTIGS with the selected parameters <!-- purpose : use at rerun - when one is sure of the parameters to use -->
 
-*Detection of contaminants in assemblies* - `krakenDB = null` please provide the path of the kraken database to use (eg. once at installation), see also [how to install](./2_Installation). Option for detecting contaminants in assemblies <!-- TODO we need to improve this part and adapt to assemblies -->
+*Detection of contaminants in assemblies* - `krakenDB = null` please provide the path of the kraken database to use (eg. once at installation), see also [how to install]. Option for detecting contaminants in assemblies <!-- TODO we need to improve this part and adapt to assemblies -->
+
+  [how to install]: ./2_Installation
 
 *Assembly quality assessment with QUAST* - `which_quast = "ref"` : options: "ref", "assembly", "both" : if quast is to be run with an external reference and/or using an internal assembly was reference.
 
@@ -178,7 +188,7 @@ QUAST native options: - `min_contig = 500` only shows contigs of size \$ \geq 50
 -   `busco_download_path = null` please provide the path where busco lineages databases have been donwloaded (should be ending with `busco_downloads`)
 
 |  |
-|------|
+|------------------------------------------------------------------------|
 | \#### Example of command for SAGA users: |
 | \`\`\`bash DIPLO="/cluster/projects/nn9305k/active/evezeyl/projects/Saprolegnia/git/diplotopia" |
 | module purge module load Java/17.0.4 |
@@ -198,7 +208,9 @@ NFCONFIG="${DIPLO}/SAGA/nextflow.config" CONFIG="\${DIPLO}/SAGA/saga_sapro.confi
 
 "input.csv" : A comma delimited file containing the following fields: `ID,assembly,longreads,R1,R2,type,haplo_low,haplo_mid,haplo_high,comments`
 
-It is an extension of the [COMPASS Track](./3_How_to_Run.md###4._COMPASS) input, as it includes additional fields `haplo_low`, `haplo_mid`, `haplo_high` which are required for purging haplotigs.
+It is an extension of the [COMPASS Track] input, as it includes additional fields `haplo_low`, `haplo_mid`, `haplo_high` which are required for purging haplotigs.
+
+  [COMPASS Track]: ./3_How_to_Run.md###4._COMPASS
 
 If you do not know which parameters to employ in `haplo_low`, `haplo_mid`, `haplo_high` fields yet, please Set `NA` in those fields.
 
@@ -214,9 +226,13 @@ If you do not know which parameters to employ in `haplo_low`, `haplo_mid`, `hapl
 
 This parameters allows you to make the pipeline stop when you need to take a decision and adjust the parameters of the pipeline step by step. First using : `hist`, then `cov`, followed by `purge` until you are satistified with the results. `all` will run everything, allowing you to get a clean run with all the parameters set (eg. prior to writing an article).
 
-The results of `hist`stage will allow you to choose the `haplo_low`, `haplo_mid`, `haplo_high` parameters, which are the coverage cutoff parameters "low, mid, and high", defined by [purge haplotigs software](https://bitbucket.org/mroachawri/purge_haplotigs/src/master/)
+The results of `hist`stage will allow you to choose the `haplo_low`, `haplo_mid`, `haplo_high` parameters, which are the coverage cutoff parameters "low, mid, and high", defined by [purge haplotigs software]
 
-![choosing parameters for purge haplotigs](https://bitbucket-assetroot.s3.amazonaws.com/repository/Ej8Mz7/84978409-phased_coverage_histogram.png?AWSAccessKeyId=ASIA6KOSE3BNG544Y6EG&Signature=LtNEErYzyv459JKKIPSrN1zJy28%3D&x-amz-security-token=IQoJb3JpZ2luX2VjEAQaCXVzLWVhc3QtMSJIMEYCIQDEW35mJ0MY47%2BLj8C27zkdJryGp8RWOMBrIeufNf1QMwIhAIM9nOUMkDcJaafLUZCm2yahzBqzG2HEaltEJLSYydB3KrACCO3%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEQABoMOTg0NTI1MTAxMTQ2IgyfDEStr8CukwwXi1YqhAL5TPJefb34V2h%2BZvMuIWjCkkOZSfFBtMsMAKpvmeVatd%2B%2BQuR3CIVJEHbrnlzs3zVG8PWxSA4fTMUhBmE3TT1%2F%2FfEGy%2BW6lGj%2BA5Ma4AV8q75eM7pyX%2F6swUyj24S3qRxQnxbdgxj8RfIYFdPNbVVHkn%2BF98CzOwQCkchZNhf6ikPQJAuZjoXrRe1BxR1M6WmbaPQKdyNPrxiUYhSkgxykjUw7IzWXqSF2x7k8ntXLMKLw2mA0FCigtyTopkZUjLntVT4MWAKmKj8yb%2FwyfQ6insenrbrBSM70rUhPR6YLWoamLMMk1kMOoeYsRe4%2FY9ScBC%2FXuSOruUtSwC4YeOzI39%2B0KzCSmci1BjqcAd%2FKI5ikk81yK4Kj%2FdQdSHsh6hsbB%2FWMWC7cNftVwZ1OFJcHVgaNiUctAbNZweJUP0%2BKoLEnwgP7awUjKmG%2FLcJVzPMvepI%2F2NsqwMON1G6guW%2FT%2BWdW2IDxKfjdxpLsj3dGe%2BaOPdxZ4WYSWN0wRbKo8KkGKrw6DPlKtoE8rGAf41%2FaMbA0Dyl4hb4Ny9rsb9qU2d6YmBsT9QHY1g%3D%3D&Expires=1722946911) \> Citat: Purge Haplotigs sofware <https://bitbucket.org/mroachawri/purge_haplotigs/src/master/>
+  [purge haplotigs software]: https://bitbucket.org/mroachawri/purge_haplotigs/src/master/
+
+![choosing parameters for purge haplotigs] \> Citat: Purge Haplotigs sofware <https://bitbucket.org/mroachawri/purge_haplotigs/src/master/>
+
+  [choosing parameters for purge haplotigs]: https://bitbucket-assetroot.s3.amazonaws.com/repository/Ej8Mz7/84978409-phased_coverage_histogram.png?AWSAccessKeyId=ASIA6KOSE3BNG544Y6EG&Signature=LtNEErYzyv459JKKIPSrN1zJy28%3D&x-amz-security-token=IQoJb3JpZ2luX2VjEAQaCXVzLWVhc3QtMSJIMEYCIQDEW35mJ0MY47%2BLj8C27zkdJryGp8RWOMBrIeufNf1QMwIhAIM9nOUMkDcJaafLUZCm2yahzBqzG2HEaltEJLSYydB3KrACCO3%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEQABoMOTg0NTI1MTAxMTQ2IgyfDEStr8CukwwXi1YqhAL5TPJefb34V2h%2BZvMuIWjCkkOZSfFBtMsMAKpvmeVatd%2B%2BQuR3CIVJEHbrnlzs3zVG8PWxSA4fTMUhBmE3TT1%2F%2FfEGy%2BW6lGj%2BA5Ma4AV8q75eM7pyX%2F6swUyj24S3qRxQnxbdgxj8RfIYFdPNbVVHkn%2BF98CzOwQCkchZNhf6ikPQJAuZjoXrRe1BxR1M6WmbaPQKdyNPrxiUYhSkgxykjUw7IzWXqSF2x7k8ntXLMKLw2mA0FCigtyTopkZUjLntVT4MWAKmKj8yb%2FwyfQ6insenrbrBSM70rUhPR6YLWoamLMMk1kMOoeYsRe4%2FY9ScBC%2FXuSOruUtSwC4YeOzI39%2B0KzCSmci1BjqcAd%2FKI5ikk81yK4Kj%2FdQdSHsh6hsbB%2FWMWC7cNftVwZ1OFJcHVgaNiUctAbNZweJUP0%2BKoLEnwgP7awUjKmG%2FLcJVzPMvepI%2F2NsqwMON1G6guW%2FT%2BWdW2IDxKfjdxpLsj3dGe%2BaOPdxZ4WYSWN0wRbKo8KkGKrw6DPlKtoE8rGAf41%2FaMbA0Dyl4hb4Ny9rsb9qU2d6YmBsT9QHY1g%3D%3D&Expires=1722946911
 
 The improvement of the assembly, towards an HaploSSembly is then under control of the following parameters:
 
@@ -227,8 +243,8 @@ The improvement of the assembly, towards an HaploSSembly is then under control o
 -   `haplo_suspect = 80` : purge haplotigs `suspect` parameter (step2). Coverage threshold for suspect haplotigs (integer). Contig is suspect if diploid coverage is $leq$ % of the contig \> aka. alleles at a locus are given in a different contig.
 
 -   `haplo_align_cov = 70` : purge haplotigs `align_cov` parameter (step3). <!-- TODO check if I understood correctly --- I am really not sure this one 
-    The cutoff percentage of the contig length from which the reads coverage is estimated to be haploid. Above this percentage, the contig is considered as an haplotig.  
-    --> The read covearge cutoff at which the contig is estimated to be haploid. Bellow this percentage, the contig is considered as an haplotig.
+                    The cutoff percentage of the contig length from which the reads coverage is estimated to be haploid. Above this percentage, the contig is considered as an haplotig.  
+                    --> The read covearge cutoff at which the contig is estimated to be haploid. Bellow this percentage, the contig is considered as an haplotig.
 
 <!-- check if I understood correctly -->
 
@@ -296,7 +312,7 @@ The field `comments` is not used during analysis but must be present and can be 
 Allows parameter adjustments, see eg. masking the reference, filtering mapped reads and filtering variants parameters.\
 <!-- TODO ? should we change to var_phase ? -->
 
--   `phase  =  null` : a choice to enter "prep_ref" (1) OR "prep_samples" (2) OR "call_variants" (3) [ This parameters allows you to run the pipeline step by step, when used in conjunction with `-resume`. Note `call_variants` will run everything if this has not been done before. This allows you to get a clean run with all the parameters set approriately (eg. prior to writing an article). ]{style="display:inline-block;margin-left:1em;"}
+-   `phase  =  null` : a choice to enter "prep_ref" (1) OR "prep_samples" (2) OR "call_variants" (3) [This parameters allows you to run the pipeline step by step, when used in conjunction with `-resume`. Note `call_variants` will run everything if this has not been done before. This allows you to get a clean run with all the parameters set approriately (eg. prior to writing an article).]{style="display:inline-block;margin-left:1em;"}
 
 *Trimming reads prior to mapping: Trim Galore parameters* - `phred_score = 15` - `error_rate =  0.1` - `minlength = 20`
 
@@ -319,7 +335,9 @@ kmer size can be adapted by adding -k eg. "-k 19" <br> </br> </span>
 *Filtering of mapped reads: Samtools parameters*
 
 -   `min_mapq = 30` reads with MAPQ (mapping quality) $/leg 30$ are filtered out. (MAPQ given as a phread value)
--   `filterout_tag = "-F 0x0008 -F 0x0100 -F 0x0400 -F 0x0800 -F 0x0004"` reads from which those tags are present are filtered out. See [sammtools flags](https://www.htslib.org/doc/samtools-flags.html) for flags code.
+-   `filterout_tag = "-F 0x0008 -F 0x0100 -F 0x0400 -F 0x0800 -F 0x0004"` reads from which those tags are present are filtered out. See [sammtools flags] for flags code.
+
+  [sammtools flags]: https://www.htslib.org/doc/samtools-flags.html
 
 Note: This will filter out reads where one is unmapped/unpaired, and will filterout positions that are secondary alignment and supplementary alignments. <!-- ! TODO we need to review again I think -->
 
@@ -327,25 +345,35 @@ Note: This will filter out reads where one is unmapped/unpaired, and will filter
 
 -   `vcf_ref = null` (optional) a vcf file that is used as reference to force calling variants at particular alleles, eg. to standardize with a previous population analysis. Note that the variant calling MUST have used the same assembly/haploSSembly as reference for variant calling.
 
--   `chunk_size = 100000` chunks the reference to parallelize variant calling to use [Freebayes parallel](https://github.com/freebayes/freebayes)
+-   `chunk_size = 100000` chunks the reference to parallelize variant calling to use [Freebayes parallel]
 
 -   `freebayes_args = "--min-coverage 10"` **flexible argument** : parameters to pass to freebayes to control variant calling. By default the only option is to not call variants from which reads coverage (after having filtered the mapped reads) are represented by in less than 10 reads.
 
-<span style="display:inline-block;margin-left:2em;"> Freebayes default parameters to call variants for diploid organisms: `--min-alternate-count 2 --min-alternate-fraction 0.2` have not been modified and are thus employed here; see [Freebayes instructions](https://github.com/freebayes/freebayes) <br></br>
+  [Freebayes parallel]: https://github.com/freebayes/freebayes
 
-> Note: The list of available options can be optained with freebayes by typing `freebayes -h`. For convenience it has been copied and linked [here](./tools_options/Freebayes_Options.md) </span>
+<span style="display:inline-block;margin-left:2em;"> Freebayes default parameters to call variants for diploid organisms: `--min-alternate-count 2 --min-alternate-fraction 0.2` have not been modified and are thus employed here; see [Freebayes instructions] <br></br>
+
+  [Freebayes instructions]: https://github.com/freebayes/freebayes
+
+> Note: The list of available options can be optained with freebayes by typing `freebayes -h`. For convenience it has been copied and linked [here][3] </span>
+
+  [3]: ./tools_options/Freebayes_Options.md
 
 *Variants **Filtering** parameters: bcftools* - `filter_args = "-i 'QUAL>=100 && FMT/DP >= 30 && FMT/QA >= 100'"` **flexible argument** : parameters to pass to freebayes to control the filtering of valid variants.
 
 <span style="display:inline-block;margin-left:2em;">
 
-Par default $QUAL \geq 100$ means that we require variants to be called with a minimum quality/error rate corresponding to phred 100. There is a very high probability that there is a polymorphism at this loci ![QUAL meaning](./files/p_polym_phred2.png)
+Par default $QUAL \geq 100$ means that we require variants to be called with a minimum quality/error rate corresponding to phred 100. There is a very high probability that there is a polymorphism at this loci ![QUAL meaning]
+
+  [QUAL meaning]: ./files/p_polym_phred2.png
 
 Par default $FMT/DP \geq 30$ means that variants are not called if the Read Depth at the loci is below 30.
 
 Par default $FMT/QA \geq 100$ sum of quality of the alternate observations (phred) is required for a variants to be called at specific site. </span>
 
-> Note: The headers/fields that are reported by freebayes have been copied and linked [here](./tools_options/Freebayes_headers.md) and can be employed to adjust the filtering parameters according to your requirements.
+> Note: The headers/fields that are reported by freebayes have been copied and linked [here][4] and can be employed to adjust the filtering parameters according to your requirements.
+
+  [4]: ./tools_options/Freebayes_headers.md
 
 *Other*
 
@@ -374,6 +402,35 @@ $NF run $MAIN -c $NFCONIG -c $CONFIG --out_dir . -work-dir $USERWORK/diplotopia/
 
 #### Additional information
 
-You might want to refere to this document if you wish to adjust filtering of mapped reads [SAM/BAM format specification v1](https://samtools.github.io/hts-specs/SAMv1.pdf)
+You might want to refere to this document if you wish to adjust filtering of mapped reads [SAM/BAM format specification v1]
 
-You might want to refere to this document if you wish to adjust calling and filtering of variants: [The variant Call Format v4.2](https://samtools.github.io/hts-specs/VCFv4.2.pdf) \`\`\`
+  [SAM/BAM format specification v1]: https://samtools.github.io/hts-specs/SAMv1.pdf
+
+You might want to refere to this document if you wish to adjust calling and filtering of variants: [The variant Call Format v4.2]
+
+  [The variant Call Format v4.2]: https://samtools.github.io/hts-specs/VCFv4.2.pdf
+
+## 
+
+# Parameters description
+
+> Note: A memo to recognize the type of parameters when running the pipeline
+>
+> -   Nextflow parameters : `-` nextflow running options (eg. profiles and configuration files)
+>
+> -   pipeline parameters : `--` options for running the different tools of the pipeline
+
+``` bash
+**Input and output**
+--input:              Input csv file
+--out_dir:            Output directory name
+
+Workflow-specific parameters
+
+--
+
+**General parameters**
+
+**Time-related parameters**
+--time_multiplier:    Default value 1. If increased to 2, doubles the time requested by the system for 
+```
