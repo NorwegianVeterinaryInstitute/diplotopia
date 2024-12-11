@@ -372,9 +372,7 @@ The original assembly, provided as input, is inspected for eventual chimera/miss
 
 [purge haplotigs]: "https://bmcbioinformatics.biomedcentral.com/articles/10.1186/s12859-018-2485-7"
 
-![HAPLOPURGE track overview]
-
-[haplopurge track overview]: ./files/HAPLOPURGE.drawio.svg
+![HAPLOPURGE track overview](./files/HAPLOPURGE.drawio.svg)
 
 First, reads are mapped (using MINIMAP) to the (decontaminated) assembly <!-- if you provide it as input - should be -->. Purge Haplotigs software allows to draw an histogram that allows to evaluate the coverage of the haploid and diploid parts of the genome, which allows to determine three coverage thresholds low, mid (between the haploid and diploid pics) and high that Purge Haploitigs software will further used to attemps to classify contigs as haploid VS diploid, poliploid (eg. small repeats) or chimeric/artificial contigs, this on the basis of the proportion of haploid and diploid coverage for each contig. <!-- TODO understand better and recheck info, and reformulate -->
 
@@ -392,7 +390,6 @@ NB: it also allows, by examining the difference to the completeness and size of 
 See also [HAPLOPURGE choices]
 
 [haplopurge choices]: ./Haplopurge_choices
-
 References
 
 - [Purge haplotigs article]
