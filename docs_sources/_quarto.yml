@@ -32,6 +32,12 @@ book:
 
 bibliography: references.bib
 
+# options
+render:
+    - docs_sources/
+  output-dir: docs/
+  
+  
 # format options - consider creating index
 format:
   html:
