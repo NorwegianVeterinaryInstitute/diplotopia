@@ -1,0 +1,1140 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.6.43">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>3&nbsp; Input and usage – Diplotopia pipeline documentation</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./saga_users.html" rel="next">
+<link href="./description.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-d4d76bf8491c20bad77d141916dc28e1.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-a34d670291f06f286357e447776a572a.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+</head>
+
+<body class="nav-sidebar floating">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./usage.html"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Input and usage</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">Diplotopia pipeline documentation</a> 
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Preface</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./requirements_installation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Requirements and installation</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./description.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">DIPLOTOPIA pipeline and program descriptions</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./usage.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Input and usage</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./saga_users.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Saga Users</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./configuration.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Configuration</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./output.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Output files</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./contribution.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Contribution and support</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./summary.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Summary</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">References</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
+ <span class="menu-text">Changes</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./changelog_versions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Change log in different versions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./changelog_development.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Change log</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true">
+ <span class="menu-text">Scientific reasoning</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./filter_contigs_choices.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Choices and reason behind those choices for : FILTER_CONTIGS track</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./haplopurge_choices.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Choices and reason behind those choices for : HAPLOPURGE track</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./VARWRRUMM_choices.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Choices and reason behind those choices for : VARWRRUMM track</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#usage" id="toc-usage" class="nav-link active" data-scroll-target="#usage"><span class="header-section-number">4</span> Usage</a></li>
+  <li><a href="#how-to-run" id="toc-how-to-run" class="nav-link" data-scroll-target="#how-to-run"><span class="header-section-number">5</span> How to run</a>
+  <ul class="collapse">
+  <li><a href="#with-containers" id="toc-with-containers" class="nav-link" data-scroll-target="#with-containers"><span class="header-section-number">5.1</span> with containers</a></li>
+  <li><a href="#with-conda" id="toc-with-conda" class="nav-link" data-scroll-target="#with-conda"><span class="header-section-number">5.2</span> with conda</a></li>
+  <li><a href="#saga-users-only" id="toc-saga-users-only" class="nav-link" data-scroll-target="#saga-users-only"><span class="header-section-number">5.3</span> SAGA users only</a></li>
+  <li><a href="#which-options-can-i-choose" id="toc-which-options-can-i-choose" class="nav-link" data-scroll-target="#which-options-can-i-choose"><span class="header-section-number">5.4</span> Which options can I choose</a></li>
+  <li><a href="#running-each-track" id="toc-running-each-track" class="nav-link" data-scroll-target="#running-each-track"><span class="header-section-number">5.5</span> Running each track</a>
+  <ul class="collapse">
+  <li><a href="#purely_raw-under-dev" id="toc-purely_raw-under-dev" class="nav-link" data-scroll-target="#purely_raw-under-dev"><span class="header-section-number">5.5.1</span> 1. PURELY_RAW (under dev)</a></li>
+  <li><a href="#tryassembly-under-dev" id="toc-tryassembly-under-dev" class="nav-link" data-scroll-target="#tryassembly-under-dev"><span class="header-section-number">5.5.2</span> 2. TRYASSEMBLY (under dev)</a></li>
+  <li><a href="#filter_contigs" id="toc-filter_contigs" class="nav-link" data-scroll-target="#filter_contigs"><span class="header-section-number">5.5.3</span> 3. FILTER_CONTIGS</a></li>
+  <li><a href="#compass" id="toc-compass" class="nav-link" data-scroll-target="#compass"><span class="header-section-number">5.5.4</span> 4. COMPASS</a></li>
+  <li><a href="#varwrrum" id="toc-varwrrum" class="nav-link" data-scroll-target="#varwrrum"><span class="header-section-number">5.5.5</span> 6. VARWRRUM:</a></li>
+  </ul></li>
+  <li><a href="#section" id="toc-section" class="nav-link" data-scroll-target="#section"><span class="header-section-number">5.6</span> </a></li>
+  </ul></li>
+  <li><a href="#parameters-description" id="toc-parameters-description" class="nav-link" data-scroll-target="#parameters-description"><span class="header-section-number">6</span> Parameters description</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Input and usage</span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<!---- 
+## Input
+## Available parameters, description and defaults values
+## General usage
+## Examples per track
+----------
+-->
+<section id="usage" class="level1" data-number="4">
+<h1 data-number="4"><span class="header-section-number">4</span> Usage</h1>
+</section>
+<section id="how-to-run" class="level1" data-number="5">
+<h1 data-number="5"><span class="header-section-number">5</span> How to run</h1>
+<p>Bellow some short introduction on how to run the different tracks of the pipeline.</p>
+<section id="with-containers" class="level2" data-number="5.1">
+<h2 data-number="5.1" class="anchored" data-anchor-id="with-containers"><span class="header-section-number">5.1</span> with containers</h2>
+<p>It is currently only possible to use the pipeline with containers. Tested using apptainer. <!-- TODO -- update if gets done with conda --></p>
+</section>
+<section id="with-conda" class="level2" data-number="5.2">
+<h2 data-number="5.2" class="anchored" data-anchor-id="with-conda"><span class="header-section-number">5.2</span> with conda</h2>
+<p>NOT IMPLEMENTED YET</p>
+</section>
+<section id="saga-users-only" class="level2" data-number="5.3">
+<h2 data-number="5.3" class="anchored" data-anchor-id="saga-users-only"><span class="header-section-number">5.3</span> SAGA users only</h2>
+<p>Please use apptainer as container. See <a href="./SAGA_USERS_instructions">here</a> for configuration in SAGA (for all nextflow pipelines).</p>
+</section>
+<section id="which-options-can-i-choose" class="level2" data-number="5.4">
+<h2 data-number="5.4" class="anchored" data-anchor-id="which-options-can-i-choose"><span class="header-section-number">5.4</span> Which options can I choose</h2>
+<!-- TODO -- update when finalized -->
+<p>For an updated list of available options, please have a look at <code>diplotopia/nextflow.config</code> file (or online <a href="https://github.com/NorwegianVeterinaryInstitute/diplotopia/blob/main/nextflow.config">HERE</a>). The nextflow.config file provides the options (and ssociated description) that are currently implemented in the pipeline. It also allows you to check what default options are used in the pipeline.</p>
+<p>You do not need to change this file to change options that are used differently from run to run. The desired options can be given when launching the pipeline (see below) thanks to the priority order during nextlow configuration at runtime. However, the priority order means that you should put the options that you want to change after having mentionned any other configuration file that contains parameters affecting the pipeline options.</p>
+<p>See <a href="https://www.nextflow.io/docs/latest/config.html">nextflow documentation on configuration priority</a> for more information.</p>
+<p>Note: Available options will also be described for each track of the pipeline.</p>
+</section>
+<section id="running-each-track" class="level2" data-number="5.5">
+<h2 data-number="5.5" class="anchored" data-anchor-id="running-each-track"><span class="header-section-number">5.5</span> Running each track</h2>
+<p>General nextflow synthax</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="op">&lt;</span>path<span class="op">&gt;</span>/nextflow <span class="ex">run</span> <span class="op">&lt;</span>path<span class="op">&gt;</span>/main.nf <span class="at">-c</span> <span class="op">&lt;</span>path/conf<span class="op">&gt;</span>/<span class="op">&lt;</span>selected<span class="op">&gt;</span>.config <span class="op">&lt;</span>optional: <span class="at">-c</span> otherconfig<span class="op">&gt;</span> --outdir <span class="op">&lt;</span>path<span class="op">&gt;</span> --workdir <span class="op">&lt;</span>path<span class="op">&gt;</span> <span class="dt">\</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>--track <span class="op">&lt;</span>track<span class="op">&gt;</span> --input <span class="op">&lt;</span>input.csv<span class="op">&gt;</span> --<span class="op">&lt;</span>option value<span class="op">&gt;</span> -profile <span class="op">&lt;</span>profile<span class="op">&gt;</span> </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Note: It is usually easier to use variables to put the full paths - the command gets clearer</p>
+<!-- TODO change DIPLO path when installing for other things than testing -->
+<hr>
+<p><strong>For saga users:</strong></p>
+<p>The <code>nextflow.config</code> file and slurm configuration file <code>saga_sapro.config</code> are in a specific SAGA subdirectory in the pipeline. We need to use those configs for the pipeline to launch correctly.</p>
+<!-- TODO merge folder/files from the dev branch. For now use my dir ! -->
+<div class="sourceCode" id="cb2"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># path of the pipeline directory</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="va">DIPLO</span><span class="op">=</span><span class="st">"/cluster/projects/nn9305k/active/evezeyl/projects/Saprolegnia/git/diplotopia"</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="ex">module</span> purge </span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="ex">module</span> load Java/17.0.4</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="va">MAIN</span><span class="op">=</span><span class="st">"</span><span class="va">${DIPLO}</span><span class="st">/main.nf"</span> </span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="va">NF</span><span class="op">=</span><span class="st">"/cluster/projects/nn9305k/bin/nextflow_23.04.4"</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="va">NFCONFIG</span><span class="op">=</span><span class="st">"</span><span class="va">${DIPLO}</span><span class="st">/SAGA/nextflow.config"</span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="va">CONFIG</span><span class="op">=</span><span class="st">"</span><span class="va">${DIPLO}</span><span class="st">/SAGA/saga_sapro.config"</span></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a><span class="va">$NF</span> run <span class="va">$MAIN</span> <span class="at">-c</span> <span class="va">$NFCONFIG</span> <span class="at">-c</span> <span class="va">$CONFIG</span> <span class="at">--out_dir</span> <span class="op">&lt;</span>path<span class="op">&gt;</span> -work-dir <span class="va">$USERWORK</span>/diplotopia/<span class="op">&lt;</span>track<span class="op">&gt;</span>  --track <span class="op">&lt;</span>track<span class="op">&gt;</span> --input <span class="op">&lt;</span>input.csv<span class="op">&gt;</span> --<span class="op">&lt;</span>option value<span class="op">&gt;</span> -profile apptainer <span class="at">-resume</span> <span class="dv">2</span><span class="op">&gt;&amp;</span><span class="dv">1</span> <span class="kw">|</span> <span class="fu">tee</span> <span class="op">&lt;</span>date<span class="op">&gt;</span>_nf.runlog</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<blockquote class="blockquote">
+<p>For the time being, I strongly recomend to add -resume and the external redirection to the log - it will be easier to debug (expected some problems at the beginning)</p>
+</blockquote>
+<hr>
+<section id="purely_raw-under-dev" class="level3" data-number="5.5.1">
+<h3 data-number="5.5.1" class="anchored" data-anchor-id="purely_raw-under-dev"><span class="header-section-number">5.5.1</span> 1. PURELY_RAW (under dev)</h3>
+<p>Pre-assembly. Detection and filtering out (optional) of contaminated reads, prior to assembly.</p>
+<p>Options implemented:</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</section>
+<section id="tryassembly-under-dev" class="level3" data-number="5.5.2">
+<h3 data-number="5.5.2" class="anchored" data-anchor-id="tryassembly-under-dev"><span class="header-section-number">5.5.2</span> 2. TRYASSEMBLY (under dev)</h3>
+<ul>
+<li>multiple assemblies test</li>
+</ul>
+<p>Options implemented:</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</section>
+<section id="filter_contigs" class="level3" data-number="5.5.3">
+<h3 data-number="5.5.3" class="anchored" data-anchor-id="filter_contigs"><span class="header-section-number">5.5.3</span> 3. FILTER_CONTIGS</h3>
+<p>Purpose: Filtering out contigs that do not represent the genome of the organism of interest</p>
+<hr>
+<section id="input-preparation" class="level4" data-number="5.5.3.1">
+<h4 data-number="5.5.3.1" class="anchored" data-anchor-id="input-preparation"><span class="header-section-number">5.5.3.1</span> input preparation</h4>
+<!--TODO -->
+<hr>
+</section>
+<section id="options-curently-implemented" class="level4" data-number="5.5.3.2">
+<h4 data-number="5.5.3.2" class="anchored" data-anchor-id="options-curently-implemented"><span class="header-section-number">5.5.3.2</span> Options curently implemented:</h4>
+<ul>
+<li><p><code>blastDB = null</code> please provide the path of your blast database (once at installation)</p></li>
+<li><p><code>ranked_taxo_file = null</code>” please provide the path of NCBI taxonomic file: “rankedlineage.dmp” (once at installation)</p></li>
+<li><p><code>positive_filter = null</code> rlang filtering expression, any contigs detected as corresponding (positive) to this filtering criteria will be kept in the dataset. Example “phylum == ‘Oomycota’” . <strong>! OOPS : Be aware that the external brackets need to be double</strong>. See <a href="./Filtering_contigs">here</a> for additional examples.</p></li>
+<li><p><code>evalue_min = 1e-20</code> query results where positive filtering expression is TRUE, are only considered as valid if the blast <span class="math inline">\(evalue \geq 1e-20\)</span></p></li>
+<li><p><code>perc_identity_min = 95</code> query results where positive filtering expression is TRUE, are only considered as valid if the blast identify measure of the query <span class="math inline">\(\geq 95\%\)</span> identity with the target sequence.</p></li>
+</ul>
+<hr>
+</section>
+<section id="example-of-command-for-saga-users" class="level4" data-number="5.5.3.3">
+<h4 data-number="5.5.3.3" class="anchored" data-anchor-id="example-of-command-for-saga-users"><span class="header-section-number">5.5.3.3</span> Example of command for SAGA users:</h4>
+<div class="sourceCode" id="cb5"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</section>
+</section>
+<section id="compass" class="level3" data-number="5.5.4">
+<h3 data-number="5.5.4" class="anchored" data-anchor-id="compass"><span class="header-section-number">5.5.4</span> 4. COMPASS</h3>
+<p>Purpose: Evaluation of assembly quality and compleness, for comparison of assemblies with different methods/assemblers. This in order to guide the choice of which assembly to use for downstream analyses.</p>
+<section id="input-preparation-1" class="level4" data-number="5.5.4.1">
+<h4 data-number="5.5.4.1" class="anchored" data-anchor-id="input-preparation-1"><span class="header-section-number">5.5.4.1</span> input preparation</h4>
+<p>“input.csv” : A comma delimited file containing the following fields: <code>ID,assembly,longreads,R1,R2,type,comments</code></p>
+<p>Note: The field <code>comments</code> is not used during analysis but must be present and can be left empty. Its purpose to allow you to put some notes in your input files, <strong>as long as you do not use commas as separator</strong>. You can eg. write several comments using <code>|</code> instead of <code>,</code> to write long comments.</p>
+<p>If you only have <em>long reads</em> :</p>
+<ul>
+<li>Set <code>NA</code> in “R1” and “R2” fields</li>
+<li>Set <code>long</code>in “type” fields</li>
+</ul>
+<p>If you only have <em>short reads</em> :</p>
+<ul>
+<li>Set <code>NA</code> in “longreads” field</li>
+<li>Set <code>short</code>in “type” field</li>
+</ul>
+<p>If you have <strong>both</strong> long and short reads :</p>
+<ul>
+<li>Set <code>hybrid</code>in “type” field</li>
+</ul>
+<hr>
+</section>
+<section id="options-curently-implemented-1" class="level4" data-number="5.5.4.2">
+<h4 data-number="5.5.4.2" class="anchored" data-anchor-id="options-curently-implemented-1"><span class="header-section-number">5.5.4.2</span> Options curently implemented:</h4>
+<p><em>Contigs classification and removal of contaminated contigs</em> - <code>remove_contaminants = "no"</code> if “yes” then activates FILTER_CONTIGS with the selected parameters <!-- purpose : use at rerun - when one is sure of the parameters to use --></p>
+<p><em>Detection of contaminants in assemblies</em> - <code>krakenDB = null</code> please provide the path of the kraken database to use (eg. once at installation), see also <a href="./2_Installation">how to install</a>. Option for detecting contaminants in assemblies <!-- TODO we need to improve this part and adapt to assemblies --></p>
+<p><em>Assembly quality assessment with QUAST</em> - <code>which_quast = "ref"</code> : options: “ref”, “assembly”, “both” : if quast is to be run with an external reference and/or using an internal assembly was reference.</p>
+<p><span style="display:inline-block;margin-left:2em;"> Path of the external genome/asssembly and of its annotations (.gff), to be use as external reference for assembly quality assessment using quast. (if option)</span></p>
+<p>Can eg. be provided at laucn time using <code>--quast_ref &lt;path&gt;</code> - <code>quast_ref = null</code><br>
+- <code>quast_annot = null</code></p>
+<p>Path of the internal assembly that is used by QUAST - <code>quast_ref_assembly = null</code></p>
+<p>QUAST native options: - <code>min_contig = 500</code> only shows contigs of size $ ; bp$ - <code>plot_format = "svg"</code> </p>
+<p><em>Assembly completeness assessment with BUSCO</em></p>
+<ul>
+<li><p><code>lineage_dataset = null</code> A list of lineages to use, separated by commas. Ex.: “alveolata_odb10,stramenopiles_odb10,eukaryota_odb10”</p></li>
+<li><p><code>busco_download_path = null</code> please provide the path where busco lineages databases have been donwloaded (should be ending with <code>busco_downloads</code>)</p></li>
+</ul>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 100%">
+</colgroup>
+<tbody>
+<tr class="odd">
+<td>#### Example of command for SAGA users:</td>
+</tr>
+<tr class="even">
+<td>```bash DIPLO=“/cluster/projects/nn9305k/active/evezeyl/projects/Saprolegnia/git/diplotopia”</td>
+</tr>
+<tr class="odd">
+<td>module purge module load Java/17.0.4</td>
+</tr>
+<tr class="even">
+<td>MAIN=“<span class="math inline">\({DIPLO}/main.nf"
+NF="/cluster/projects/nn9305k/bin/nextflow_23.04.4"
+NFCONFIG="\)</span>{DIPLO}/SAGA/nextflow.config” CONFIG=“${DIPLO}/SAGA/saga_sapro.config”</td>
+</tr>
+<tr class="odd">
+<td># Synthax $NF run $MAIN -c $NFCONIG-c <span class="math inline">\(CONFIG --outdir &lt;path&gt;  -work-dir &lt;\)</span>USERWORK/diplotopia/COMPASS –track coverage –input input.csv [–<optional params=""> ] -profile apptainer ```</optional></td>
+</tr>
+<tr class="even">
+<td><strong>if you are relaunching add <code>-resume</code></strong></td>
+</tr>
+<tr class="odd">
+<td>All the optional parameters are given in <code>nextflow.config</code> file. To change those, use : <code>--&lt;parameter_name&gt; &lt;value&gt;</code></td>
+</tr>
+<tr class="even">
+<td>### 5. HAPLOPURGE</td>
+</tr>
+<tr class="odd">
+<td>Purpose: Obtaining an haploid representation of the genome (HaploSSembly)</td>
+</tr>
+<tr class="even">
+<td><!-- ! TODO for short reads --></td>
+</tr>
+<tr class="odd">
+<td>This track takes advantage of the option <code>-resume</code> implemented in nextflow to run a pipeline that would otherwise require decision/user input; which is otherwise in opposition to the principe of pipeline running.</td>
+</tr>
+<tr class="even">
+<td>Running this track step by step with the -resume option will allow you to find the parameters that should be used, and allow you to rerun all the steps at once when you know what parameters to use, eg. prior to writing your definitive results.</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="input-preparation-2" class="level4" data-number="5.5.4.3">
+<h4 data-number="5.5.4.3" class="anchored" data-anchor-id="input-preparation-2"><span class="header-section-number">5.5.4.3</span> input preparation</h4>
+<p>“input.csv” : A comma delimited file containing the following fields: <code>ID,assembly,longreads,R1,R2,type,haplo_low,haplo_mid,haplo_high,comments</code></p>
+<p>It is an extension of the [COMPASS Track] input, as it includes additional fields <code>haplo_low</code>, <code>haplo_mid</code>, <code>haplo_high</code> which are required for purging haplotigs.</p>
+<!-- FIXME
+  [COMPASS Track]: ./3_How_to_Run.html###4._COMPASS
+-->
+<p>If you do not know which parameters to employ in <code>haplo_low</code>, <code>haplo_mid</code>, <code>haplo_high</code> fields yet, please Set <code>NA</code> in those fields.</p>
+<p><code>haplo_low</code>, <code>haplo_mid</code>, <code>haplo_high</code> corresponds to purge haplotigs <code>low</code>, <code>mid</code>, <code>high</code> parameters (step1) and need to be provided in input.csv. This allows you to check different assemblies with data (leading to different reads coverage).</p>
+<hr>
+</section>
+<section id="options-curently-implemented-2" class="level4" data-number="5.5.4.4">
+<h4 data-number="5.5.4.4" class="anchored" data-anchor-id="options-curently-implemented-2"><span class="header-section-number">5.5.4.4</span> Options curently implemented:</h4>
+<p><em>Running the track step by step:</em></p>
+<ul>
+<li><code>--purge_phase  =  null</code> : indicate either “hist” (1) OR “cov” (2) OR “purge” (3) OR “all”</li>
+</ul>
+<p>This parameters allows you to make the pipeline stop when you need to take a decision and adjust the parameters of the pipeline step by step. First using : <code>hist</code>, then <code>cov</code>, followed by <code>purge</code> until you are satistified with the results. <code>all</code> will run everything, allowing you to get a clean run with all the parameters set (eg. prior to writing an article).</p>
+<p>The results of <code>hist</code>stage will allow you to choose the <code>haplo_low</code>, <code>haplo_mid</code>, <code>haplo_high</code> parameters, which are the coverage cutoff parameters “low, mid, and high”, defined by <a href="https://bitbucket.org/mroachawri/purge_haplotigs/src/master/">purge haplotigs software</a></p>
+<p><img src="https://bitbucket-assetroot.s3.amazonaws.com/repository/Ej8Mz7/84978409-phased_coverage_histogram.png?AWSAccessKeyId=ASIA6KOSE3BNG544Y6EG&amp;Signature=LtNEErYzyv459JKKIPSrN1zJy28%3D&amp;x-amz-security-token=IQoJb3JpZ2luX2VjEAQaCXVzLWVhc3QtMSJIMEYCIQDEW35mJ0MY47%2BLj8C27zkdJryGp8RWOMBrIeufNf1QMwIhAIM9nOUMkDcJaafLUZCm2yahzBqzG2HEaltEJLSYydB3KrACCO3%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEQABoMOTg0NTI1MTAxMTQ2IgyfDEStr8CukwwXi1YqhAL5TPJefb34V2h%2BZvMuIWjCkkOZSfFBtMsMAKpvmeVatd%2B%2BQuR3CIVJEHbrnlzs3zVG8PWxSA4fTMUhBmE3TT1%2F%2FfEGy%2BW6lGj%2BA5Ma4AV8q75eM7pyX%2F6swUyj24S3qRxQnxbdgxj8RfIYFdPNbVVHkn%2BF98CzOwQCkchZNhf6ikPQJAuZjoXrRe1BxR1M6WmbaPQKdyNPrxiUYhSkgxykjUw7IzWXqSF2x7k8ntXLMKLw2mA0FCigtyTopkZUjLntVT4MWAKmKj8yb%2FwyfQ6insenrbrBSM70rUhPR6YLWoamLMMk1kMOoeYsRe4%2FY9ScBC%2FXuSOruUtSwC4YeOzI39%2B0KzCSmci1BjqcAd%2FKI5ikk81yK4Kj%2FdQdSHsh6hsbB%2FWMWC7cNftVwZ1OFJcHVgaNiUctAbNZweJUP0%2BKoLEnwgP7awUjKmG%2FLcJVzPMvepI%2F2NsqwMON1G6guW%2FT%2BWdW2IDxKfjdxpLsj3dGe%2BaOPdxZ4WYSWN0wRbKo8KkGKrw6DPlKtoE8rGAf41%2FaMbA0Dyl4hb4Ny9rsb9qU2d6YmBsT9QHY1g%3D%3D&amp;Expires=1722946911" class="img-fluid" alt="choosing parameters for purge haplotigs"> &gt; Citat: Purge Haplotigs sofware <a href="https://bitbucket.org/mroachawri/purge_haplotigs/src/master/" class="uri">https://bitbucket.org/mroachawri/purge_haplotigs/src/master/</a></p>
+<p>The improvement of the assembly, towards an HaploSSembly is then under control of the following parameters:</p>
+<ul>
+<li><p><code>purgehaplotigs_maxdepth = 200</code> : purge haplotigs <code>depth</code> parameter (step1). The maximum cutoff for depth. Adjust higher than your expected coverage, and to obtain a readeable histogram.</p></li>
+<li><p><code>haplo_junk = 80</code> : purge haplotigs <code>junk</code> parameter (step2). Junk coverage threshold for haplotigs (integer). % contig where low/high, if <span class="math inline">\(\geq\)</span> % then is assigned as junk. Junk is not removed if <strong>&gt; 100</strong> <!-- really not sure what it means proportion ? or --></p></li>
+<li><p><code>haplo_suspect = 80</code> : purge haplotigs <code>suspect</code> parameter (step2). Coverage threshold for suspect haplotigs (integer). Contig is suspect if diploid coverage is <span class="math inline">\(leq\)</span> % of the contig &gt; aka. alleles at a locus are given in a different contig.</p></li>
+<li><p><code>haplo_align_cov = 70</code> : purge haplotigs <code>align_cov</code> parameter (step3). <!-- TODO check if I understood correctly --- I am really not sure this one 
+                    The cutoff percentage of the contig length from which the reads coverage is estimated to be haploid. Above this percentage, the contig is considered as an haplotig.  
+                    --> The read covearge cutoff at which the contig is estimated to be haploid. Bellow this percentage, the contig is considered as an haplotig.</p></li>
+</ul>
+<!-- check if I understood correctly -->
+<ul>
+<li><code>haplo_max_match = 250</code> : purge haplotigs <code>max_match</code> parameter (step3). The % read covearge cutoff at which the contig is estimated to be repetitive <!-- equivalent to polyploid --> Above this percentage, the contig is considered to be repeated.</li>
+</ul>
+<!-- BECAUSE I really am not sure I left those as is-->
+<!-- TODO get the dotplots for the choosen contig -->
+<hr>
+</section>
+<section id="example-of-command-for-saga-users-1" class="level4" data-number="5.5.4.5">
+<h4 data-number="5.5.4.5" class="anchored" data-anchor-id="example-of-command-for-saga-users-1"><span class="header-section-number">5.5.4.5</span> Example of command for SAGA users:</h4>
+<p>Example of initial run</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="va">DIPLO</span><span class="op">=</span><span class="st">"/cluster/projects/nn9305k/active/evezeyl/projects/Saprolegnia/git/diplotopia"</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="ex">module</span> purge </span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="ex">module</span> load Java/17.0.4</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a><span class="va">MAIN</span><span class="op">=</span><span class="st">"</span><span class="va">${DIPLO}</span><span class="st">/main.nf"</span> </span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a><span class="va">NF</span><span class="op">=</span><span class="st">"/cluster/projects/nn9305k/bin/nextflow_23.04.4"</span></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a><span class="va">NFCONFIG</span><span class="op">=</span><span class="st">"</span><span class="va">${DIPLO}</span><span class="st">/SAGA/nextflow.config"</span></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a><span class="va">CONFIG</span><span class="op">=</span><span class="st">"</span><span class="va">${DIPLO}</span><span class="st">/SAGA/saga_sapro.config"</span></span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a><span class="co"># first time</span></span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a><span class="va">$NF</span> run <span class="va">$MAIN</span> <span class="at">-c</span> <span class="va">$NFCONIG</span> <span class="at">-c</span> <span class="va">$CONFIG</span> <span class="at">--outdir</span> <span class="op">&lt;</span>path<span class="op">&gt;</span> -work-dir <span class="op">&lt;</span><span class="va">$USERWORK</span>/diplotopia/HAPLOPURGE <span class="at">--track</span> haplopurge <span class="at">--input</span> input.csv [--<span class="op">&lt;</span>optional params<span class="op">&gt;</span> ] <span class="at">--purge_phase</span> hist <span class="at">-profile</span> apptainer <span class="at">-resume</span> <span class="dv">2</span><span class="op">&gt;&amp;</span><span class="dv">1</span> <span class="kw">|</span> <span class="fu">tee</span> haplopurge_hist.runlog</span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a><span class="co"># rerun all (do not resume)</span></span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a><span class="va">$NF</span> run <span class="va">$MAIN</span> <span class="at">-c</span> <span class="va">$NFCONIG</span> <span class="at">-c</span> <span class="va">$CONFIG</span> <span class="at">--out_dir</span> . <span class="at">-work-dir</span> <span class="at">-work-dir</span> <span class="op">&lt;</span><span class="va">$USERWORK</span>/diplotopia/HAPLOPURGE <span class="at">--track</span> haplopurge <span class="at">--input</span> input.csv <span class="at">--haplo_junk</span> 105 <span class="at">-profile</span> apptainer <span class="at">--purge_phase</span> all <span class="kw">|</span> <span class="fu">tee</span> haplopurge_all.runlog</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<hr>
+</section>
+</section>
+<section id="varwrrum" class="level3" data-number="5.5.5">
+<h3 data-number="5.5.5" class="anchored" data-anchor-id="varwrrum"><span class="header-section-number">5.5.5</span> 6. VARWRRUM:</h3>
+<p>Purpose: Variant calling (incl.&nbsp;at the population level, filtering and normalisation)</p>
+<p><strong>Current implementation: Variants are called using short reads (illumina)</strong></p>
+<hr>
+<section id="input-preparation-3" class="level4" data-number="5.5.5.1">
+<h4 data-number="5.5.5.1" class="anchored" data-anchor-id="input-preparation-3"><span class="header-section-number">5.5.5.1</span> input preparation</h4>
+<p>You will need to prepare two different input files for this track, both comma delimited files (.csv)</p>
+<p><code>input.csv</code> : A comma delimited file, where you will indicate the information about samples you want to call variants for. The file must contain the following fields: <code>ID,R1,R2,ploidy,comments</code> .</p>
+<p><code>ref_input.csv</code> : A comma delimited file, where the information conserning the haploid reference that will be used for variant calling on all the samples is indicated. The file must contain the following fields: <code>ID,R1,R2,ploidy,comments</code></p>
+<p>R1 and R2 fields are the path of respective reads corresponding to each sample (or to the haploid reference). Note: Short reads can be used for softmasking regions with high coverage in the reference. <strong>! Not implemented yet</strong> <!-- ! TODO do for long reads --><br>
+<!-- ! TODO Implement coverage based reference masking --></p>
+<p>ID is the name for either the samples of the reference.</p>
+<p>The field <code>comments</code> is not used during analysis but must be present and can be left empty. Its purpose to allow you to put some notes in your input files, <strong>as long as you do not use commas as separator</strong>. You can eg. write several comments using <code>|</code> instead of <code>,</code> to write long comments.</p>
+<hr>
+</section>
+<section id="options-curently-implemented-3" class="level4" data-number="5.5.5.2">
+<h4 data-number="5.5.5.2" class="anchored" data-anchor-id="options-curently-implemented-3"><span class="header-section-number">5.5.5.2</span> Options curently implemented:</h4>
+<p><em>Running the track step by step:</em></p>
+<p>Allows parameter adjustments, see eg. masking the reference, filtering mapped reads and filtering variants parameters.<br>
+<!-- TODO ? should we change to var_phase ? --></p>
+<ul>
+<li><code>phase  =  null</code> : a choice to enter “prep_ref” (1) OR “prep_samples” (2) OR “call_variants” (3) <span style="display:inline-block;margin-left:1em;">This parameters allows you to run the pipeline step by step, when used in conjunction with <code>-resume</code>. Note <code>call_variants</code> will run everything if this has not been done before. This allows you to get a clean run with all the parameters set approriately (eg. prior to writing an article).</span></li>
+</ul>
+<p><em>Trimming reads prior to mapping: Trim Galore parameters</em> - <code>phred_score = 15</code> - <code>error_rate =  0.1</code> - <code>minlength = 20</code></p>
+<!-- while this might not be recommended by some authors, this allows easier croscheck visually - and as we filter potential second alignments this should not really be a problem -->
+<p><em>Soft masking of the reference: bbmask parameters</em> - <code>bbmask_entropy = 0.7</code> bbmask entropy parameter</p>
+<ul>
+<li><code>bbmask_maxcov = null</code> bbmask maxcov parameter (optional). ! Currently not implemented <!-- TODO to implement --></li>
+</ul>
+<p><em>Mapping reads: BWA mem parameters</em> - <code>bwamem_args = "-a -M"</code> a <strong>flexible argument</strong> : parameters to pass to bwa mem.</p>
+<p><span style="display:inline-block;margin-left:1em;"> Default parameters:</span></p>
+<li>
+-a flags secondary alignments
+</li>
+<li>
+-M marks shorter split hits as secondary
+</li>
+<p>kmer size can be adapted by adding -k eg. “-k 19” <br> <br> </p>
+<p><em>Filtering of mapped reads: Samtools parameters</em></p>
+<ul>
+<li><code>min_mapq = 30</code> reads with MAPQ (mapping quality) <span class="math inline">\(/leg 30\)</span> are filtered out. (MAPQ given as a phread value)</li>
+<li><code>filterout_tag = "-F 0x0008 -F 0x0100 -F 0x0400 -F 0x0800 -F 0x0004"</code> reads from which those tags are present are filtered out. See <a href="https://www.htslib.org/doc/samtools-flags.html">sammtools flags</a> for flags code.</li>
+</ul>
+<p>Note: This will filter out reads where one is unmapped/unpaired, and will filterout positions that are secondary alignment and supplementary alignments. <!-- ! TODO we need to review again I think --></p>
+<p><em>Variant <strong>Calling</strong> parameters: Freebayes</em></p>
+<ul>
+<li><p><code>vcf_ref = null</code> (optional) a vcf file that is used as reference to force calling variants at particular alleles, eg. to standardize with a previous population analysis. Note that the variant calling MUST have used the same assembly/haploSSembly as reference for variant calling.</p></li>
+<li><p><code>chunk_size = 100000</code> chunks the reference to parallelize variant calling to use <a href="https://github.com/freebayes/freebayes">Freebayes parallel</a></p></li>
+<li><p><code>freebayes_args = "--min-coverage 10"</code> <strong>flexible argument</strong> : parameters to pass to freebayes to control variant calling. By default the only option is to not call variants from which reads coverage (after having filtered the mapped reads) are represented by in less than 10 reads.</p></li>
+</ul>
+<p><span style="display:inline-block;margin-left:2em;"> Freebayes default parameters to call variants for diploid organisms: <code>--min-alternate-count 2 --min-alternate-fraction 0.2</code> have not been modified and are thus employed here; see <a href="https://github.com/freebayes/freebayes">Freebayes instructions</a> <br><br></span></p>
+<blockquote class="blockquote">
+<p>Note: The list of available options can be optained with freebayes by typing <code>freebayes -h</code>. For convenience it has been copied and linked [here][3] </p>
+</blockquote>
+<!-- FIXME 
+  [3]: ./tools_options/Freebayes_Options.md
+-->
+<p><em>Variants <strong>Filtering</strong> parameters: bcftools</em> - <code>filter_args = "-i 'QUAL&gt;=100 &amp;&amp; FMT/DP &gt;= 30 &amp;&amp; FMT/QA &gt;= 100'"</code> <strong>flexible argument</strong> : parameters to pass to freebayes to control the filtering of valid variants.</p>
+<p><span style="display:inline-block;margin-left:2em;"></span></p>
+<p>Par default <span class="math inline">\(QUAL \geq 100\)</span> means that we require variants to be called with a minimum quality/error rate corresponding to phred 100. There is a very high probability that there is a polymorphism at this loci <img src="./files/p_polym_phred2.png" class="img-fluid" alt="QUAL meaning"></p>
+<p>Par default <span class="math inline">\(FMT/DP \geq 30\)</span> means that variants are not called if the Read Depth at the loci is below 30.</p>
+<p>Par default <span class="math inline">\(FMT/QA \geq 100\)</span> sum of quality of the alternate observations (phred) is required for a variants to be called at specific site. </p>
+<blockquote class="blockquote">
+<p>Note: The headers/fields that are reported by freebayes have been copied and linked [here][4] and can be employed to adjust the filtering parameters according to your requirements.</p>
+</blockquote>
+<!--FIXME 
+  [4]: ./tools_options/Freebayes_headers.md
+-->
+<p><em>Other</em></p>
+<p>Please review <code>purgehaplotigs_maxdepth</code> parameter for completness at this parameter is used to re-estimate the histograms of ploidy with purge haplotigs (informational)</p>
+</section>
+<section id="example-of-command-for-saga-users-2" class="level4" data-number="5.5.5.3">
+<h4 data-number="5.5.5.3" class="anchored" data-anchor-id="example-of-command-for-saga-users-2"><span class="header-section-number">5.5.5.3</span> Example of command for SAGA users:</h4>
+<div class="sourceCode" id="cb7"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="va">DIPLO</span><span class="op">=</span><span class="st">"/cluster/projects/nn9305k/active/evezeyl/projects/Saprolegnia/git/diplotopia"</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="ex">module</span> purge </span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="ex">module</span> load Java/17.0.4</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a><span class="va">MAIN</span><span class="op">=</span><span class="st">"</span><span class="va">${DIPLO}</span><span class="st">/main.nf"</span> </span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a><span class="va">NF</span><span class="op">=</span><span class="st">"/cluster/projects/nn9305k/bin/nextflow_23.04.4"</span></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a><span class="va">NFCONFIG</span><span class="op">=</span><span class="st">"</span><span class="va">${DIPLO}</span><span class="st">/SAGA/nextflow.config"</span></span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a><span class="va">CONFIG</span><span class="op">=</span><span class="st">"</span><span class="va">${DIPLO}</span><span class="st">/SAGA/saga_sapro.config"</span></span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a><span class="va">REFCSV</span><span class="op">=</span><span class="st">"&lt;path&gt;/ref_input.csv"</span></span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a><span class="va">INPUTCSV</span><span class="op">=</span><span class="st">"&lt;path&gt;/input.csv"</span></span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a><span class="va">$NF</span> run <span class="va">$MAIN</span> <span class="at">-c</span> <span class="va">$NFCONIG</span> <span class="at">-c</span> <span class="va">$CONFIG</span> <span class="at">--out_dir</span> . <span class="at">-work-dir</span> <span class="va">$USERWORK</span>/diplotopia/VARWRRUM <span class="dt">\</span></span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a>--track varwrrum <span class="at">--input</span> <span class="va">$INPUTCSV</span>  <span class="at">--ref_input</span> <span class="va">$REFCSV</span> <span class="at">--phase</span> call_variants <span class="dt">\</span></span>
+<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a>-profile apptainer <span class="at">-resume</span> <span class="dv">2</span><span class="op">&gt;&amp;</span><span class="dv">1</span> <span class="kw">|</span> <span class="fu">tee</span> varwrrum_nf.runlog</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</section>
+<section id="additional-information" class="level4" data-number="5.5.5.4">
+<h4 data-number="5.5.5.4" class="anchored" data-anchor-id="additional-information"><span class="header-section-number">5.5.5.4</span> Additional information</h4>
+<p>You might want to refere to this document if you wish to adjust filtering of mapped reads <a href="https://samtools.github.io/hts-specs/SAMv1.pdf">SAM/BAM format specification v1</a></p>
+<p>You might want to refere to this document if you wish to adjust calling and filtering of variants: <a href="https://samtools.github.io/hts-specs/VCFv4.2.pdf">The variant Call Format v4.2</a></p>
+</section>
+</section>
+</section>
+<section id="section" class="level2" data-number="5.6">
+<h2 data-number="5.6" class="anchored" data-anchor-id="section"><span class="header-section-number">5.6</span> </h2>
+</section>
+</section>
+<section id="parameters-description" class="level1" data-number="6">
+<h1 data-number="6"><span class="header-section-number">6</span> Parameters description</h1>
+<blockquote class="blockquote">
+<p>Note: A memo to recognize the type of parameters when running the pipeline</p>
+<ul>
+<li><p>Nextflow parameters : <code>-</code> nextflow running options (eg. profiles and configuration files)</p></li>
+<li><p>pipeline parameters : <code>--</code> options for running the different tools of the pipeline</p></li>
+</ul>
+</blockquote>
+<div class="sourceCode" id="cb8"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="ex">**Input</span> and output<span class="pp">**</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="ex">--input:</span>              Input csv file</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="ex">--out_dir:</span>            Output directory name</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="ex">Workflow-specific</span> parameters</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a><span class="ex">--</span></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a><span class="ex">**General</span> parameters<span class="pp">**</span></span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a><span class="ex">**Time-related</span> parameters<span class="pp">**</span></span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a><span class="ex">--time_multiplier:</span>    Default value 1. If increased to 2, doubles the time requested by the system for </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./description.html" class="pagination-link" aria-label="DIPLOTOPIA pipeline and program descriptions">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">DIPLOTOPIA pipeline and program descriptions</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./saga_users.html" class="pagination-link" aria-label="Saga Users">
+        <span class="nav-page-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Saga Users</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

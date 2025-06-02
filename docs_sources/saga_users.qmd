@@ -78,7 +78,7 @@ $NF run $MAIN -c $CONFIG --out_dir <path_outputdirectory> -work-dir $USERWORK/di
 ```
 
 Notes: 
-- You will need to fill what is in between <> with what you have choosen
+- You will need to fill what is in between <> with what you have chosen
 - change options needs 2 `-` then the name of option, a space and the value of the option. Example : `--remove_contaminants no`
 - you can look at all the options that you can change by looking at the options described in `.nextflow.config` file, also online [here](https://github.com/NorwegianVeterinaryInstitute/diplotopia/blob/main/nextflow.config)
 - Using `-resume`will allow the pipeline to start when it stoped (eg. if bugs osv, or when you are testing parameters)
@@ -86,7 +86,7 @@ Notes:
 
 
 Now you have enough information, so you can transpose advises that are
-specified in [How to run section](./3_How_to_Run.md) 
+specified in [How to run section](./usage.html) 
 
 ## Going further 
 

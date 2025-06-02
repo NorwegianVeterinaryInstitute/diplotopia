@@ -1,0 +1,812 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.6.43">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>11&nbsp; Choices and reason behind those choices for : FILTER_CONTIGS track – Diplotopia pipeline documentation</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./haplopurge_choices.html" rel="next">
+<link href="./changelog_development.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-d4d76bf8491c20bad77d141916dc28e1.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-a34d670291f06f286357e447776a572a.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+</head>
+
+<body class="nav-sidebar floating">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./filter_contigs_choices.html">Scientific reasoning</a></li><li class="breadcrumb-item"><a href="./filter_contigs_choices.html"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Choices and reason behind those choices for : FILTER_CONTIGS track</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">Diplotopia pipeline documentation</a> 
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Preface</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./requirements_installation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Requirements and installation</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./description.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">DIPLOTOPIA pipeline and program descriptions</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./usage.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Input and usage</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./saga_users.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Saga Users</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./configuration.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Configuration</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./output.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Output files</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./contribution.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Contribution and support</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./summary.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Summary</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">References</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
+ <span class="menu-text">Changes</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./changelog_versions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Change log in different versions</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./changelog_development.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Change log</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true">
+ <span class="menu-text">Scientific reasoning</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./filter_contigs_choices.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Choices and reason behind those choices for : FILTER_CONTIGS track</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./haplopurge_choices.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Choices and reason behind those choices for : HAPLOPURGE track</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./VARWRRUMM_choices.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Choices and reason behind those choices for : VARWRRUMM track</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#why-to-do-so" id="toc-why-to-do-so" class="nav-link active" data-scroll-target="#why-to-do-so"><span class="header-section-number">11.1</span> Why to do so ?</a></li>
+  <li><a href="#summary-of-the-filtering-strategy" id="toc-summary-of-the-filtering-strategy" class="nav-link" data-scroll-target="#summary-of-the-filtering-strategy"><span class="header-section-number">11.2</span> Summary of the filtering strategy</a>
+  <ul class="collapse">
+  <li><a href="#details-of-the-filtering-strategy" id="toc-details-of-the-filtering-strategy" class="nav-link" data-scroll-target="#details-of-the-filtering-strategy"><span class="header-section-number">11.2.1</span> Details of the filtering strategy</a></li>
+  <li><a href="#extract-the-best-classification-match-per-contig." id="toc-extract-the-best-classification-match-per-contig." class="nav-link" data-scroll-target="#extract-the-best-classification-match-per-contig."><span class="header-section-number">11.2.2</span> 1. Extract the best classification match per contig.</a></li>
+  <li><a href="#filtering-the-contigs-and-building-the-filtering-expression" id="toc-filtering-the-contigs-and-building-the-filtering-expression" class="nav-link" data-scroll-target="#filtering-the-contigs-and-building-the-filtering-expression"><span class="header-section-number">11.2.3</span> 2. Filtering the contigs and building the filtering expression</a></li>
+  </ul></li>
+  <li><a href="#description-of-output-files" id="toc-description-of-output-files" class="nav-link" data-scroll-target="#description-of-output-files"><span class="header-section-number">11.3</span> Description of output files :</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./filter_contigs_choices.html">Scientific reasoning</a></li><li class="breadcrumb-item"><a href="./filter_contigs_choices.html"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Choices and reason behind those choices for : FILTER_CONTIGS track</span></a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Choices and reason behind those choices for : FILTER_CONTIGS track</span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<!-- Filtering out contaminant contigs -->
+<ul>
+<li>subworflow : <code>FILTERING_CONTIGS.nf</code></li>
+<li>output directory : <code>/results/filter_contigs/${ID}</code> if <code>filter_contigs</code> track is used OR <code>/results/1_FILTER_CONTIGS</code> if <code>compass</code> track is used.</li>
+</ul>
+<p>We choosed to use a “positive” filter, aka contigs are kept if they match the positive filtering expression.</p>
+<section id="why-to-do-so" class="level2" data-number="11.1">
+<h2 data-number="11.1" class="anchored" data-anchor-id="why-to-do-so"><span class="header-section-number">11.1</span> Why to do so ?</h2>
+<p>Some contaminants might have been sequenced together with the organims of interest. Contigs that result of the assembly of those contaminants might be retrieved, depending on which steps have been taken (or not), prior to assembly,</p>
+<p>Contaminant contigs are defined as contigs that do not belong to desired organism of study. This include eg. host, or other organism eg. bacterial contaminants from the lab.</p>
+<p>It is good to ensure that no contaminant contigs remain in the genome that will be used post-assemblyas they can affect eg. the evaluation of the completness of the genome; moreover you do not want to call variants that belong to another species, do you ?</p>
+<p>We employ the taxonomic classification of each contig to select contigs that only belong to the organism under study. To do so, the user will need to define a filtering expression (positive) that defines what is the correct taxonomy of the organism to be retrieved. This will allow to solely select contigs that matches this expression. (Note that you might need to adjust your positive filtering expression and rerun the filtering of contigs to optain appropriate filtering.)</p>
+<p>Note that is important to be able to judge what taxon are likely be detected that are real vs those that are artifactual. Indeed, even blast databases are not perfectly currated, and depending the organism you study, some real sequences might have been attributed to another organism. <!--
+(Aka what the user believe to be true contaminants contigs vs artifacts due to classification database composition and classification process ).
+--></p>
+</section>
+<section id="summary-of-the-filtering-strategy" class="level2" data-number="11.2">
+<h2 data-number="11.2" class="anchored" data-anchor-id="summary-of-the-filtering-strategy"><span class="header-section-number">11.2</span> Summary of the filtering strategy</h2>
+<p>step 1: The Taxonomic classification of each contig in each assembly is done using blastn taxonomical identification. We aimed to keep a maximum of 5 matches for each contig<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>.</p>
+<p>step 2: An <code>R script: contigs_taxo_overview_filter.qmd</code> is used to sort and keep the best match per contig. We define the best match as the classification for which the e-value is lowest. At equal low e-values, the best match is the classification for which the percent identity is highest.</p>
+<p>Then best match classification that correspond to the positive filter are kept as non-contaminated contigs. (Secondary classifications are kept aside for a second screening step.) <!-- TODO improve that script !! 
+evalue criteria also in first
+--></p>
+<p>We evaluate if there appear to be any classification biais of best matches (eg. scatterplots; see output files).</p>
+<p>We use secondary classification to salvage contigs that were not discovered as positive match with the best matches, provided that the e-value is above a minimum threshold (1e-20 per default), such as to not errorneously discard contigs as not belonging to the organism of interst.</p>
+<p>We provide evaluation of possible contaminants by taxonomic rank (eg. alluvial plots) for further adjustments of the positive filter (see output files).</p>
+<p>We report both contigs that correspond to positive matches and no matches, to allow inspection for further adjustment of the filtering expression.</p>
+<section id="details-of-the-filtering-strategy" class="level3" data-number="11.2.1">
+<h3 data-number="11.2.1" class="anchored" data-anchor-id="details-of-the-filtering-strategy"><span class="header-section-number">11.2.1</span> Details of the filtering strategy</h3>
+<p>The filtering is done by the <code>script: contigs_taxo_overview_filter.qmd</code>, writen in R.</p>
+<p>The script: 1. collates the taxonomical results for each contig in each assembly 2. reads and join the collated results with the <code>rankedlineage.dmp</code> file that provides the taxonomical rank of each taxon ID number.</p>
+<p>NB: see <a href="https://ncbiinsights.ncbi.nlm.nih.gov/2018/02/22/new-taxonomy-files-available-with-lineage-type-and-host-information/">NCBI new taxonomy</a> for more detailed information about the NCBI taxonomy used.</p>
+<p>Note that the fields for rank filtrering are described in <a href="https://ftp.ncbi.nlm.nih.gov/pub/taxonomy/new_taxdump/taxdump_readme.txt">taxdump_readme.txt</a>.</p>
+<p>We kept in our taxonomical table the following fields from <code>rankedlineage.dmp</code></p>
+<pre class="text"><code>tax_id                  -- node id
+tax_name                -- scientific name of the organism
+species                 -- name of a species (coincide with organism name for species-level nodes)
+genus                   -- genus name when available
+family                  -- family name when available
+order                   -- order name when available
+class                   -- class name when available
+phylum                  -- phylum name when available
+kingdom                 -- kingdom name when available
+superkingdom            -- superkingdom (domain) name when available</code></pre>
+<!-- TODO
+THIS I think we need to review  with updated script - this is not used but to review manually now, as I changed the process 
+The contigs are classified according to a degree of "confidence" using the following defaults (parameters which can be changed): `evalue_min: 1e-20 and perc_identity_min: 95`
+
+- considered of "high confidence" if: evalue <= evalue_min & perc_identity >= perc_identity_min  
+- considered of "medium confidence" if : evalue <= evalue_min & perc_identity <= perc_identity_min
+- considered of "low confidence" if : evalue >= evalue_min
+
+> Note: This classification is a test and is not used for filtering, but can help give an indication of what need to be checked in details. This provided in the table giving the classification per contig, positively filtered and negatively filtered
+
+
+Note: Ultimately the filtering expression is transformed in a Rlang expression, as we use R to perform the filtering. 
+-->
+</section>
+<section id="extract-the-best-classification-match-per-contig." class="level3" data-number="11.2.2">
+<h3 data-number="11.2.2" class="anchored" data-anchor-id="extract-the-best-classification-match-per-contig."><span class="header-section-number">11.2.2</span> 1. Extract the best classification match per contig.</h3>
+<p><strong>The best match is defined as the match with lowest evalue and then highest percentage of identity.</strong> &gt; this is done by sorting matches per contig by ordering data with ascending evalue, and descending percentage of identity, and by then keeping only the first row value per contig.</p>
+</section>
+<section id="filtering-the-contigs-and-building-the-filtering-expression" class="level3" data-number="11.2.3">
+<h3 data-number="11.2.3" class="anchored" data-anchor-id="filtering-the-contigs-and-building-the-filtering-expression"><span class="header-section-number">11.2.3</span> 2. Filtering the contigs and building the filtering expression</h3>
+<p><strong>The filtering is done according to a user defined filter expression, the user choice. Any data that match the filter is referred to as “positive” filtering, what does not matches is referred to as “negative”.</strong></p>
+<p>The user select a set of keywords that will efficiently be used to remove contigs that are poorly classified (or any other selection by choosing values in fields in one of the following fields).</p>
+<p>taxonomical fields: “tax_name”, “species”, “genus”, “family”, “order”, “class”, “phylum”, “kingdom”, “superkingdom”</p>
+<p>To be more efficient at building your positive filtering expression, take the deepest taxonomical level that will identify the organism of interest.</p>
+<p><strong>The order of quotes is important - otherwise the arguments wont be passed successfully to the script</strong></p>
+<p>Examples of simple filtering expressions</p>
+<pre class="text"><code>"genus == 'Saprolegnia'"
+"species == 'Saprolegnia parasitica'"
+"phylum != 'Arthropoda'" </code></pre>
+<p>You can refining the filtering expression :</p>
+<pre class="text"><code>"superkingdom == 'Eukaryota', phylum == 'Oomycota'"  # treated as list of filters , AND 
+"superkingdom == 'Eukaryota' &amp; phylum == 'Oomycota'" # treated together AND
+"superkingdom == 'Eukaryota' | phylum == 'Oomycota'" # treated together OR
+"genus == 'Chironomus' &amp; genus == 'Epistrophe'" # will be empty - because it cant be both 
+"genus == 'Chironomus', genus == 'Epistrophe'"  # equivalent to line above
+"genus == 'Chironomus' | genus == 'Epistrophe'" # OR is working</code></pre>
+<blockquote class="blockquote">
+<p>Note: The filtering expression will be transformed in an rlang expression, thus it is important to <strong>quote adequately</strong>, so the filtering expression are passed correctly to R (double quote external, simple quotes internal).</p>
+</blockquote>
+<p>Advises: - Try to keep your filter as simple as possible. The deepest taxonomical level choosen, the most simple is the filtering expression. - Use branckets to separate complex filters more efficiently - using <code>,</code> between expression create a list of filters that are treated as <code>and</code> - control in the “negative filtered taxon” that you did not remove any contig you wished to keep.</p>
+</section>
+</section>
+<section id="description-of-output-files" class="level2" data-number="11.3">
+<h2 data-number="11.3" class="anchored" data-anchor-id="description-of-output-files"><span class="header-section-number">11.3</span> Description of output files :</h2>
+<ul>
+<li>${ID}_filter_info.csv : a reminder of what filtering expression was used information about the positive filter that was used (for archive)</li>
+<li>${ID}_all_taxon_contig.csv : concatenated results of blast classificaiton for all contigs (unfiltered)</li>
+<li>${ID}_positive_filter.csv : the best classification for each contig positive to the filter expression</li>
+<li>${ID}_negative_filter.csv : best classification for each contig negative to the filter expression</li>
+</ul>
+<!-- TODO explain what is the best classification : how I sort -->
+<ul>
+<li><p>${ID}_alluvial_plot_possible_contaminants.png : an alluvial plots trying to show the possible contaminants and their taxonomical hiearchy (anything that did not match the positive filter) <!-- TODO Find a way to make this plot look better, now its very tangled --></p></li>
+<li><p>{ID}_evalue_perc_identity.png : scatterplot to investigate eventual quality pattern associated to contig classification (evalue and percent identity on all results of classification provided by blast)</p></li>
+<li><p>{ID}_contig_size_check.png : scatterplots to investigate eventual quality pattern associated to contig size</p></li>
+<li><p>{ID}_filtered_positive.fasta : decontaminated assembly</p></li>
+<li><p>{ID}_filtered_negative.fasta : contaminant contigs (can be used for further investivations)</p></li>
+</ul>
+<p><code>{ID}_taxon_contig_df.rds</code> taxonomic classification table - Rojbect saved for faster inspection <!-- TODO to remove from output --></p>
+
+
+</section>
+<section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes">
+<hr>
+<ol>
+<li id="fn1"><p>Seems that equivalent matches are given in output also<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+</ol>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./changelog_development.html" class="pagination-link" aria-label="Change log">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Change log</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./haplopurge_choices.html" class="pagination-link" aria-label="Choices and reason behind those choices for : HAPLOPURGE track">
+        <span class="nav-page-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Choices and reason behind those choices for : HAPLOPURGE track</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

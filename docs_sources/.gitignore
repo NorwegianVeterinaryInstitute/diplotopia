@@ -1,7 +1,8 @@
 /.quarto/
 renv
 _book
-docs.Rproj
+#docs.Rproj
+
 .Rhistory
 
 diplotopia.code-workspace

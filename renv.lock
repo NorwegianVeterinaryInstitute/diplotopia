@@ -1686,13 +1686,13 @@
     },
     "tinytex": {
       "Package": "tinytex",
-      "Version": "0.52",
+      "Version": "0.57",
       "Source": "Repository",
       "Repository": "CRAN",
       "Requirements": [
         "xfun"
       ],
-      "Hash": "cfbad971a71f0e27cec22e544a08bc3b"
+      "Hash": "02d65e0c0415bf36a7ddc0d2ba50a840"
     },
     "tzdb": {
       "Package": "tzdb",
@@ -1789,7 +1789,7 @@
     },
     "xfun": {
       "Package": "xfun",
-      "Version": "0.47",
+      "Version": "0.52",
       "Source": "Repository",
       "Repository": "CRAN",
       "Requirements": [
@@ -1798,7 +1798,7 @@
         "stats",
         "tools"
       ],
-      "Hash": "36ab21660e2d095fef0d83f689e0477c"
+      "Hash": "652ce36fe7d57688e6786819b09d9190"
     },
     "xml2": {
       "Package": "xml2",

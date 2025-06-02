@@ -1,5 +1,9 @@
 project:
   type: book
+  # output-dir : ../docs
+  
+ # scripts:
+#    pre-render: ../renv/activate.R
 
 number-depth: 6
 
@@ -32,20 +36,17 @@ book:
 
 bibliography: references.bib
 
-# options
-render:
-    - docs_sources/
-  output-dir: docs/
+
   
   
 # format options - consider creating index
 format:
   html:
     theme: cosmo
-  pdf:
-    documentclass: scrreprt
-  epub:
-    cover-image: cover.png
+  # pdf:
+  #   documentclass: scrreprt
+  # epub:
+  #   cover-image: cover.png
 
 editor: visual
 

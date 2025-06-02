@@ -210,7 +210,9 @@ NFCONFIG="${DIPLO}/SAGA/nextflow.config" CONFIG="\${DIPLO}/SAGA/saga_sapro.confi
 
 It is an extension of the [COMPASS Track] input, as it includes additional fields `haplo_low`, `haplo_mid`, `haplo_high` which are required for purging haplotigs.
 
-  [COMPASS Track]: ./3_How_to_Run.md###4._COMPASS
+<!-- FIXME
+  [COMPASS Track]: ./3_How_to_Run.html###4._COMPASS
+--> 
 
 If you do not know which parameters to employ in `haplo_low`, `haplo_mid`, `haplo_high` fields yet, please Set `NA` in those fields.
 
@@ -357,7 +359,9 @@ Note: This will filter out reads where one is unmapped/unpaired, and will filter
 
 > Note: The list of available options can be optained with freebayes by typing `freebayes -h`. For convenience it has been copied and linked [here][3] </span>
 
+<!-- FIXME 
   [3]: ./tools_options/Freebayes_Options.md
+--> 
 
 *Variants **Filtering** parameters: bcftools* - `filter_args = "-i 'QUAL>=100 && FMT/DP >= 30 && FMT/QA >= 100'"` **flexible argument** : parameters to pass to freebayes to control the filtering of valid variants.
 
@@ -373,7 +377,9 @@ Par default $FMT/QA \geq 100$ sum of quality of the alternate observations (phre
 
 > Note: The headers/fields that are reported by freebayes have been copied and linked [here][4] and can be employed to adjust the filtering parameters according to your requirements.
 
+<!--FIXME 
   [4]: ./tools_options/Freebayes_headers.md
+--> 
 
 *Other*
 
