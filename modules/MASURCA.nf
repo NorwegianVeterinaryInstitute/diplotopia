@@ -10,9 +10,9 @@ process MASURCA {
     tag "$meta.id" 
     
     input:
-    tuple val(meta), path(R1), path(R2)
-    val(longRead),  optional: true
-    val(extraOption), optional: true
+    tuple val(meta), path(R1), path(R2), 
+    val(longRead,  optional: true),
+    val(extraOption, optional: true),
     val(ploidy_value)
 
     output: 

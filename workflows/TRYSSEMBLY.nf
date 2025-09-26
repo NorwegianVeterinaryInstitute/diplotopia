@@ -36,34 +36,35 @@ workflow TRYSSEMBLY {
                     
             tuple(meta, R1, R2, longRead, extraOption)
             }
+            .combine(ploidy_ch)
     
-    //input_ch.view()
+    input_ch.view()
 
-    processed_input_ch = input_ch
-    .map { meta, R1, R2, longRead, extraOption -> 
-        // 1. The short reads tuple is created from the original elements
-        def paired_reads_tuple = tuple(meta, R1, R2) 
-        // 2. The long read path is the original element
-        def long_read_path = longRead 
+   // processed_input_ch = input_ch
+    // .map { meta, R1, R2, longRead, extraOption -> 
+    //     // 1. The short reads tuple is created from the original elements
+    //     def paired_reads_tuple = tuple(meta, R1, R2) 
+    //     // 2. The long read path is the original element
+    //     def long_read_path = longRead 
         
-        // This output tuple keeps the matched short/long reads together as one item
-        return tuple(paired_reads_tuple, long_read_path, extraOption) 
-    }
+    //     // This output tuple keeps the matched short/long reads together as one item
+    //     return tuple(paired_reads_tuple, long_read_path, extraOption) 
+    // }
     // .combine attaches a global value to this already-matched item:
-    .combine(ploidy_ch) 
+    //.combine(ploidy_ch) 
 
     //processed_input_ch.view()
 
     
-    processed_input_ch.branch {paired_reads_tuple, long_read_path, extraOption, ploidy_value ->
-        // Condition for the different assemblers
-        go_to_masurca: paired_reads_tuple[0].assembler == "masurca" 
-        // meta is first element 
-        go_to_dispades: paired_reads_tuple[0].assembler == "dipspades"
-        }
-        .set { branched_ch }
+    // processed_input_ch.branch {paired_reads_tuple, long_read_path, extraOption, ploidy_value ->
+    //     // Condition for the different assemblers
+    //     go_to_masurca: paired_reads_tuple[0].assembler == "masurca" 
+    //     // meta is first element 
+    //     go_to_dispades: paired_reads_tuple[0].assembler == "dipspades"
+    //     }
+    //     .set { branched_ch }
 
-    branched_ch.go_to_masurca.view()
+    //branched_ch.go_to_masurca.view()
      
 
     // MASURCA
