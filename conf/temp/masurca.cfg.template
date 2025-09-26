@@ -1,0 +1,46 @@
+# example configuration file 
+# see : https://github.com/alekseyzimin/masurca
+# These  ${variable} will be filled in by Nextflow
+
+
+##########################################
+DATA
+
+PE=pe 150 50 ${R1} ${R2}
+
+# This section is conditional and will be included only if long reads are provided. How to do conditional template?
+#NANOPORE=${longRead}
+
+
+
+
+
+##########################################
+PARAMETERS
+
+USE_GRID=0
+EXTEND_JUMP_READS=0
+GRAPH_KMER_SIZE=auto
+PLOIDY=2
+
+LIMIT_JUMP_COVERAGE = 300
+#CA_PARAMETERS =  cgwErrorRate=0.15 
+
+
+LHE_COVERAGE=35
+MEGA_READS_ONE_PASS=0
+CLOSE_GAPS=1
+
+NUM_THREADS = ${task.cpus}
+
+#this is mandatory jellyfish hash size -- a safe value is estimated_genome_size*20
+JF_SIZE = 8240000000
+
+# This section is conditional should be set to 1 if there are NANOPORE reads 
+FLYE_ASSEMBLY=0
+
+
+END 
+
+##########################################
+

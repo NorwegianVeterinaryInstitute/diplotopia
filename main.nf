@@ -3,10 +3,10 @@ nextflow.enable.dsl=2
 
 //include { PURELY_RAW } from "./workflows/PURELY_RAW.nf"
 include { TRYSSEMBLY } from "./workflows/TRYSSEMBLY.nf"
-include { FILTER_CONTIGS } from "./workflows/FILTER_CONTIGS.nf"
-include { COMPASS } from "./workflows/COMPASS.nf"
-include { HAPLOPURGE } from "./workflows/HAPLOPURGE.nf"
-include { VARWRRUM } from "./workflows/VARWRRUM.nf"
+// include { FILTER_CONTIGS } from "./workflows/FILTER_CONTIGS.nf"
+// include { COMPASS } from "./workflows/COMPASS.nf"
+// include { HAPLOPURGE } from "./workflows/HAPLOPURGE.nf"
+// include { VARWRRUM } from "./workflows/VARWRRUM.nf"
 
 workflow{ 
 	/*
@@ -23,25 +23,25 @@ workflow{
 		TRYSSEMBLY()
 	}
 
-	if (params.track == "filter_contigs") {
-		// COMP-ASS for comparison assemblies 
-		FILTER_CONTIGS() 
-	}
+	// if (params.track == "filter_contigs") {
+	// 	// COMP-ASS for comparison assemblies 
+	// 	FILTER_CONTIGS() 
+	// }
 
-    if (params.track == "compass") {
-		// COMP-ASS for comparison assemblies 
-		COMPASS() 
-	}
+    // if (params.track == "compass") {
+	// 	// COMP-ASS for comparison assemblies 
+	// 	COMPASS() 
+	// }
 	
-	if (params.track == "haplopurge"){
-		// Getting HaploSSembly from the best assembly 
-		HAPLOPURGE()
-	}
+	// if (params.track == "haplopurge"){
+	// 	// Getting HaploSSembly from the best assembly 
+	// 	HAPLOPURGE()
+	// }
 
-	if (params.track == "varwrrum"){
-		// (population) Variants At Regions Where Reference Reads Uniquely Map 
-		VARWRRUM()
-	}
+	// if (params.track == "varwrrum"){
+	// 	// (population) Variants At Regions Where Reference Reads Uniquely Map 
+	// 	VARWRRUM()
+	// }
 
 
 }
