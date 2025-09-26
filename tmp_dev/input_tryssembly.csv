@@ -1,3 +1,2 @@
-assembler,csv_input,comment
-necat,/cluster/projects/nn9305k/active/evezeyl/projects/Saprolegnia/git/2023_Saprolegnia_pilot/dev_pipeline/tryssembly/input.necat.csv,test necat template input
-masurca,/cluster/projects/nn9305k/active/evezeyl/projects/Saprolegnia/git/2023_Saprolegnia_pilot/dev_pipeline/tryssembly/input.masurca.csv,test masurca template input
+id, assembler,path_reads,R1,R2,long,comment
+582-1,dipSPADES,/cluster/projects/nn9305k/active/330403_001-A4_Tapeworm/analyses/assembly_dipSPADES/20250926/582-1,582-1_R1.fastq.gz,582-1_R2.fastq.gz,NA,20250926_test

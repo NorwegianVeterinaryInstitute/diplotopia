@@ -16,15 +16,22 @@ workflow TRYSSEMBLY {
 
     input_ch = Channel
         .fromPath(params.input, checkIfExists: true)
-        .splitCsv(header:['assembler', 'csv_input', 'comment'], skip: 1, sep:",", strip:true)
-        .map { row -> (assembler, csv_input) =  [ row.assembler, row.csv_input ]}
-    //[necat, /cluster/projects/nn9305k/active/evezeyl/projects/Saprolegnia/git/2023_Saprolegnia_pilot/dev_pipeline/tryssembly/input.necat.csv]
-    //[masurca, /cluster/projects/nn9305k/active/evezeyl/projects/Saprolegnia/git/2023_Saprolegnia_pilot/dev_pipeline/tryssembly/input.masurca.csv    ]
+        .splitCsv(header:['id', 'assembler', 'path_reads','R1','R2','long','comment'], skip: 1, sep:",", strip:true)      
+        .map { row ->
     
-    input_ch
-    //.filter { row -> row.assembler == "/necat/" }
-    .filter { assembler -> assembler == "/necat/" }
-    .view()
+            def R1 = (row.path_reads + "/" + row.R1) 
+            def R2 = (row.path_reads + "/" + row.R2) 
+            def long = (row.path_reads + "/" + row.long) 
+
+        
+            tuple(row.sample_id, file(row.r1), file(row.r2), 
+                row.testname, row.irma_config, row.track, row.fraction.toFloat(), ext_config)
+            }
+        .set { input_ch }
+    //input_ch.view()
+    
+    
+    
     /*
     path_ch_necat = 
         input_ch.filter{ row.assembler == "necat" }
