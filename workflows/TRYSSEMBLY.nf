@@ -13,6 +13,7 @@ workflow TRYSSEMBLY {
     // here the pb is to standardize input 
     // so we need template and then the input is the location of those filled templates 
 
+    // SECTION inputs
     ploidy_ch = Channel.value(params.ploidy_value) 
 
     input_ch = Channel
@@ -20,9 +21,11 @@ workflow TRYSSEMBLY {
         .splitCsv(header:['id', 'assembler', 'path_reads','R1','R2','long_read', 'advanced_options','comment'], skip: 1, sep:",")      
         .map { row ->
     
-            def R1 = file("${row.path_reads}/${row.R1}")
-            def R2 = file("${row.path_reads}/${row.R2}")
+            // for convenience usage at this stage need to be strings - because of need of configuration files for software
+            def R1 = "${row.path_reads}/${row.R1}"
+            def R2 = "${row.path_reads}/${row.R2}"
             
+            //def longRead = row.long_read ? file("${row.path_reads}/${row.long_read}") : ''
             def longRead = row.long_read ? file("${row.path_reads}/${row.long_read}") : ''
             def extraOption = row.advanced_options ?: ''
 
@@ -38,42 +41,33 @@ workflow TRYSSEMBLY {
             }
         .combine(ploidy_ch)
     
-    input_ch.view()
+    //input_ch.view()
+    // !SECTION
 
-}
 
-   // processed_input_ch = input_ch
-    // .map { meta, R1, R2, longRead, extraOption -> 
-    //     // 1. The short reads tuple is created from the original elements
-    //     def paired_reads_tuple = tuple(meta, R1, R2) 
-    //     // 2. The long read path is the original element
-    //     def long_read_path = longRead 
-        
-    //     // This output tuple keeps the matched short/long reads together as one item
-    //     return tuple(paired_reads_tuple, long_read_path, extraOption) 
-    // }
-    // .combine attaches a global value to this already-matched item:
-    //.combine(ploidy_ch) 
-
-    //processed_input_ch.view()
-
-    
-    // processed_input_ch.branch {paired_reads_tuple, long_read_path, extraOption, ploidy_value ->
-    //     // Condition for the different assemblers
-    //     go_to_masurca: paired_reads_tuple[0].assembler == "masurca" 
-    //     // meta is first element 
-    //     go_to_dispades: paired_reads_tuple[0].assembler == "dipspades"
-    //     }
-    //     .set { branched_ch }
+    // SECTION branching channel for different assemblers
+    input_ch.branch {meta, R1, R2, longRead, extraOption, ploidy_value ->
+    //processed_input_ch.branch {paired_reads_tuple, long_read_path, extraOption, ploidy_value ->
+        // Condition for the different assemblers
+        go_to_masurca: meta.assembler == "masurca" 
+        // meta is first element 
+        go_to_dispades: meta.assembler == "dipspades"
+        }
+        .set { branched_ch }
 
     //branched_ch.go_to_masurca.view()
-     
-
-    // MASURCA
-    //MASURCA(branched_ch.go_to_masurca)
+    // !SECTION
 
 
-  
+
+    // SECTION Assemblers  
+    MASURCA(branched_ch.go_to_masurca)
+
+    // !SECTION
+
+
+}  
+
 
     
 
