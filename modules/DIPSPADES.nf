@@ -11,34 +11,28 @@ process DIPSPADES {
     tag "$meta.id" 
     
     input:
-    tuple val(meta), path(R1), path(R2)
-    path(long_reads), optional : true
-    val(options), optional : true
+    tuple val(meta), val(R1), val(R2), val(extraOption)
 
     output: 
-    tuple val(meta), path("${meta.id}/*"), emit: masurca_assembly
-    // Check path how to give path("CA/") - need assembly and need all results in output ? 
+    tuple val(meta), path("${meta.id}"), emit: dipspades_assembly
     path "versions.yml", emit : versions
 
     script:
     def short_reads_param = "-1 ${R1} -2 ${R2}"
-    def long_reads_param = long_reads ? "-r ${long_reads}" : ""
-    def advanced_options = "--hap haplocontigs.fasta"
+    // for now only long reads
+    // def long_reads_param = ''
+    // if (meta.has_longRead) {
+    //     long_reads_param = "-r ${longRead}"
+    // } 
     def log_file = "${meta.id}_dispades.log"
 
     """
     dipspades.py -v > versions.yml
 
-    # To perform haplotype assembly of diploid genome - Illumina
+    # Haplotype assembly - short reads -diploid genome - Illumina
     dipspades.py ${short_reads_param} \\
-                ${advanced_options} \\
-                -o ${meta.id}
-
-
-    masurca -t $task.cpus \\
- 
-        ${long_reads_param} \\
-        2>&1 | tee ${log_file} 
+                ${extraOption} \\
+                -o ${meta.id} 2>&1 | tee ${log_file} 
     """
 
 }

@@ -14,9 +14,8 @@ process MASURCA {
 
     output: 
     tuple val(meta), path("*"), emit: masurca_assembly
-    // will to rename path
     path "versions.yml", emit : versions
-    //path "${meta.id}_masurca.config", emit : masurca_config
+
 
     script:
     // SECTION define script outputs
