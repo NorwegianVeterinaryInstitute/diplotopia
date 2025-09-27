@@ -1,3 +1,5 @@
+tmux login5
+
 module purge 
 module load Java/21.0.2  
 
