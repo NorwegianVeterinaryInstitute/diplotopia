@@ -2,7 +2,6 @@
 
 
 tmux login5
-
 module purge 
 module load Java/21.0.2  
 
@@ -39,3 +38,8 @@ find /opt -name "masurca"
 srun --account=nn9305k --ntasks=1 --mem-per-cpu=4G --qos=devel --time=0:10:00 --pty bash -i
 module load MaSuRCA/4.1.0-GCC-11.3.0
 # ok it seems the problem of running is when using the container 
+
+
+IMG=/cluster/work/users/evezeyl/images/cgenomics-redundans-latest.img
+apptainer shell $IMG
+apptainer exec $IMG bash

@@ -4,7 +4,7 @@
 
 // modules 
 //include { MASURCA } from "../modules/MASURCA.nf"
-include { DIPSPADES } from "../modules/DIPSPADES.nf"
+// include { DIPSPADES } from "../modules/DIPSPADES.nf"
 include { REDUNDANS } from "../modules/REDUNDANS.nf"
 //include { NECAT_GLOBAL } from "../modules/NECAT.nf"
 //include {FOO_PATH} from "../modules/FOO.nf"
@@ -63,11 +63,11 @@ workflow TRYSSEMBLY {
     // SECTION Assemblers  
     //MASURCA(branched_ch.go_to_masurca)
 
-    DIPSPADES(branched_ch.go_to_dispades
-            .map{ meta, R1, R2, longRead, extraOption, ploidy_value -> 
-                tuple(meta, R1, R2, extraOption)
-                } 
-            )
+    // DIPSPADES(branched_ch.go_to_dispades
+    //         .map{ meta, R1, R2, longRead, extraOption, ploidy_value -> 
+    //             tuple(meta, R1, R2, extraOption)
+    //             } 
+    //         )
     REDUNDANS(branched_ch.go_to_redundans
             .map{ meta, R1, R2, longRead, extraOption, ploidy_value -> 
                 tuple(meta, R1, R2, longRead)

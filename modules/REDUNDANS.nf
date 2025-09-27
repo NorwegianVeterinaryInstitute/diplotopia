@@ -35,11 +35,10 @@ process REDUNDANS {
     """
     # FIXME could not make it work with containers I tried. Find way to use container. Missing gz ? 
     # maybe need to stage file but then pb when missing files ... and paths
-    module load MaSuRCA/4.1.0-GCC-11.3.0
-    redundans.py --version > versions.yml
 
-    redundans.py -v ${short_reads_param} \\
-                ${long_reads_param} \\
+    /root/src/redundans/redundans.py --version > versions.yml
+
+    /root/src/redundans/redundans.py -v ${short_reads_param} ${long_reads_param} \\
                 -o ${meta.id} \\
                 -t ${task.cpus} 2>&1 | tee ${log_file}
     
