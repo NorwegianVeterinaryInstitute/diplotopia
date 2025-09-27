@@ -9,39 +9,41 @@ include { TRYSSEMBLY } from "./workflows/TRYSSEMBLY.nf"
 // include { VARWRRUM } from "./workflows/VARWRRUM.nf"
 
 workflow{ 
-	/*
 	if (params.track == "purelyraw") {
 		// sub_workflow - detectomg contamination from reads --- 
 		// NOT ready 
 		PURELY_RAW()
 	}
-	*/
+
+
 
 	if (params.track == "tryssembly") {
 		// sub_workflow - detectomg contamination from reads --- 
 		// NOT ready 
 		TRYSSEMBLY()
+		// merging assemblies workflow
+	
 	}
 
-	// if (params.track == "filter_contigs") {
-	// 	// COMP-ASS for comparison assemblies 
-	// 	FILTER_CONTIGS() 
-	// }
+	if (params.track == "filter_contigs") {
+		// COMP-ASS for comparison assemblies 
+		FILTER_CONTIGS() 
+	}
 
-    // if (params.track == "compass") {
-	// 	// COMP-ASS for comparison assemblies 
-	// 	COMPASS() 
-	// }
+    if (params.track == "compass") {
+		// COMP-ASS for comparison assemblies 
+		COMPASS() 
+	}
 	
-	// if (params.track == "haplopurge"){
-	// 	// Getting HaploSSembly from the best assembly 
-	// 	HAPLOPURGE()
-	// }
+	if (params.track == "haplopurge"){
+		// Getting HaploSSembly from the best assembly 
+		HAPLOPURGE()
+	}
 
-	// if (params.track == "varwrrum"){
-	// 	// (population) Variants At Regions Where Reference Reads Uniquely Map 
-	// 	VARWRRUM()
-	// }
+	if (params.track == "varwrrum"){
+		// (population) Variants At Regions Where Reference Reads Uniquely Map 
+		VARWRRUM()
+	}
 
 
 }

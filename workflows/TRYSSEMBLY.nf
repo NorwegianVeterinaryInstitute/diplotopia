@@ -36,9 +36,11 @@ workflow TRYSSEMBLY {
                     
             tuple(meta, R1, R2, longRead, extraOption)
             }
-            .combine(ploidy_ch)
+        .combine(ploidy_ch)
     
     input_ch.view()
+
+}
 
    // processed_input_ch = input_ch
     // .map { meta, R1, R2, longRead, extraOption -> 
@@ -70,7 +72,7 @@ workflow TRYSSEMBLY {
     // MASURCA
     //MASURCA(branched_ch.go_to_masurca)
 
-}
+
   
 
     
