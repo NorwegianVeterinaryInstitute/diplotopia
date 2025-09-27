@@ -3,7 +3,7 @@ process MASURCA {
     //conda "/cluster/projects/nn9305k/src/miniconda/envs/"
     //conda (params.enable_conda ? 'bioconda::chewbbaca=3.3.1' : null)
     
-    container 'quay.io/biocontainers/masurca:4.1.1--pl5321hb5bd705_0'
+    //container 'quay.io/biocontainers/masurca:4.1.0--pl5321hb5bd705_1'
 
     label 'process_high_memory_time'
 
@@ -64,6 +64,7 @@ END
 
     // SECTION MASURCA execution 
     """
+    module load MaSuRCA/4.1.0-GCC-11.3.0
     masurca -v > versions.yml
     echo "${config_content}" > ${meta.id}_masurca.config
 
