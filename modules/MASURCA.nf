@@ -4,6 +4,7 @@ process MASURCA {
     //conda (params.enable_conda ? 'bioconda::chewbbaca=3.3.1' : null)
     
     //container 'quay.io/biocontainers/masurca:4.1.0--pl5321hb5bd705_1'
+    // some problem for some reason - try to use masurca directly in the container /usr/local/bin/masurca
 
     label 'process_high_memory_time'
 

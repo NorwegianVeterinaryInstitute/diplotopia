@@ -28,7 +28,10 @@ $NF run $MAIN -c $NFCONFIG -c $CONFIG --out_dir assembly_582-1 -work-dir $WORKDI
 srun --account=nn9305k --ntasks=1 --mem-per-cpu=4G --qos=devel --time=0:10:00 --pty bash -i
 IMG=/cluster/work/users/evezeyl/images/quay.io-biocontainers-masurca-4.1.1--pl5321hb5bd705_0.img
 apptainer shell $IMG
-
+apptainer exec $IMG bash
+find /usr/bin -name "masurca"
+find /usr/local/bin -name "masurca" # /usr/local/bin/masurca
+find /opt -name "masurca"
 
 srun --account=nn9305k --ntasks=1 --mem-per-cpu=4G --qos=devel --time=0:10:00 --pty bash -i
 module load MaSuRCA/4.1.0-GCC-11.3.0
