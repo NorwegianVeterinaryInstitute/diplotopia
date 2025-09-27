@@ -12,7 +12,10 @@ NF="/cluster/projects/nn9305k/bin/nextflow_25.04.7"
 NFCONFIG="${DIPLO}/nextflow.config"
 CONFIG="${DIPLO}/SAGA/saga_flatworm.config"
 INPUT="${DIPLO}/tmp_dev/input_tryssembly.csv"
-WORKDIR="/cluster/projects/nn9305k/active/evezeyl/projects/DIPLOTOPIA/diplotopia/work"
+WORKDIR="/cluster/work/users/evezeyl/DIPLOTOPIA/TRYSSEMBLY"
+
+
+
 
 
 $NF run $MAIN -c $NFCONFIG -c $CONFIG --out_dir assembly_582-1 -work-dir $WORKDIR --input $INPUT -profile apptainer,tryssembly

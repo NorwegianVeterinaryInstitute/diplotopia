@@ -64,6 +64,8 @@ END
 
     // SECTION MASURCA execution 
     """
+    # FIXME could not make it work with containers I tried. Find way to use container. Missing gz ? 
+    # maybe need to stage file but then pb when missing files ... and paths
     module load MaSuRCA/4.1.0-GCC-11.3.0
     masurca -v > versions.yml
     echo "${config_content}" > ${meta.id}_masurca.config
