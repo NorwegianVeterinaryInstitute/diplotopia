@@ -39,6 +39,7 @@ process REDUNDANS {
     /root/src/redundans/redundans.py --version > versions.yml
 
     /root/src/redundans/redundans.py -v ${short_reads_param} ${long_reads_param} \\
+                --mem ${task.mem} --tmp . \\
                 -o ${meta.id} \\
                 -t ${task.cpus} 2>&1 | tee ${log_file}
     
