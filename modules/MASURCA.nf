@@ -26,7 +26,7 @@ process MASURCA {
 
     // SECTION preparing optional run with long reads and extra options
     def hybrid_data_block = ''
-    def flye_assembly_param = ''
+    def flye_assembly_param = 'FLYE_ASSEMBLY=0'
 
     if (meta.has_longRead) {
         hybrid_data_block = "NANOPORE=${longRead}"
@@ -37,6 +37,7 @@ process MASURCA {
     // !SECTION
 
     // SECTION GENERATE MASURCA config file (Gstring)
+    // FIXME JF_SIZE should be set based on genome size - need to added as input parameter
     def config_content = """
 DATA
 PE=pe 150 50 ${R1} ${R2}
@@ -44,15 +45,20 @@ ${hybrid_data_block}
 END
 
 PARAMETERS
-USE_GRID=0
 EXTEND_JUMP_READS=0
-GRAPH_KMER_SIZE=auto
+GRAPH_KMER_SIZE = auto
+USE_LINKING_MATES = 0
+USE_GRID=0
+GRID_ENGINE=SGE
+GRID_QUEUE=all.q
+GRID_BATCH_SIZE=500000000
+LHE_COVERAGE=25
 LIMIT_JUMP_COVERAGE = 300
-LHE_COVERAGE=35
-MEGA_READS_ONE_PASS=0
+CA_PARAMETERS =  cgwErrorRate=0.15
 CLOSE_GAPS=1
 NUM_THREADS = ${task.cpus}
 JF_SIZE = 8240000000
+SOAP_ASSEMBLY=0
 ${flye_assembly_param}
 ${extra_config_param} 
 END
