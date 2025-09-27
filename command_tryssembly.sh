@@ -1,3 +1,6 @@
+# https://github.com/Gabaldonlab/redundans
+
+
 tmux login5
 
 module purge 

@@ -18,13 +18,16 @@ process DIPSPADES {
     path "versions.yml", emit : versions
 
     script:
+    def log_file = "${meta.id}_dispades.log"
+
     def short_reads_param = "-1 ${R1} -2 ${R2}"
-    // for now only long reads
+    
+    // for now only long reads - need to see how to use with spades if do long reads
     // def long_reads_param = ''
     // if (meta.has_longRead) {
     //     long_reads_param = "-r ${longRead}"
     // } 
-    def log_file = "${meta.id}_dispades.log"
+
 
     """
     dipspades.py -v > versions.yml
