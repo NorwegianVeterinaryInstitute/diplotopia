@@ -1,13 +1,14 @@
 # https://github.com/Gabaldonlab/redundans
 
 
-tmux login5
+tmux login4
  
 
 
 
 # For masurca test
-cd /cluster/projects/nn9305k/active/330403_001-A4_Tapeworm/analyses/assembly_masurca/20250926
+tmux
+cd /cluster/projects/nn9305k/active/330403_001-A4_Tapeworm/analyses
 
 module purge
 module load Java/21.0.2 
@@ -20,10 +21,7 @@ INPUT="${DIPLO}/tmp_dev/input_tryssembly.csv"
 WORKDIR="/cluster/work/users/evezeyl/DIPLOTOPIA/TRYSSEMBLY"
 
 
-
-
-
-$NF run $MAIN -c $NFCONFIG -c $CONFIG --out_dir assembly_582-1 -work-dir $WORKDIR --input $INPUT -profile apptainer,tryssembly -resume
+$NF run $MAIN -c $NFCONFIG -c $CONFIG --out_dir diplotopia_assembly -work-dir $WORKDIR --input $INPUT -profile apptainer,tryssembly -resume
 
 # 2>&1 | tee 2025-09-26_nf.runlog
 
