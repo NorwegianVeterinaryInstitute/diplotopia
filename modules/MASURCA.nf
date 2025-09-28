@@ -26,40 +26,45 @@ process MASURCA {
 
     // SECTION preparing optional run with long reads and extra options
     def hybrid_data_block = ''
-    def flye_assembly_param = 'FLYE_ASSEMBLY=0'
+    def linked_mates_param = '1'
+    def jf_size = ${meta.genome_size} * 20 // rough estimate
+    def soap_assembly_param = '1'
+    def flye_assembly_param = '0'
+
 
     if (meta.has_longRead) {
         hybrid_data_block = "NANOPORE=${longRead}"
-        flye_assembly_param = 'FLYE_ASSEMBLY=1'
+        linked_mates_param = '0'
+        flye_assembly_param = '1'
+        soap_assembly_param = '0'
     } 
     // will not be used for now 
     def extra_config_param = extraOption ? extraOption : ''
     // !SECTION
 
     // SECTION GENERATE MASURCA config file (Gstring)
-    // FIXME JF_SIZE should be set based on genome size - need to added as input parameter
     def config_content = """
 DATA
-PE=pe 150 50 ${R1} ${R2}
+PE=pe $params.pe ${R1} ${R2}
 ${hybrid_data_block}
 END
 
 PARAMETERS
-EXTEND_JUMP_READS=0
-GRAPH_KMER_SIZE = auto
-USE_LINKING_MATES = 0
+EXTEND_JUMP_READS=$params.extend_jump_reads
+GRAPH_KMER_SIZE = $params.graph_kmer_size
+USE_LINKING_MATES = ${linked_mates_param}
 USE_GRID=0
 GRID_ENGINE=SGE
 GRID_QUEUE=all.q
 GRID_BATCH_SIZE=500000000
-LHE_COVERAGE=25
-LIMIT_JUMP_COVERAGE = 300
-CA_PARAMETERS =  cgwErrorRate=0.15
-CLOSE_GAPS=1
+LHE_COVERAGE=$params.lhe_coverage
+LIMIT_JUMP_COVERAGE = $params.limit_jump_coverage
+CA_PARAMETERS = cgwErrorRate=$params.cgwErrorRate
+CLOSE_GAPS=$params.close_gaps
 NUM_THREADS = ${task.cpus}
-JF_SIZE = 8240000000
-SOAP_ASSEMBLY=0
-${flye_assembly_param}
+JF_SIZE = ${jf_size}
+SOAP_ASSEMBLY=${soap_assembly_param}
+FLYE_ASSEMBLY=${flye_assembly_param}
 ${extra_config_param} 
 END
    """
@@ -80,7 +85,7 @@ END
 
     sed -i "s/echo 1 > PLOIDY.txt/echo ${ploidy_value} > PLOIDY.txt/" assemble.sh
 
-    bash assemble.sh
+    bash assemble.sh > ${log_file} 2>&1
 
     """
 }

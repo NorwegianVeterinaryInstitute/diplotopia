@@ -20,13 +20,13 @@ workflow TRYSSEMBLY {
 
     input_ch = Channel
         .fromPath(params.input, checkIfExists: true)
-        .splitCsv(header:['id', 'assembler', 'path_reads','R1','R2','long_read', 'advanced_options','comment'], skip: 1, sep:",")      
+        .splitCsv(header:['id', 'assembler', 'path_reads','R1','R2','long_read', 'genome_size', 'advanced_options','comment'], skip: 1, sep:",")      
         .map { row ->
     
             // for convenience usage at this stage need to be strings - because of need of configuration files for software
             def R1 = "${row.path_reads}/${row.R1}"
             def R2 = "${row.path_reads}/${row.R2}"
-            
+            def genome_size = row.genome_size ?: ''
             //def longRead = row.long_read ? file("${row.path_reads}/${row.long_read}") : ''
             def longRead = row.long_read ? file("${row.path_reads}/${row.long_read}") : ''
             def extraOption = row.advanced_options ?: ''
@@ -35,6 +35,7 @@ workflow TRYSSEMBLY {
             def meta = [
                 id: row.id, 
                 assembler : row.assembler,
+                genome_size : genome_size,
                 has_longRead : !!row.long_read, 
                 has_extraOption : !!row.advanced_options
             ]

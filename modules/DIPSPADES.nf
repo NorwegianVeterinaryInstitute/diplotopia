@@ -14,7 +14,7 @@ process DIPSPADES {
     tuple val(meta), val(R1), val(R2), val(extraOption)
 
     output: 
-    tuple val(meta), path("${meta.id}"), emit: dipspades_assembly
+    tuple val(meta), path("*"), emit: dipspades_assembly
     path "versions.yml", emit : versions
 
     script:
@@ -22,20 +22,14 @@ process DIPSPADES {
 
     def short_reads_param = "-1 ${R1} -2 ${R2}"
     
-    // for now only long reads - need to see how to use with spades if do long reads
-    // def long_reads_param = ''
-    // if (meta.has_longRead) {
-    //     long_reads_param = "-r ${longRead}"
-    // } 
-
-
+    script:
     """
     dipspades.py -v > versions.yml
 
     # Haplotype assembly - short reads -diploid genome - Illumina
     dipspades.py ${short_reads_param} \\
                 ${extraOption} \\
-                -o ${meta.id} 2>&1 | tee ${log_file} 
+                -o ${meta.id} > ${log_file} 2>&1
     """
 
 }

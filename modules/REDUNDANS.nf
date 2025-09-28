@@ -33,15 +33,16 @@ process REDUNDANS {
 
     // SECTION MASURCA execution 
     """
-    # FIXME could not make it work with containers I tried. Find way to use container. Missing gz ? 
     # maybe need to stage file but then pb when missing files ... and paths
+    # path of redundans.py in container is in root
 
     /root/src/redundans/redundans.py --version > versions.yml
 
+    # important to put long_reads param at the end because create as string, in on new line produces error
     /root/src/redundans/redundans.py -v ${short_reads_param} ${long_reads_param} \\
                 --mem ${task.mem} --tmp . \\
                 -o ${meta.id} \\
-                -t ${task.cpus} 2>&1 | tee ${log_file}
+                -t ${task.cpus} > ${log_file} 2>&1
     
     """
 }
