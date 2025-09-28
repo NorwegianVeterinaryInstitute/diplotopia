@@ -27,7 +27,7 @@ process MASURCA {
     // SECTION preparing optional run with long reads and extra options
     def hybrid_data_block = ''
     def linked_mates_param = '1'
-    def jf_size = ${meta.genome_size} * 20 // rough estimate
+    def jf_size = (meta.genome_size as long) * 20
     def soap_assembly_param = '1'
     def flye_assembly_param = '0'
 
@@ -45,22 +45,22 @@ process MASURCA {
     // SECTION GENERATE MASURCA config file (Gstring)
     def config_content = """
 DATA
-PE=pe $params.pe ${R1} ${R2}
+PE=pe ${params.pe} ${R1} ${R2}
 ${hybrid_data_block}
 END
 
 PARAMETERS
-EXTEND_JUMP_READS=$params.extend_jump_reads
-GRAPH_KMER_SIZE = $params.graph_kmer_size
+EXTEND_JUMP_READS=${params.extend_jump_reads}
+GRAPH_KMER_SIZE = ${params.graph_kmer_size}
 USE_LINKING_MATES = ${linked_mates_param}
 USE_GRID=0
 GRID_ENGINE=SGE
 GRID_QUEUE=all.q
 GRID_BATCH_SIZE=500000000
-LHE_COVERAGE=$params.lhe_coverage
-LIMIT_JUMP_COVERAGE = $params.limit_jump_coverage
-CA_PARAMETERS = cgwErrorRate=$params.cgwErrorRate
-CLOSE_GAPS=$params.close_gaps
+LHE_COVERAGE=${params.lhe_coverage}
+LIMIT_JUMP_COVERAGE=${params.limit_jump_coverage}
+CA_PARAMETERS = cgwErrorRate=${params.cgwErrorRate}
+CLOSE_GAPS=${params.close_gaps}
 NUM_THREADS = ${task.cpus}
 JF_SIZE = ${jf_size}
 SOAP_ASSEMBLY=${soap_assembly_param}
@@ -71,6 +71,7 @@ END
    // !SECTION
   
   
+
 
 
     // SECTION MASURCA execution 
