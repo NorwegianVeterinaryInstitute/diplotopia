@@ -2,7 +2,6 @@
 // Contains platanus assembler 
 
 
-// Asssembly with masurca
 process REDUNDANS {
     //conda "/cluster/projects/nn9305k/src/miniconda/envs/"
     //conda (params.enable_conda ? 'bioconda::chewbbaca=3.3.1' : null)
@@ -45,4 +44,20 @@ process REDUNDANS {
                 -t ${task.cpus} > ${log_file} 2>&1
     
     """
+
+    // Specific mount
+    extraOptions '-v /host/path/to/data:/container/path/to/data:ro' 
+    // Or, for a named volume:
+    // extraOptions '--mount source=my_volume,target=/container/path/to/data'
+
+
+    // -v /host/path/to/data:/container/path/to/data:ro: This example bind-mounts a host directory /host/path/to/data to /container/path/to/data inside the container, with read-only permissions (ro).
+    // --mount source=my_volume,target=/container/path/to/data: This example mounts a named Docker volume my_volume to /container/path/to/data inside the container.
+
+
 }
+
+//
+// # if you wish to process local files, you need to mount the volume with -v
+// ## make sure you are in redundans repo directory (containing test/ directory)
+// docker run -v `pwd`/test:/test:rw -it cgenomics/redundans:latest /root/src/redundans/redundans.py -v -i test/*.fq.gz -f test/contigs.fa -o test/run1

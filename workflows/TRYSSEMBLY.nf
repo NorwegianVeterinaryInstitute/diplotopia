@@ -51,6 +51,8 @@ workflow TRYSSEMBLY {
         go_to_masurca: meta.assembler == "masurca" 
         go_to_dispades: meta.assembler == "dipspades"
         // go_to_redundans: meta.assembler == "redundans"
+        // go_to_platanus: meta.assembler == "platanus"
+        // go_to_platanus_allee: meta.assembler == "platanus_allee"
         }
         .set { branched_ch }
 
