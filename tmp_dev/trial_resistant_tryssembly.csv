@@ -1,0 +1,2 @@
+id, assembler,path_reads,R1,R2,long_read,genome_size,advanced_options,ploidy,comment
+resistant,masurca,/cluster/projects/nn9305k/active/330403_001-A4_Tapeworm/data/raw,resistant_R1.fastq.gz,resistant_R2.fastq.gz,,412000000,,2,resistant_concatenated
