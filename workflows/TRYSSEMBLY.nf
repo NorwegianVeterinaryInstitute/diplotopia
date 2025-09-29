@@ -34,7 +34,7 @@ workflow TRYSSEMBLY {
                 id: row.id, 
                 assembler : row.assembler,
                 genome_size : genome_size,
-                ploidy : row.ploidy ?: params.ploidy_value,
+                ploidy : row.ploidy,
                 has_longRead : !!row.long_read, 
                 has_extraOption : !!row.advanced_options
             ]
@@ -47,7 +47,7 @@ workflow TRYSSEMBLY {
 
 
     // SECTION branching channel for different assemblers
-    input_ch.branch {meta, R1, R2, longRead, extraOption, ploidy_value ->
+    input_ch.branch {meta, R1, R2, longRead, extraOption ->
         go_to_masurca: meta.assembler == "masurca" 
         // go_to_dispades: meta.assembler == "dipspades"
         // go_to_redundans: meta.assembler == "redundans"

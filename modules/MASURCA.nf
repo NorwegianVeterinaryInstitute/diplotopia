@@ -21,6 +21,8 @@ process MASURCA {
     script:
     // SECTION define script outputs
     def log_file = "${meta.id}_masurca.log"
+    def out_dir="${meta.id}_out" 
+
 
     // !SECTION
 
@@ -36,7 +38,6 @@ process MASURCA {
         hybrid_data_block = "NANOPORE=${longRead}"
         linked_mates_param = '0'
         flye_assembly_param = '1'
-        soap_assembly_param = '0'
     } 
     // will not be used for now 
     def extra_config_param = extraOption ? extraOption : ''
@@ -88,16 +89,9 @@ END
 
     bash assemble.sh > ${log_file} 2>&1
 
-    OUTPUT_DIR="${meta.id}_out" 
-    mkdir ${OUTPUT_DIR}
-
     # Moving all in subdirectory for clarity
-    find . -mindepth 1 \
-        ! -name "${OUTPUT_DIR}" \
-        ! -type l \
-        -exec mv {} ${OUTPUT_DIR}/ \;
-
-
+    mkdir ${out_dir}
+    find . -mindepth 1 ! -name "${out_dir}" ! -type l -exec mv {} ${out_dir}/ \;
     """
     // !SECTION
 }
