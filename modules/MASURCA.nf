@@ -11,10 +11,10 @@ process MASURCA {
     tag "$meta.id" 
     
     input:
-    tuple val(meta), val(R1), val(R2), val(longRead), val(extraOption), val(ploidy_value)
+    tuple val(meta), val(R1), val(R2), val(longRead), val(extraOption)
 
     output: 
-    tuple val(meta), path("*"), emit: masurca_assembly
+    tuple val(meta), path("${meta.id}_out"), emit: masurca_assembly
     path "versions.yml", emit : versions
 
 
@@ -25,10 +25,10 @@ process MASURCA {
     // !SECTION
 
     // SECTION preparing optional run with long reads and extra options
+    def ploidy_value = meta.ploidy ?: '1'
     def hybrid_data_block = ''
     def linked_mates_param = '1'
     def jf_size = (meta.genome_size as long) * 20
-    def soap_assembly_param = '1'
     def flye_assembly_param = '0'
 
 
@@ -63,7 +63,7 @@ CA_PARAMETERS = cgwErrorRate=${params.cgwErrorRate}
 CLOSE_GAPS=${params.close_gaps}
 NUM_THREADS = ${task.cpus}
 JF_SIZE = ${jf_size}
-SOAP_ASSEMBLY=${soap_assembly_param}
+SOAP_ASSEMBLY=${params.soap_assembly}
 FLYE_ASSEMBLY=${flye_assembly_param}
 ${extra_config_param} 
 END
@@ -88,5 +88,16 @@ END
 
     bash assemble.sh > ${log_file} 2>&1
 
+    OUTPUT_DIR="${meta.id}_out" 
+    mkdir ${OUTPUT_DIR}
+
+    # Moving all in subdirectory for clarity
+    find . -mindepth 1 \
+        ! -name "${OUTPUT_DIR}" \
+        ! -type l \
+        -exec mv {} ${OUTPUT_DIR}/ \;
+
+
     """
+    // !SECTION
 }
