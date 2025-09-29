@@ -12,8 +12,15 @@ book:
     - index.qmd
     - requirements_installation.qmd
     - description.qmd
-    - usage.qmd
-    - saga_users.qmd
+    - part : "Using Diplotopia"
+      chapters:
+        - general_usage.qmd
+        - tryssembly.qmd
+    - part: "For SAGA users"
+      chapters:
+    -   saga_users.qmd
+    - part: "TO SORT"
+      chapters:
     - configuration.qmd
     - output.qmd
     - contribution.qmd

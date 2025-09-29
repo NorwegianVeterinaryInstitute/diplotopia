@@ -1,0 +1,115 @@
+# TRYSSEMBLY track : Testing assemblers for diploid genomes assemblies
+
+
+Tryssembly track allows to test different assemblers (for diploid genomes assemblies). 
+Some assemblers are specific for short reads assemblies, other for long reads, or hybrid assemblies.
+
+
+## Available assemblers : 
+
+| option | short_only | long_only | hybrid description | Links | Comment | Status_implementation | 
+|-------------|------------|-----------|---------------------|-------|---------|-----------------------|
+| masurca[^1] | yes | no | yes  | [Masurca github] | hybrid (when providing long reads) | implemented |
+| dipspades[^2] | yes | no | no | [dipspades] | short reads (SPades assembler in diploid mode) | testing |
+| redundans[^3] | yes | no | no | [redundans]| short reads | debugging |
+| platanus | yes | no | no | [platanus] | short reads | placeholder |
+| platanus-allee | yes | no | yes | [platanus-allee] | short reads | placeholder |
+| necat | no | yes | no | [necat] | long reads | placeholder (planned) |
+
+
+[^1]: Has itself several assembler possibilities (SOAP assembler, Celera Assembler : default for short reads, and flye for long reads). The hybrid mode is not well documented.
+[^2]: Might be possible to use as hybrid mode - but not tried, and would need to tweak the code.
+[^3]: pipeline based on platanus v1.2.4 assembler.
+
+
+
+[dipspades]:https://mitra.stanford.edu/kundaje/marinovg/oak/programs/spades-cloudspades-paper/assembler/dipspades_manual.html#hapl_assembly_output
+
+
+[Masurca github]:https://github.com/alekseyzimin/masurca
+
+
+[redundans github]:https://github.com/Gabaldonlab/redundans
+
+[platanus]
+
+[platanus-allee]
+
+[necat]
+
+## Usage 
+
+- [ ] FIXME : (masurca ) - need to manage to make it work from container
+
+### input file format. Example
+
+- id : sample ID
+- assembler : in lower cases, choices: (masurca, dipspades, redundans, platanus, platanus_allee, necat)
+- path_reads is the directory where your reads are located (absolute path)
+- R1, R2 : fastq files names (can be gzipped)
+- long_read : if hybrid mode (can be empty)
+- genome_size : estimated genome size (can be empty - but masurca might not work)
+- ploidy : 2 (unless you want to try with other ploidy level, used in masurca)
+- comment : any comment you want to add (e.g. date of the test) its for you and its not used in the pipeline
+
+> spelling matters ! 
+
+
+```text 
+id, assembler,path_reads,R1,R2,long_read,genome_size,advanced_options,ploidy,comment
+582-2,masurca,/cluster/projects/nn9305k/active/330403_001-A4_Tapeworm/data/raw,250509_NB552450.25-17-582-2_S2_R1_001.fastq.gz,250509_NB552450.25-17-582-2_S2_R2_001.fastq.gz,,412000000,,2,20250927_test|
+```
+
+
+
+### Launching Tryssembly track 
+
+- requires Java/21.0.2 (or 17+)
+- **note that the track is provided by giving the profile for containers and the profile for the specific track**
+
+- **ORDER of configuration files matters (first default, then specific)**
+- options added via command line MUST be after the configuration files NFCONDFIG and CONFIG
+
+```bash
+# module load Java/21.0.2 
+
+# Path to diplotopia
+DIPLO="/cluster/projects/nn9305k/active/evezeyl/projects/DIPLOTOPIA/diplotopia"
+MAIN="${DIPLO}/main.nf"
+# Path to nextflow 
+NF="/cluster/projects/nn9305k/bin/nextflow_25.04.7"
+
+# General nextflow config file 
+NFCONFIG="${DIPLO}/nextflow.config"
+
+# HPC / Executor config file 
+CONFIG="${DIPLO}/SAGA/saga_flatworm.config"
+
+# Input file
+INPUT="${DIPLO}/tmp_dev/trial_resistant_tryssembly.csv"
+
+# Optional : nextflow working directory and result directory (if not provided, it will be your current directory)
+WORKDIR="/cluster/work/users/evezeyl/DIPLOTOPIA/TRYSSEMBLY"
+RESDIR="/cluster/projects/nn9305k/active/330403_001-A4_Tapeworm/analyses/assembly_resistant"
+
+
+$NF run $MAIN -c $NFCONFIG -c $CONFIG --out_dir $RESDIR -work-dir $WORKDIR --input $INPUT -profile apptainer,tryssembly 
+
+# Optional - resume at failure
+# -resume
+```
+
+
+## What after tryssembly ?
+
+- comparing assemblies : See [COMPASS] track 
+
+
+- meta assembly : combining the results of different assemblers -> to be implemented
+
+- [ ] TODO 
+<!-- see assembly hackaton 
+(e.g. with metassembler[^4], or quickmerge[^5])
+
+-->
+
