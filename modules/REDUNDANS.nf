@@ -44,7 +44,7 @@ process REDUNDANS {
 
     # important to put long_reads param at the end because create as string, in on new line produces error
     /root/src/redundans/redundans.py -v ${short_reads_param} ${long_reads_param} \\
-                --mem ${memory} --tmp TMP \\
+                --mem ${memory} --tmp tmp \\
                 -o ${out_dir} \\
                 -t ${task.cpus} > ${log_file} 2>&1
     
