@@ -41,3 +41,20 @@ module load MaSuRCA/4.1.0-GCC-11.3.0
 IMG=/cluster/work/users/evezeyl/images/cgenomics-redundans-latest.img
 apptainer shell $IMG
 apptainer exec $IMG bash
+
+# test diplotopia 
+OUTDIR="/cluster/projects/nn9305k/active/330403_001-A4_Tapeworm/analyses/test_dipl" 
+cd $OUTDIR
+
+module purge
+module load Java/21.0.2 
+DIPLO="/cluster/projects/nn9305k/active/evezeyl/projects/DIPLOTOPIA/diplotopia"
+MAIN="${DIPLO}/main.nf" 
+NF="/cluster/projects/nn9305k/bin/nextflow_25.04.7"
+NFCONFIG="${DIPLO}/nextflow.config"
+CONFIG="${DIPLO}/SAGA/saga_flatworm.config"
+INPUT="${DIPLO}/tmp_dev/test_diplo.csv"
+WORKDIR="/cluster/work/users/evezeyl/DIPLOTOPIA/TRYSSEMBLY"
+
+
+$NF run $MAIN -c $NFCONFIG -c $CONFIG --out_dir $OUTDIR -work-dir $WORKDIR --input $INPUT -profile apptainer,tryssembly -resume

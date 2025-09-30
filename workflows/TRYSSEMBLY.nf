@@ -22,11 +22,17 @@ workflow TRYSSEMBLY {
         .map { row ->
     
             // for convenience usage at this stage need to be strings - because of need of configuration files for software
-            def R1 = "${row.path_reads}/${row.R1}"
-            def R2 = "${row.path_reads}/${row.R2}"
+            def R1 = file("${row.path_reads}/${row.R1}", checkIfExists: true)
+            def R2 = file("${row.path_reads}/${row.R2}", checkIfExists: true)
             def genome_size = row.genome_size ?: ''
-            //def longRead = row.long_read ? file("${row.path_reads}/${row.long_read}") : ''
-            def longRead = row.long_read ? file("${row.path_reads}/${row.long_read}") : ''
+            
+            // Determine if long reads are provided
+            def has_longRead = !!row.long_read
+            def longRead = has_longRead ?
+                            file("${row.path_reads}/${row.long_read}", checkIfExists: true) :
+                            file("${workflow.projectDir}/assets/dummy.fa")
+
+            
             def extraOption = row.advanced_options ?: ''
 
             // !! is a shorthand for a boolean check on a non-null string !!null -> F !!'astring' -> T
@@ -35,15 +41,9 @@ workflow TRYSSEMBLY {
                 assembler : row.assembler,
                 genome_size : genome_size,
                 ploidy : row.ploidy,
-                has_longRead : !!row.long_read, 
+                has_longRead : has_longRead, 
                 has_extraOption : !!row.advanced_options
-            ]
-
-            if (! meta.has_longRead){
-                longRead = ''
-
-            }
-                    
+            ]                    
             tuple(meta, R1, R2, longRead, extraOption)
             }
     
@@ -55,7 +55,7 @@ workflow TRYSSEMBLY {
     input_ch.branch {meta, R1, R2, longRead, extraOption ->
         go_to_masurca: meta.assembler == "masurca" 
         go_to_dispades: meta.assembler == "dipspades"
-        // go_to_redundans: meta.assembler == "redundans"
+        //go_to_redundans: meta.assembler == "redundans"
         // go_to_platanus: meta.assembler == "platanus"
         // go_to_platanus_allee: meta.assembler == "platanus_allee"
         }
@@ -74,11 +74,11 @@ workflow TRYSSEMBLY {
                 tuple(meta, R1, R2, extraOption)
                 } 
             )
-    REDUNDANS(branched_ch.go_to_redundans
-            .map{ meta, R1, R2, longRead, extraOption -> 
-                tuple(meta, R1, R2, longRead)
-                } 
-            )
+    // REDUNDANS(branched_ch.go_to_redundans
+    //         .map{ meta, R1, R2, longRead, extraOption -> 
+    //             tuple(meta, R1, R2, longRead)
+    //             } 
+    //         )
 
     // !SECTION
 
