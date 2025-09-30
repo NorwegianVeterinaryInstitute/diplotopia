@@ -1,2 +1,2 @@
 id, assembler,path_reads,R1,R2,long_read,genome_size,advanced_options,ploidy,comment
-583-11,masurca,/cluster/projects/nn9305k/active/330403_001-A4_Tapeworm/data/raw,250509_NB552450.25-17-583-11_S5_R1_001.fastq.gz,250509_NB552450.25-17-583-11_S5_R2_001.fastq.gz,,412000000,,2,testdiplo
+582-2,redundans,/cluster/projects/nn9305k/active/330403_001-A4_Tapeworm/data/raw,250509_NB552450.25-17-582-2_S2_R1_001.fastq.gz,250509_NB552450.25-17-582-2_S2_R2_001.fastq.gz,,412000000,,2,20250927_test

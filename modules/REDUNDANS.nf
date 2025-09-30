@@ -13,21 +13,26 @@ process REDUNDANS {
     tag "$meta.id" 
     
     input:
-    tuple val(meta), val(R1), val(R2), val(longRead)
+    tuple val(meta), 
+        path(R1, stageAs: 'R1.fastq.gz'), 
+        path(R2, stageAs: 'R2.fastq.gz'), 
+        path(longRead, stageAs: 'longRead.fa') 
 
     output: 
-    tuple val(meta), path("*"), emit: redundans_assembly
+    tuple val(meta), path("${meta.id}_out"), emit: redundans_assembly
     path "versions.yml", emit : versions
 
 
     script:
     // SECTION define script outputs
     def log_file = "${meta.id}_redundans.log"
+    def out_dir="${meta.id}_out"
+    def memory = task.memory.toGiga().toInteger() 
 
-    def short_reads_param = "-i ${R1} ${R2}"
+    def short_reads_param = "-i R1.fastq.gz R2.fastq.gz"
     def long_reads_param = '' 
     if (meta.has_longRead) {
-        long_reads_param = "--longreads ${longRead}"
+        long_reads_param = "--longreads longRead.fa"
     }
 
     // SECTION MASURCA execution 
@@ -39,14 +44,14 @@ process REDUNDANS {
 
     # important to put long_reads param at the end because create as string, in on new line produces error
     /root/src/redundans/redundans.py -v ${short_reads_param} ${long_reads_param} \\
-                --mem ${task.mem} --tmp . \\
-                -o ${meta.id} \\
+                --mem ${memory} --tmp . \\
+                -o ${out_dir} \\
                 -t ${task.cpus} > ${log_file} 2>&1
     
     """
 
     // Specific mount
-    extraOptions '-v /host/path/to/data:/container/path/to/data:ro' 
+    // extraOptions '-v /host/path/to/data:/container/path/to/data:ro' 
     // Or, for a named volume:
     // extraOptions '--mount source=my_volume,target=/container/path/to/data'
 
