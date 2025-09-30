@@ -38,6 +38,11 @@ workflow TRYSSEMBLY {
                 has_longRead : !!row.long_read, 
                 has_extraOption : !!row.advanced_options
             ]
+
+            if (! meta.has_longRead){
+                longRead = ''
+
+            }
                     
             tuple(meta, R1, R2, longRead, extraOption)
             }
@@ -69,11 +74,11 @@ workflow TRYSSEMBLY {
                 tuple(meta, R1, R2, extraOption)
                 } 
             )
-    // REDUNDANS(branched_ch.go_to_redundans
-    //         .map{ meta, R1, R2, longRead, extraOption -> 
-    //             tuple(meta, R1, R2, longRead)
-    //             } 
-    //         )
+    REDUNDANS(branched_ch.go_to_redundans
+            .map{ meta, R1, R2, longRead, extraOption -> 
+                tuple(meta, R1, R2, longRead)
+                } 
+            )
 
     // !SECTION
 
