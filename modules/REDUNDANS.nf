@@ -14,8 +14,8 @@ process REDUNDANS {
     
     input:
     tuple val(meta), 
-        path(R1, stageAs: 'R1.fastq.gz'), 
-        path(R2, stageAs: 'R2.fastq.gz'), 
+        path(R1, stageAs: 'R1.fq.gz'), 
+        path(R2, stageAs: 'R2.fq.gz'), 
         path(longRead, stageAs: 'longRead.fa') 
 
     output: 
@@ -29,7 +29,7 @@ process REDUNDANS {
     def out_dir="${meta.id}_out"
     def memory = task.memory.toGiga().toInteger() 
 
-    def short_reads_param = "-i R1.fastq.gz R2.fastq.gz"
+    def short_reads_param = "-i *.fq.gz"
     def long_reads_param = '' 
     if (meta.has_longRead) {
         long_reads_param = "--longreads longRead.fa"
@@ -44,7 +44,7 @@ process REDUNDANS {
 
     # important to put long_reads param at the end because create as string, in on new line produces error
     /root/src/redundans/redundans.py -v ${short_reads_param} ${long_reads_param} \\
-                --mem ${memory} --tmp . \\
+                --mem ${memory} --tmp TMP \\
                 -o ${out_dir} \\
                 -t ${task.cpus} > ${log_file} 2>&1
     
