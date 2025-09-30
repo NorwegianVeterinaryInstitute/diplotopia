@@ -42,8 +42,10 @@ IMG=/cluster/work/users/evezeyl/images/cgenomics-redundans-latest.img
 apptainer shell $IMG
 apptainer exec $IMG bash
 
-# test diplotopia 
-OUTDIR="/cluster/projects/nn9305k/active/330403_001-A4_Tapeworm/analyses/test_dipl" 
+# test diplotopia
+# login 5
+tmux attach-session -t 2
+OUTDIR="/cluster/projects/nn9305k/active/330403_001-A4_Tapeworm/analyses/test_dipl"
 cd $OUTDIR
 
 
