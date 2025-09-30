@@ -14,8 +14,10 @@ process DIPSPADES {
     tag "$meta.id" 
     
     input:
-    tuple val(meta), val(R1), val(R2), val(extraOption)
-
+    tuple val(meta), 
+        path(R1, stageAs: 'R1.fastq.gz'), 
+        path(R2, stageAs: 'R2.fastq.gz'), 
+        val(extraOption)
     output: 
     tuple val(meta),  path("${meta.id}_out"), emit: dipspades_assembly
     path "versions.yml", emit : versions
@@ -24,18 +26,17 @@ process DIPSPADES {
     def log_file = "${meta.id}_dispades.log"
     def out_dir="${meta.id}_out" 
 
-    def short_reads_param = "-1 ${R1} -2 ${R2}"
+    def short_reads_param = "-1 R1.fastq.gz -2 R2.fastq.gz"
     
     script:
     """
     dipspades.py -v > versions.yml
 
     # Haplotype assembly - short reads -diploid genome - Illumina
-    dipspades.py ${short_reads_param} \\ 
+    dipspades.py ${short_reads_param} ${extraOption} \\
                 --memory ${task.memory} \\
                 --threads ${task.cpus} \\
-                ${extraOption} \\
-                --cov-cutoff  auto \\
+                --cov-cutoff auto \\
                 -o ${meta.id} > ${log_file} 2>&1
 
     # Moving all in subdirectory for clarity

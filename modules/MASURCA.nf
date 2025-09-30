@@ -1,7 +1,15 @@
 // Asssembly with masurca
+// https://github.com/aakashsur/docker-masurca/blob/main/Dockerfile
+// lack ps but otherwise might be ok 
+// Difficulties to make work in container 
 process MASURCA {
     conda (params.enable_conda ? 'bioconda::masurca=4.1.1' : null)    
-    container 'quay.io/biocontainers/masurca:4.1.1--pl5321hb5bd705_0'
+    // container 'quay.io/biocontainers/masurca:4.1.3--h6b3f7d6_1'
+    // container 'docker://aakashsur/masurca'
+    // 4.0.3 
+
+
+    //stageInMode 'copy' 
 
     label 'process_high_memory_time'
 
@@ -78,6 +86,9 @@ END
 
     // SECTION MASURCA execution 
     """
+    # FIXE need to find a proper container with masurca installed
+    module load MaSuRCA/4.1.0-GCC-11.3.0
+
     masurca -v > versions.yml
     echo "${config_content}" > ${meta.id}_masurca.config
 
