@@ -31,8 +31,11 @@ process DIPSPADES {
     dipspades.py -v > versions.yml
 
     # Haplotype assembly - short reads -diploid genome - Illumina
-    dipspades.py ${short_reads_param} \\
+    dipspades.py ${short_reads_param} \\ 
+                --memory ${task.memory} \\
+                --threads ${task.cpus} \\
                 ${extraOption} \\
+                --cov-cutoff  auto \\
                 -o ${meta.id} > ${log_file} 2>&1
 
     # Moving all in subdirectory for clarity
