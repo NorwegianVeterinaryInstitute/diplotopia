@@ -1,0 +1,2 @@
+id, assembler,path_reads,R1,R2,long_read,genome_size,advanced_options,ploidy,comment
+resistant,platanus,/cluster/projects/nn9305k/active/330403_001-A4_Tapeworm/data/clean,resistant_clean_R1.fastq,resistant_clean_R2.fastq,,412000000,,2,resistant_clean_concatenated

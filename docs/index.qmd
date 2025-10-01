@@ -4,6 +4,14 @@
 
 Welcome to the diplotopia documentation!
 
+Suggested readings: 
+- [A practical assembly guideline for genomes with various levels of heterozygosity](https://academic.oup.com/bib/article/24/6/bbad337/7291993)
+- for highly repetitive regions : [Genome of Solanum pimpinellifolium provides insights into structural variants during tomato breeding](https://www.nature.com/articles/s41467-020-19682-0)
+- high level heterozygosity : [A chromosome-level genome assembly for the Pacific oyster Crassostrea gigas](https://academic.oup.com/gigascience/article/10/3/giab020/6187865)
+
+
+
+
 ## Pipeline status
 
 This pipeline is currently under development.

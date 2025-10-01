@@ -6,6 +6,7 @@
 include { MASURCA } from "../modules/MASURCA.nf"
 include { DIPSPADES } from "../modules/DIPSPADES.nf"
 include { REDUNDANS } from "../modules/REDUNDANS.nf"
+include { PLATANUS_ASSEMBLE } from "../modules/PLATANUS.nf"
 //include { NECAT_GLOBAL } from "../modules/NECAT.nf"
 //include {FOO_PATH} from "../modules/FOO.nf"
 
@@ -56,7 +57,7 @@ workflow TRYSSEMBLY {
         go_to_masurca: meta.assembler == "masurca" 
         go_to_dispades: meta.assembler == "dipspades"
         go_to_redundans: meta.assembler == "redundans"
-        // go_to_platanus: meta.assembler == "platanus"
+        go_to_platanus: meta.assembler == "platanus"
         // go_to_platanus_allee: meta.assembler == "platanus_allee"
         }
         .set { branched_ch }
@@ -79,6 +80,13 @@ workflow TRYSSEMBLY {
                 tuple(meta, R1, R2, longRead)
                 } 
             )
+    // platanus section
+    PLATANUS_ASSEMBLE(branched_ch.go_to_platanus
+            .map{ meta, R1, R2, longRead, extraOption -> 
+                tuple(meta, R1, R2, longRead)
+                } 
+            )
+    
 
     // !SECTION
 
