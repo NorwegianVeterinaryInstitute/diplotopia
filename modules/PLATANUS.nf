@@ -14,7 +14,7 @@ process PLATANUS_ASSEMBLE {
     
     container 'cmonjeau/platanus:latest'
     
-    label 'process_high_memory_time'
+    label 'process_high_memory_time3'
 
     tag "$meta.id" 
     
