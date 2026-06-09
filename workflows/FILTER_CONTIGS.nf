@@ -6,7 +6,7 @@ workflow FILTER_CONTIGS {
     input_ch = Channel
         .fromPath(params.input, checkIfExists: true)
         .splitCsv(header:['ID', 'assembly'], skip: 1, sep:",", strip:true)
-        .map { row -> (ID, assembly) =  [row.ID, row.assembly]}
+        .map { row -> tuple(row.ID, file(row.assembly)) }
 
     FILTER_CONTIGS_SUB(input_ch)
 
