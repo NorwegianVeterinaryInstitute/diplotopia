@@ -23,20 +23,24 @@ process FILTER_BLAST_CONTIGS {
     path("*_filtered_negative.fasta")
     path("*.{png,csv,html,command.sh,version,log,rds}")
 
-    script: 
+    script:
     javamem = "${task.memory.toGiga()-4}G"
     """
     cp $baseDir/bin/contigs_taxo_overview_filter.qmd .
 
+    cat > render_params.yml << 'EOF'
+res_dir: "."
+save_dir: "."
+ID: "${ID}"
+assemblyfile: "${assembly}"
+taxonomyDB: "$params.ranked_taxo_file"
+positive_filter: "$params.positive_filter"
+evalue_min: $params.evalue_min
+perc_identity_min: $params.perc_identity_min
+EOF
+
     quarto render contigs_taxo_overview_filter.qmd \\
-    -P res_dir:"." \\
-    -P save_dir:"." \\
-    -P ID:"${ID}" \\
-    -P assemblyfile:"${assembly}" \\
-    -P taxonomyDB:"$params.ranked_taxo_file" \\
-    -P positive_filter:"$params.positive_filter" \\
-    -P evalue_min:$params.evalue_min \\
-    -P perc_identity_min:$params.perc_identity_min 2>&1 | tee ${ID}_compassr.log
+    --execute-params render_params.yml 2>&1 | tee ${ID}_compassr.log
 
 
     # need to rename the quarto render

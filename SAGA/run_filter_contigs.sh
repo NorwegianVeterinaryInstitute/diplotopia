@@ -10,4 +10,4 @@ nextflow run main.nf \
     --out_dir results \
     --blastDB /cluster/shared/databases/blast/nt \
     --ranked_taxo_file /path/to/ranked_taxo.tsv \
-    --positive_filter "Oomycetes"
+    --positive_filter "phylum == 'Oomycota'"
